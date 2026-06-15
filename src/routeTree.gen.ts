@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppOpportunityFinderRouteImport } from './routes/app.opportunity-finder'
 import { Route as AppMarketplaceRouteImport } from './routes/app.marketplace'
@@ -38,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
@@ -110,10 +116,10 @@ export interface FileRoutesByFullPath {
   '/app/marketplace': typeof AppMarketplaceRoute
   '/app/opportunity-finder': typeof AppOpportunityFinderRoute
   '/app/reports': typeof AppReportsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
@@ -126,6 +132,7 @@ export interface FileRoutesByTo {
   '/app/marketplace': typeof AppMarketplaceRoute
   '/app/opportunity-finder': typeof AppOpportunityFinderRoute
   '/app/reports': typeof AppReportsRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +150,7 @@ export interface FileRoutesById {
   '/app/marketplace': typeof AppMarketplaceRoute
   '/app/opportunity-finder': typeof AppOpportunityFinderRoute
   '/app/reports': typeof AppReportsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,10 +169,10 @@ export interface FileRouteTypes {
     | '/app/marketplace'
     | '/app/opportunity-finder'
     | '/app/reports'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/app'
     | '/onboarding'
     | '/app/advisor'
     | '/app/alerts'
@@ -177,6 +185,7 @@ export interface FileRouteTypes {
     | '/app/marketplace'
     | '/app/opportunity-finder'
     | '/app/reports'
+    | '/app'
   id:
     | '__root__'
     | '/'
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
     | '/app/marketplace'
     | '/app/opportunity-finder'
     | '/app/reports'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +233,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/app/reports': {
       id: '/app/reports'
@@ -316,6 +333,7 @@ interface AppRouteChildren {
   AppMarketplaceRoute: typeof AppMarketplaceRoute
   AppOpportunityFinderRoute: typeof AppOpportunityFinderRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -330,6 +348,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMarketplaceRoute: AppMarketplaceRoute,
   AppOpportunityFinderRoute: AppOpportunityFinderRoute,
   AppReportsRoute: AppReportsRoute,
+  AppIndexRoute: AppIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
