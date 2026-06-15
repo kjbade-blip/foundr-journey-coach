@@ -9,38 +9,224 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppOpportunityFinderRouteImport } from './routes/app.opportunity-finder'
+import { Route as AppMarketplaceRouteImport } from './routes/app.marketplace'
+import { Route as AppLearningRouteImport } from './routes/app.learning'
+import { Route as AppJourneyRouteImport } from './routes/app.journey'
+import { Route as AppGrowRouteImport } from './routes/app.grow'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
+import { Route as AppCommunityRouteImport } from './routes/app.community'
+import { Route as AppAlertsRouteImport } from './routes/app.alerts'
+import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOpportunityFinderRoute = AppOpportunityFinderRouteImport.update({
+  id: '/opportunity-finder',
+  path: '/opportunity-finder',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketplaceRoute = AppMarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearningRoute = AppLearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppJourneyRoute = AppJourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGrowRoute = AppGrowRouteImport.update({
+  id: '/grow',
+  path: '/grow',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
+  id: '/competitors',
+  path: '/competitors',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCommunityRoute = AppCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdvisorRoute = AppAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +234,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/opportunity-finder': {
+      id: '/app/opportunity-finder'
+      path: '/opportunity-finder'
+      fullPath: '/app/opportunity-finder'
+      preLoaderRoute: typeof AppOpportunityFinderRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/marketplace': {
+      id: '/app/marketplace'
+      path: '/marketplace'
+      fullPath: '/app/marketplace'
+      preLoaderRoute: typeof AppMarketplaceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/learning': {
+      id: '/app/learning'
+      path: '/learning'
+      fullPath: '/app/learning'
+      preLoaderRoute: typeof AppLearningRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/journey': {
+      id: '/app/journey'
+      path: '/journey'
+      fullPath: '/app/journey'
+      preLoaderRoute: typeof AppJourneyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/grow': {
+      id: '/app/grow'
+      path: '/grow'
+      fullPath: '/app/grow'
+      preLoaderRoute: typeof AppGrowRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/competitors': {
+      id: '/app/competitors'
+      path: '/competitors'
+      fullPath: '/app/competitors'
+      preLoaderRoute: typeof AppCompetitorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/community': {
+      id: '/app/community'
+      path: '/community'
+      fullPath: '/app/community'
+      preLoaderRoute: typeof AppCommunityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/alerts': {
+      id: '/app/alerts'
+      path: '/alerts'
+      fullPath: '/app/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/advisor': {
+      id: '/app/advisor'
+      path: '/advisor'
+      fullPath: '/app/advisor'
+      preLoaderRoute: typeof AppAdvisorRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAdvisorRoute: typeof AppAdvisorRoute
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppCommunityRoute: typeof AppCommunityRoute
+  AppCompetitorsRoute: typeof AppCompetitorsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppGrowRoute: typeof AppGrowRoute
+  AppJourneyRoute: typeof AppJourneyRoute
+  AppLearningRoute: typeof AppLearningRoute
+  AppMarketplaceRoute: typeof AppMarketplaceRoute
+  AppOpportunityFinderRoute: typeof AppOpportunityFinderRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdvisorRoute: AppAdvisorRoute,
+  AppAlertsRoute: AppAlertsRoute,
+  AppCommunityRoute: AppCommunityRoute,
+  AppCompetitorsRoute: AppCompetitorsRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppGrowRoute: AppGrowRoute,
+  AppJourneyRoute: AppJourneyRoute,
+  AppLearningRoute: AppLearningRoute,
+  AppMarketplaceRoute: AppMarketplaceRoute,
+  AppOpportunityFinderRoute: AppOpportunityFinderRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
