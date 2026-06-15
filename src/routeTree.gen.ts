@@ -12,6 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppOpportunityFinderRouteImport } from './routes/app.opportunity-finder'
+import { Route as AppMarketplaceRouteImport } from './routes/app.marketplace'
+import { Route as AppLearningRouteImport } from './routes/app.learning'
+import { Route as AppJourneyRouteImport } from './routes/app.journey'
+import { Route as AppGrowRouteImport } from './routes/app.grow'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -28,34 +36,132 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOpportunityFinderRoute = AppOpportunityFinderRouteImport.update({
+  id: '/opportunity-finder',
+  path: '/opportunity-finder',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketplaceRoute = AppMarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLearningRoute = AppLearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppJourneyRoute = AppJourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGrowRoute = AppGrowRouteImport.update({
+  id: '/grow',
+  path: '/grow',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
+  id: '/competitors',
+  path: '/competitors',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/competitors': typeof AppCompetitorsRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/grow': typeof AppGrowRoute
+  '/app/journey': typeof AppJourneyRoute
+  '/app/learning': typeof AppLearningRoute
+  '/app/marketplace': typeof AppMarketplaceRoute
+  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
+  '/app/reports': typeof AppReportsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/onboarding'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/onboarding'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/onboarding'
-  id: '__root__' | '/' | '/app' | '/onboarding'
+  to:
+    | '/'
+    | '/app'
+    | '/onboarding'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/onboarding'
+    | '/app/competitors'
+    | '/app/dashboard'
+    | '/app/grow'
+    | '/app/journey'
+    | '/app/learning'
+    | '/app/marketplace'
+    | '/app/opportunity-finder'
+    | '/app/reports'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -82,12 +188,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/opportunity-finder': {
+      id: '/app/opportunity-finder'
+      path: '/opportunity-finder'
+      fullPath: '/app/opportunity-finder'
+      preLoaderRoute: typeof AppOpportunityFinderRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/marketplace': {
+      id: '/app/marketplace'
+      path: '/marketplace'
+      fullPath: '/app/marketplace'
+      preLoaderRoute: typeof AppMarketplaceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/learning': {
+      id: '/app/learning'
+      path: '/learning'
+      fullPath: '/app/learning'
+      preLoaderRoute: typeof AppLearningRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/journey': {
+      id: '/app/journey'
+      path: '/journey'
+      fullPath: '/app/journey'
+      preLoaderRoute: typeof AppJourneyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/grow': {
+      id: '/app/grow'
+      path: '/grow'
+      fullPath: '/app/grow'
+      preLoaderRoute: typeof AppGrowRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/competitors': {
+      id: '/app/competitors'
+      path: '/competitors'
+      fullPath: '/app/competitors'
+      preLoaderRoute: typeof AppCompetitorsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppCompetitorsRoute: typeof AppCompetitorsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppGrowRoute: typeof AppGrowRoute
+  AppJourneyRoute: typeof AppJourneyRoute
+  AppLearningRoute: typeof AppLearningRoute
+  AppMarketplaceRoute: typeof AppMarketplaceRoute
+  AppOpportunityFinderRoute: typeof AppOpportunityFinderRoute
+  AppReportsRoute: typeof AppReportsRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppCompetitorsRoute: AppCompetitorsRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppGrowRoute: AppGrowRoute,
+  AppJourneyRoute: AppJourneyRoute,
+  AppLearningRoute: AppLearningRoute,
+  AppMarketplaceRoute: AppMarketplaceRoute,
+  AppOpportunityFinderRoute: AppOpportunityFinderRoute,
+  AppReportsRoute: AppReportsRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
