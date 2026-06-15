@@ -20,6 +20,9 @@ import { Route as AppJourneyRouteImport } from './routes/app.journey'
 import { Route as AppGrowRouteImport } from './routes/app.grow'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
+import { Route as AppCommunityRouteImport } from './routes/app.community'
+import { Route as AppAlertsRouteImport } from './routes/app.alerts'
+import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -76,11 +79,29 @@ const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
   path: '/competitors',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCommunityRoute = AppCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdvisorRoute = AppAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/grow': typeof AppGrowRoute
@@ -94,6 +115,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/grow': typeof AppGrowRoute
@@ -108,6 +132,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
+  '/app/advisor': typeof AppAdvisorRoute
+  '/app/alerts': typeof AppAlertsRoute
+  '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/grow': typeof AppGrowRoute
@@ -123,6 +150,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
@@ -136,6 +166,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
@@ -149,6 +182,9 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/onboarding'
+    | '/app/advisor'
+    | '/app/alerts'
+    | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
@@ -244,10 +280,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompetitorsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/community': {
+      id: '/app/community'
+      path: '/community'
+      fullPath: '/app/community'
+      preLoaderRoute: typeof AppCommunityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/alerts': {
+      id: '/app/alerts'
+      path: '/alerts'
+      fullPath: '/app/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/advisor': {
+      id: '/app/advisor'
+      path: '/advisor'
+      fullPath: '/app/advisor'
+      preLoaderRoute: typeof AppAdvisorRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAdvisorRoute: typeof AppAdvisorRoute
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppCommunityRoute: typeof AppCommunityRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppGrowRoute: typeof AppGrowRoute
@@ -259,6 +319,9 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdvisorRoute: AppAdvisorRoute,
+  AppAlertsRoute: AppAlertsRoute,
+  AppCommunityRoute: AppCommunityRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppGrowRoute: AppGrowRoute,
