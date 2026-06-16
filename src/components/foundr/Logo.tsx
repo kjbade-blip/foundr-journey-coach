@@ -1,4 +1,4 @@
-import logo from "@/assets/foundr-logo.png.asset.json";
+import logo from "@/assets/foundr-logo-v2.png.asset.json";
 
 export function Logo({ className = "h-9", showWordmark = true }: { className?: string; showWordmark?: boolean }) {
   return (
