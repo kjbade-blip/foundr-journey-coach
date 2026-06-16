@@ -17,9 +17,9 @@ function Landing() {
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <Logo className="h-16" />
+            <Logo className="h-[77px]" />
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a href="#product" className="hover:text-foreground">Product</a>
@@ -210,7 +210,7 @@ function Landing() {
       <footer className="border-t border-border py-10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6">
           <div className="flex items-center gap-3">
-            <Logo className="h-7" />
+            <Logo className="h-[34px]" />
           </div>
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Found-r. Clarity before commitment.</p>
         </div>

@@ -56,7 +56,7 @@ function AppShell() {
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
           <Link to="/" className="flex items-center gap-2">
-            <Logo className="h-8" />
+            <Logo className="h-[38px]" />
           </Link>
           <div className="ml-4 hidden flex-1 max-w-xl md:flex">
             <div className="flex w-full items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm text-muted-foreground">
