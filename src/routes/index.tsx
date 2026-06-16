@@ -37,27 +37,27 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="bg-hero-gradient relative overflow-hidden">
+      <section className="bg-brand relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:pt-24">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground shadow-soft">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border/40 bg-card px-3 py-1 text-xs font-semibold text-muted-foreground shadow-soft">
               <span className="h-1.5 w-1.5 rounded-full bg-brand" /> Now in preview — AI-powered business intelligence
             </span>
-            <h1 className="mt-6 text-balance text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
-              Clarity <span className="italic text-muted-foreground">before</span> commitment.
+            <h1 className="mt-6 text-balance text-5xl font-extrabold tracking-tight text-brand-foreground sm:text-6xl lg:text-7xl">
+              Clarity <span className="italic text-brand-foreground/70">before</span> commitment.
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-muted-foreground sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-brand-foreground/80 sm:text-xl">
               Found-r is the AI operating system for brick-and-mortar businesses — discover, validate, launch and grow with the data and guidance of a top-tier consulting team.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link to="/onboarding" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-base font-semibold text-brand-foreground shadow-pop transition hover:opacity-95 sm:w-auto">
+              <Link to="/onboarding" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-dark px-6 py-3.5 text-base font-semibold text-white shadow-pop transition hover:opacity-95 sm:w-auto">
                 Start your journey <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/app/opportunity-finder" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-base font-semibold text-foreground hover:bg-muted sm:w-auto">
+              <Link to="/app/opportunity-finder" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border/40 bg-card px-6 py-3.5 text-base font-semibold text-foreground hover:bg-muted sm:w-auto">
                 Try Opportunity Finder
               </Link>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">No credit card • Free tier forever</p>
+            <p className="mt-4 text-xs text-brand-foreground/60">No credit card • Free tier forever</p>
           </div>
 
           {/* Hero preview */}
