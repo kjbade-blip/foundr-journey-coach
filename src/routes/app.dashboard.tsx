@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Stat, Pill, Bar } from "@/components/foundr/ui";
-import { ArrowRight, Sparkles, Compass, FileText, Building2, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, Compass, FileText, CheckCircle2 } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 
 export const Route = createFileRoute("/app/dashboard")({
