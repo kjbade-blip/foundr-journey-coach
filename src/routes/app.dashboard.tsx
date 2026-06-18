@@ -72,25 +72,31 @@ function Dashboard() {
             <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Top Opportunities</div>
             <Link to="/app/opportunity-finder" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:underline">View finder <ArrowRight className="h-3 w-3" /></Link>
           </div>
-          <div className="mt-4 divide-y divide-border">
-            {[
-              { name: "Speciality Coffee", area: "SW11 · 0.5mi", score: 84, tone: "good" as const },
-              { name: "Dog Grooming Studio", area: "BS7 · 1mi", score: 76, tone: "good" as const },
-              { name: "Boutique Gym", area: "M20 · 0.75mi", score: 68, tone: "warn" as const },
-              { name: "Independent Bakery", area: "LS6 · 1mi", score: 61, tone: "warn" as const },
-            ].map((o) => (
-              <div key={o.name} className="flex items-center gap-4 py-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent">
-                  <Building2 className="h-5 w-5 text-brand-dark" />
+          <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_220px]">
+            <div className="divide-y divide-border">
+              {OPPS.map((o, i) => (
+                <div key={o.name} className="flex items-center gap-4 py-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-xs font-bold text-brand-dark">{i + 1}</div>
+                  <div className="flex-1">
+                    <div className="font-semibold">{o.name}</div>
+                    <div className="text-xs text-muted-foreground">{o.area}</div>
+                  </div>
+                  <div className="hidden w-32 md:block"><Bar value={o.score} /></div>
+                  <div className="w-12 text-right text-lg font-extrabold">{o.score}</div>
                 </div>
-                <div className="flex-1">
-                  <div className="font-semibold">{o.name}</div>
-                  <div className="text-xs text-muted-foreground">{o.area}</div>
-                </div>
-                <div className="w-40"><Bar value={o.score} /></div>
-                <div className="w-12 text-right text-lg font-extrabold">{o.score}</div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="h-[220px] overflow-hidden rounded-xl bg-muted sm:h-auto">
+              <GoogleMap
+                center={{ lat: 53.0, lng: -1.5 }}
+                zoom={5}
+                markers={OPPS.map((o, i) => ({
+                  lat: o.lat, lng: o.lng, label: String(i + 1), title: `${o.name} · ${o.score}`,
+                  primary: i === 0,
+                })) as MapMarker[]}
+                className="h-full w-full"
+              />
+            </div>
           </div>
         </Card>
 
