@@ -1,11 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Stat, Pill, Bar } from "@/components/foundr/ui";
 import { ArrowRight, Sparkles, Compass, FileText, Building2, CheckCircle2 } from "lucide-react";
+import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · Found-r" }] }),
   component: Dashboard,
 });
+
+const OPPS = [
+  { name: "Speciality Coffee",   area: "SW11 · 0.5mi", score: 84, tone: "good" as const, lat: 51.4655, lng: -0.1696 },
+  { name: "Dog Grooming Studio", area: "BS7 · 1mi",    score: 76, tone: "good" as const, lat: 51.4780, lng: -2.5870 },
+  { name: "Boutique Gym",        area: "M20 · 0.75mi", score: 68, tone: "warn" as const, lat: 53.4180, lng: -2.2280 },
+  { name: "Independent Bakery",  area: "LS6 · 1mi",    score: 61, tone: "warn" as const, lat: 53.8170, lng: -1.5740 },
+];
 
 function Dashboard() {
   return (

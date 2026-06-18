@@ -47,6 +47,19 @@ function Community() {
           ))}
         </div>
         <div className="space-y-4">
+          <Card className="overflow-hidden p-0">
+            <div className="border-b border-border p-4 text-xs font-bold uppercase tracking-wider text-brand-dark">In-person events near you</div>
+            <div className="h-[220px] w-full bg-muted">
+              <GoogleMap
+                center={{ lat: 51.4690, lng: -0.1400 }}
+                zoom={12}
+                markers={EVENTS.filter((e) => e.lat && e.lng).map((e, i) => ({
+                  lat: e.lat!, lng: e.lng!, label: String(i + 1), title: `${e.t} · ${e.loc}`,
+                }))}
+                className="h-full w-full"
+              />
+            </div>
+          </Card>
           <Card>
             <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Upcoming events</div>
             <ul className="mt-3 space-y-3">
