@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { MessageCircle, Award, Calendar, MapPin } from "lucide-react";
+import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 
 export const Route = createFileRoute("/app/community")({
   head: () => ({ meta: [{ title: "Community · Found-r" }] }),
@@ -14,9 +15,10 @@ const POSTS = [
 ];
 
 const EVENTS = [
-  { t: "Lambeth indie operators meetup", d: "Tue 24 Jun · 7pm", loc: "Brixton" },
-  { t: "Funding clinic with NatWest", d: "Thu 26 Jun · 12pm", loc: "Online" },
-  { t: "Local SEO workshop", d: "Wed 2 Jul · 10am", loc: "Online" },
+  { t: "Lambeth indie operators meetup", d: "Tue 24 Jun · 7pm", loc: "Brixton", lat: 51.4613, lng: -0.1156 },
+  { t: "Battersea founders breakfast",   d: "Fri 27 Jun · 8am", loc: "Battersea", lat: 51.4761, lng: -0.1633 },
+  { t: "Funding clinic with NatWest",    d: "Thu 26 Jun · 12pm", loc: "Online" },
+  { t: "Local SEO workshop",             d: "Wed 2 Jul · 10am", loc: "Online" },
 ];
 
 function Community() {
