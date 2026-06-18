@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/foundr/Logo";
 import { ArrowRight, MapPin, Sparkles, BarChart3, Users, ShieldCheck, Zap, Brain, Building2, Rocket, TrendingUp, Compass } from "lucide-react";
+import { GoogleMap } from "@/components/foundr/GoogleMap";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -288,21 +289,18 @@ function HeroPreview() {
           <p className="mt-1 text-sm">Strong demand and weak premium-coffee supply within 0.5mi. Target a 38–45 sqm unit on the north side of the high street. Estimated breakeven month 9.</p>
         </div>
       </div>
-      <div className="relative overflow-hidden bg-[#eef2e6]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#A7D957_0%,transparent_45%),radial-gradient(circle_at_70%_60%,#22C55E_0%,transparent_40%),radial-gradient(circle_at_50%_80%,#F59E0B_0%,transparent_35%)] opacity-50" />
-        <div className="absolute inset-0 bg-[linear-gradient(transparent_95%,rgba(17,17,17,0.08)_95%),linear-gradient(90deg,transparent_95%,rgba(17,17,17,0.08)_95%)] bg-[length:32px_32px]" />
-        {[
-          { t: "84", x: "30%", y: "35%", primary: true },
-          { t: "72", x: "60%", y: "50%" },
-          { t: "61", x: "45%", y: "70%" },
-          { t: "48", x: "20%", y: "65%" },
-        ].map((p, i) => (
-          <div key={i} className="absolute -translate-x-1/2 -translate-y-full" style={{ left: p.x, top: p.y }}>
-            <div className={`grid h-10 w-10 place-items-center rounded-full rounded-bl-none border-2 border-white text-xs font-extrabold shadow-pop ${p.primary ? "bg-brand text-brand-foreground" : "bg-brand-dark text-white"}`}>
-              {p.t}
-            </div>
-          </div>
-        ))}
+      <div className="relative min-h-[360px] overflow-hidden bg-muted">
+        <GoogleMap
+          center={{ lat: 51.4655, lng: -0.1696 }}
+          zoom={14}
+          markers={[
+            { lat: 51.4655, lng: -0.1696, primary: true, label: "84", title: "Speciality Coffee · SW11" },
+            { lat: 51.4690, lng: -0.1620, label: "72", title: "Site B" },
+            { lat: 51.4620, lng: -0.1740, label: "61", title: "Site C" },
+            { lat: 51.4680, lng: -0.1780, label: "48", title: "Site D" },
+          ]}
+          className="h-full min-h-[360px] w-full"
+        />
       </div>
     </div>
   );
