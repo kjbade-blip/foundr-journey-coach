@@ -26,7 +26,7 @@ function Landing() {
             <a href="#product" className="hover:text-foreground">Product</a>
             <a href="#journey" className="hover:text-foreground">Journey</a>
             <a href="#intelligence" className="hover:text-foreground">Intelligence</a>
-            <a href="#pricing" className="hover:text-foreground">Pricing</a>
+            <Link to="/pricing" className="hover:text-foreground">Pricing</Link>
           </nav>
           <div className="flex items-center gap-2">
             <Link to="/auth" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted sm:inline-flex">Sign in</Link>
