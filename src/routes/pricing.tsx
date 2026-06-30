@@ -167,7 +167,7 @@ function PricingPage() {
                 <span className="text-5xl font-extrabold tracking-tight">{t.price}</span>
                 {t.priceNote && <span className="pb-2 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
               </div>
-              <ul className="mt-6 space-y-2.5 text-sm">
+              <ul className="mt-6 flex-1 space-y-2.5 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-dark" strokeWidth={3} />
@@ -175,19 +175,21 @@ function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/onboarding"
-                className={`mt-8 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-bold transition ${
-                  t.highlight
-                    ? "bg-brand-dark text-white hover:opacity-90"
-                    : "bg-brand text-brand-foreground hover:opacity-90"
-                }`}
-              >
-                {t.cta} <ArrowRight className="h-4 w-4" />
-              </Link>
-              {t.priceNote && (
-                <p className="mt-3 text-center text-[11px] text-muted-foreground">*Plus VAT</p>
-              )}
+              <div className="mt-auto pt-8">
+                <Link
+                  to="/onboarding"
+                  className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-bold transition ${
+                    t.highlight
+                      ? "bg-brand-dark text-white hover:opacity-90"
+                      : "bg-brand text-brand-foreground hover:opacity-90"
+                  }`}
+                >
+                  {t.cta} <ArrowRight className="h-4 w-4" />
+                </Link>
+                {t.priceNote && (
+                  <p className="mt-3 text-center text-[11px] text-muted-foreground">*Plus VAT</p>
+                )}
+              </div>
             </div>
           ))}
         </div>
