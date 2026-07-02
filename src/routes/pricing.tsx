@@ -186,8 +186,8 @@ function PricingPage() {
                 >
                   {t.cta} <ArrowRight className="h-4 w-4" />
                 </Link>
-                <div className="mt-3 min-h-[1em] text-center text-[11px] text-muted-foreground">
-                  {t.priceNote && "*Plus VAT"}
+                <div className="mt-3 text-center text-[11px] text-muted-foreground">
+                  {t.priceNote ? "*Plus VAT" : <span className="invisible">*Plus VAT</span>}
                 </div>
               </div>
             </div>
