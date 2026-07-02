@@ -175,7 +175,7 @@ function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto pt-8">
+              <div className="pt-8">
                 <Link
                   to="/onboarding"
                   className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-bold transition ${
@@ -186,9 +186,9 @@ function PricingPage() {
                 >
                   {t.cta} <ArrowRight className="h-4 w-4" />
                 </Link>
-                {t.priceNote && (
-                  <p className="mt-3 text-center text-[11px] text-muted-foreground">*Plus VAT</p>
-                )}
+                <div className="mt-3 min-h-[1em] text-center text-[11px] text-muted-foreground">
+                  {t.priceNote && "*Plus VAT"}
+                </div>
               </div>
             </div>
           ))}
