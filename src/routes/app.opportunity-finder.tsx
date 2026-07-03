@@ -176,6 +176,25 @@ function Finder() {
         </div>
       </div>
 
+      {analyse.data?.bdi && (
+        <div className="mt-6">
+          <BDICard
+            result={analyse.data.bdi.result}
+            narrative={analyse.data.bdi.narrative}
+            locationName={analyse.data.geo.address}
+            actions={
+              <Link
+                to="/app/bdi-compare"
+                search={{ q: postcode }}
+                className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted"
+              >
+                Compare with another location
+              </Link>
+            }
+          />
+        </div>
+      )}
+
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-dark"><Sparkles className="h-4 w-4" /> AI Recommendation</div>
