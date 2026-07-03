@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { FileText, Download, Share2, Search } from "lucide-react";
+import { bdiColor } from "@/components/foundr/bdi/BDIGauge";
 
 export const Route = createFileRoute("/app/reports")({
   head: () => ({ meta: [{ title: "Reports · Found-r" }] }),
@@ -8,11 +9,11 @@ export const Route = createFileRoute("/app/reports")({
 });
 
 const REPORTS = [
-  { name: "SW11 Speciality Coffee — Viability", type: "Opportunity", date: "12 Jun 2026", score: 84, tone: "good" as const },
-  { name: "BS7 Dog Grooming — Location", type: "Location", date: "08 Jun 2026", score: 76, tone: "good" as const },
-  { name: "M20 Boutique Gym — Competition", type: "Competitor", date: "05 Jun 2026", score: 68, tone: "warn" as const },
-  { name: "LS6 Independent Bakery — Viability", type: "Opportunity", date: "02 Jun 2026", score: 61, tone: "warn" as const },
-  { name: "Lambeth Coffee Expansion — Growth", type: "Growth", date: "28 May 2026", score: 73, tone: "good" as const },
+  { name: "SW11 Speciality Coffee — Viability",   type: "Opportunity", date: "12 Jun 2026", score: 84, tone: "good" as const, bdi: 84, bdiBand: "Strong" },
+  { name: "BS7 Dog Grooming — Location",          type: "Location",    date: "08 Jun 2026", score: 76, tone: "good" as const, bdi: 71, bdiBand: "Stable" },
+  { name: "M20 Boutique Gym — Competition",       type: "Competitor",  date: "05 Jun 2026", score: 68, tone: "warn" as const, bdi: 63, bdiBand: "Stable" },
+  { name: "LS6 Independent Bakery — Viability",   type: "Opportunity", date: "02 Jun 2026", score: 61, tone: "warn" as const, bdi: 49, bdiBand: "Weak" },
+  { name: "Lambeth Coffee Expansion — Growth",    type: "Growth",      date: "28 May 2026", score: 73, tone: "good" as const, bdi: 78, bdiBand: "Strong" },
 ];
 
 function Reports() {
