@@ -24,15 +24,17 @@ function Finder() {
 
   const geocodeFn = useServerFn(geocodeAddress);
   const searchFn = useServerFn(searchPlacesNearby);
+  const bdiFn = useServerFn(getLocationBDI);
 
   const analyse = useMutation({
     mutationFn: async () => {
       const geo = await geocodeFn({ data: { address: postcode } });
       if (!geo) throw new Error("Location not found");
-      const places = await searchFn({
-        data: { query: cat, lat: geo.lat, lng: geo.lng, radius: Math.round(radius * 1609) },
-      });
-      return { geo, places };
+      const [places, bdi] = await Promise.all([
+        searchFn({ data: { query: cat, lat: geo.lat, lng: geo.lng, radius: Math.round(radius * 1609) } }),
+        bdiFn({ data: { lat: geo.lat, lng: geo.lng, radius: Math.max(800, Math.round(radius * 1609)), locationName: geo.address } }),
+      ]);
+      return { geo, places, bdi };
     },
   });
 
