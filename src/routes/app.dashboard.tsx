@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Stat, Pill, Bar } from "@/components/foundr/ui";
 import { ArrowRight, Sparkles, Compass, FileText, CheckCircle2 } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
-import { BDIGauge, bdiColor } from "@/components/foundr/bdi/BDIGauge";
+import { bdiColor } from "@/components/foundr/bdi/BDIGauge";
 import { sampleBDI } from "@/lib/bdi-samples";
 
 export const Route = createFileRoute("/app/dashboard")({
