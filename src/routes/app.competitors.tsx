@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Star, Users, MapPin, Megaphone } from "lucide-react";
+import { Star, MapPin, Megaphone } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { BDICard } from "@/components/foundr/bdi/BDICard";
+import { sampleBDI } from "@/lib/bdi-samples";
 
 export const Route = createFileRoute("/app/competitors")({
   head: () => ({ meta: [{ title: "Competitor Intelligence · Found-r" }] }),
