@@ -35,6 +35,19 @@ function Competitors() {
         </div>
       </Card>
 
+      <div className="mt-6">
+        <BDICard
+          result={sampleBDI("healthy")}
+          locationName="Your catchment · SW11"
+          compact
+          actions={
+            <Link to="/app/bdi-compare" search={{ q: "SW11" }} className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
+              Benchmark against another area
+            </Link>
+          }
+        />
+      </div>
+
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {COMPETITORS.map((c, i) => (
           <Card key={c.n}>
