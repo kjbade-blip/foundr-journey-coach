@@ -5,7 +5,7 @@ import { Logo } from "@/components/foundr/Logo";
 import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
   LayoutDashboard, Compass, Map, FileText, Store, GraduationCap,
-  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot
+  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3
 } from "lucide-react";
 import { FoundrAI } from "@/components/foundr/FoundrAI";
 
@@ -17,6 +17,7 @@ const START_NAV = [
   { to: "/app/dashboard",          label: "Dashboard",          icon: LayoutDashboard },
   { to: "/app/journey",            label: "My Journey",         icon: Map },
   { to: "/app/opportunity-finder", label: "Opportunity Finder", icon: Compass },
+  { to: "/app/bdi-compare",        label: "BDI Compare",        icon: BarChart3 },
   { to: "/app/reports",            label: "Reports",            icon: FileText },
   { to: "/app/marketplace",        label: "Marketplace",        icon: Store },
   { to: "/app/learning",           label: "Learning Centre",    icon: GraduationCap },
@@ -25,6 +26,7 @@ const START_NAV = [
 const GROW_NAV = [
   { to: "/app/grow",         label: "Growth Dashboard",      icon: TrendingUp },
   { to: "/app/competitors",  label: "Competitor Intelligence", icon: Radar },
+  { to: "/app/bdi-compare",  label: "BDI Compare",           icon: BarChart3 },
   { to: "/app/alerts",       label: "Market Alerts",         icon: Bell },
   { to: "/app/advisor",      label: "AI Growth Advisor",     icon: Sparkles },
   { to: "/app/community",    label: "Community",             icon: Users },
