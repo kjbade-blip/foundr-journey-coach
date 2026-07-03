@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Stat, Pill, Bar } from "@/components/foundr/ui";
 import { ArrowRight, Sparkles, Compass, FileText, CheckCircle2 } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { BDIGauge, bdiColor } from "@/components/foundr/bdi/BDIGauge";
+import { sampleBDI } from "@/lib/bdi-samples";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · Found-r" }] }),
@@ -16,6 +18,7 @@ const OPPS = [
 ];
 
 function Dashboard() {
+  const bdi = sampleBDI("healthy");
   return (
     <div>
       <PageHeader
@@ -25,12 +28,23 @@ function Dashboard() {
         actions={<Link to="/app/journey" className="rounded-full bg-brand-dark px-4 py-2 text-sm font-semibold text-white">Open my journey</Link>}
       />
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Stat label="Founder Readiness" value="72" hint="Solid — keep building" />
         <Stat label="Journey Progress" value="18%" hint="2 of 11 stages complete" />
         <Stat label="Saved Opportunities" value="6" hint="3 high-confidence" />
         <Stat label="Reports Generated" value="4" hint="2 viability, 2 location" />
+        <Card>
+          <Link to="/app/bdi-compare" className="block">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Business Diversity Index</div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <div className="text-4xl font-extrabold" style={{ color: bdiColor(bdi.overall) }}>{bdi.overall}</div>
+              <span className="text-xs font-bold" style={{ color: bdiColor(bdi.overall) }}>{bdi.band}</span>
+            </div>
+            <div className="mt-1 text-xs text-muted-foreground">SW11 · benchmark →</div>
+          </Link>
+        </Card>
       </div>
+
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
