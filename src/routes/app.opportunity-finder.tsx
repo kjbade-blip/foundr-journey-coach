@@ -5,7 +5,10 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { geocodeAddress, searchPlacesNearby } from "@/lib/maps.functions";
+import { getLocationBDI } from "@/lib/bdi.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { BDICard } from "@/components/foundr/bdi/BDICard";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/opportunity-finder")({
   head: () => ({ meta: [{ title: "Opportunity Finder · Found-r" }] }),
@@ -21,15 +24,17 @@ function Finder() {
 
   const geocodeFn = useServerFn(geocodeAddress);
   const searchFn = useServerFn(searchPlacesNearby);
+  const bdiFn = useServerFn(getLocationBDI);
 
   const analyse = useMutation({
     mutationFn: async () => {
       const geo = await geocodeFn({ data: { address: postcode } });
       if (!geo) throw new Error("Location not found");
-      const places = await searchFn({
-        data: { query: cat, lat: geo.lat, lng: geo.lng, radius: Math.round(radius * 1609) },
-      });
-      return { geo, places };
+      const [places, bdi] = await Promise.all([
+        searchFn({ data: { query: cat, lat: geo.lat, lng: geo.lng, radius: Math.round(radius * 1609) } }),
+        bdiFn({ data: { lat: geo.lat, lng: geo.lng, radius: Math.max(800, Math.round(radius * 1609)), locationName: geo.address } }),
+      ]);
+      return { geo, places, bdi };
     },
   });
 
@@ -170,6 +175,25 @@ function Finder() {
           </div>
         </div>
       </div>
+
+      {analyse.data?.bdi && (
+        <div className="mt-6">
+          <BDICard
+            result={analyse.data.bdi.result}
+            narrative={analyse.data.bdi.narrative}
+            locationName={analyse.data.geo.address}
+            actions={
+              <Link
+                to="/app/bdi-compare"
+                search={{ q: postcode }}
+                className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted"
+              >
+                Compare with another location
+              </Link>
+            }
+          />
+        </div>
+      )}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Card>

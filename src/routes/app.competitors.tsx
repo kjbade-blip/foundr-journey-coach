@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Star, Users, MapPin, Megaphone } from "lucide-react";
+import { Star, MapPin, Megaphone } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { BDICard } from "@/components/foundr/bdi/BDICard";
+import { sampleBDI } from "@/lib/bdi-samples";
 
 export const Route = createFileRoute("/app/competitors")({
   head: () => ({ meta: [{ title: "Competitor Intelligence · Found-r" }] }),
@@ -32,6 +34,19 @@ function Competitors() {
           <GoogleMap center={YOU} zoom={15} markers={markers} className="h-full w-full" />
         </div>
       </Card>
+
+      <div className="mt-6">
+        <BDICard
+          result={sampleBDI("healthy")}
+          locationName="Your catchment · SW11"
+          compact
+          actions={
+            <Link to="/app/bdi-compare" search={{ q: "SW11" }} className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted">
+              Benchmark against another area
+            </Link>
+          }
+        />
+      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {COMPETITORS.map((c, i) => (
