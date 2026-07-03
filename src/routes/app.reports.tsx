@@ -19,7 +19,13 @@ const REPORTS = [
 function Reports() {
   return (
     <div>
-      <PageHeader eyebrow="Reports" title="All your intelligence in one place." subtitle="Export, share, and compare every report you've generated." />
+      <PageHeader
+        eyebrow="Reports"
+        title="All your intelligence in one place."
+        subtitle="Every Location, Business and Opportunity report now includes the Business Diversity Index — Found-r's proprietary measure of high-street health."
+        actions={<Link to="/app/bdi-compare" className="rounded-full bg-brand-dark px-4 py-2 text-sm font-semibold text-white">Compare BDI</Link>}
+      />
+
 
       <Card className="p-0">
         <div className="flex items-center gap-3 border-b border-border p-4">
@@ -38,6 +44,11 @@ function Reports() {
                 <div className="text-xs text-muted-foreground">{r.type} · {r.date}</div>
               </div>
               <Pill tone={r.tone}>Score {r.score}</Pill>
+              <div className="hidden items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-xs font-semibold md:inline-flex">
+                <span className="text-muted-foreground">BDI</span>
+                <span style={{ color: bdiColor(r.bdi) }}>{r.bdi}</span>
+                <span className="text-muted-foreground">· {r.bdiBand}</span>
+              </div>
               <div className="flex gap-1.5">
                 <button className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold"><Download className="h-3.5 w-3.5" /> PDF</button>
                 <button className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold"><Share2 className="h-3.5 w-3.5" /> Share</button>
