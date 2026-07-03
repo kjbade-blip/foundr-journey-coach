@@ -24,6 +24,7 @@ import { Route as AppGrowRouteImport } from './routes/app.grow'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppCommunityRouteImport } from './routes/app.community'
+import { Route as AppBdiCompareRouteImport } from './routes/app.bdi-compare'
 import { Route as AppAlertsRouteImport } from './routes/app.alerts'
 import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
 
@@ -102,6 +103,11 @@ const AppCommunityRoute = AppCommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBdiCompareRoute = AppBdiCompareRouteImport.update({
+  id: '/bdi-compare',
+  path: '/bdi-compare',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAlertsRoute = AppAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/bdi-compare': typeof AppBdiCompareRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/bdi-compare': typeof AppBdiCompareRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
+  '/app/bdi-compare': typeof AppBdiCompareRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
+    | '/app/bdi-compare'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
+    | '/app/bdi-compare'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
+    | '/app/bdi-compare'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -344,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommunityRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/bdi-compare': {
+      id: '/app/bdi-compare'
+      path: '/bdi-compare'
+      fullPath: '/app/bdi-compare'
+      preLoaderRoute: typeof AppBdiCompareRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/alerts': {
       id: '/app/alerts'
       path: '/alerts'
@@ -364,6 +383,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAdvisorRoute: typeof AppAdvisorRoute
   AppAlertsRoute: typeof AppAlertsRoute
+  AppBdiCompareRoute: typeof AppBdiCompareRoute
   AppCommunityRoute: typeof AppCommunityRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -379,6 +399,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAdvisorRoute: AppAdvisorRoute,
   AppAlertsRoute: AppAlertsRoute,
+  AppBdiCompareRoute: AppBdiCompareRoute,
   AppCommunityRoute: AppCommunityRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppDashboardRoute: AppDashboardRoute,

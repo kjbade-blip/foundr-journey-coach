@@ -5,7 +5,10 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { geocodeAddress, searchPlacesNearby } from "@/lib/maps.functions";
+import { getLocationBDI } from "@/lib/bdi.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { BDICard } from "@/components/foundr/bdi/BDICard";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/opportunity-finder")({
   head: () => ({ meta: [{ title: "Opportunity Finder · Found-r" }] }),
