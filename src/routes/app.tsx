@@ -24,8 +24,10 @@ const START_NAV = [
 ] as const;
 
 const GROW_NAV = [
-  { to: "/app/grow",         label: "Growth Dashboard",      icon: TrendingUp },
+  { to: "/app/grow",             label: "Growth Dashboard",        icon: TrendingUp },
+  { to: "/app/business-profile", label: "Business Profile",        icon: Building2 },
   { to: "/app/competitors",  label: "Competitor Intelligence", icon: Radar },
+
   { to: "/app/bdi-compare",  label: "BDI Compare",           icon: BarChart3 },
   { to: "/app/alerts",       label: "Market Alerts",         icon: Bell },
   { to: "/app/advisor",      label: "AI Growth Advisor",     icon: Sparkles },

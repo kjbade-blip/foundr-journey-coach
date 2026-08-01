@@ -25,6 +25,7 @@ import { Route as AppGrowRouteImport } from './routes/app.grow'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppCommunityRouteImport } from './routes/app.community'
+import { Route as AppBusinessProfileRouteImport } from './routes/app.business-profile'
 import { Route as AppBdiCompareRouteImport } from './routes/app.bdi-compare'
 import { Route as AppAlertsRouteImport } from './routes/app.alerts'
 import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
@@ -109,6 +110,11 @@ const AppCommunityRoute = AppCommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBusinessProfileRoute = AppBusinessProfileRouteImport.update({
+  id: '/business-profile',
+  path: '/business-profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBdiCompareRoute = AppBdiCompareRouteImport.update({
   id: '/bdi-compare',
   path: '/bdi-compare',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -376,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommunityRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/business-profile': {
+      id: '/app/business-profile'
+      path: '/business-profile'
+      fullPath: '/app/business-profile'
+      preLoaderRoute: typeof AppBusinessProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/bdi-compare': {
       id: '/app/bdi-compare'
       path: '/bdi-compare'
@@ -404,6 +423,7 @@ interface AppRouteChildren {
   AppAdvisorRoute: typeof AppAdvisorRoute
   AppAlertsRoute: typeof AppAlertsRoute
   AppBdiCompareRoute: typeof AppBdiCompareRoute
+  AppBusinessProfileRoute: typeof AppBusinessProfileRoute
   AppCommunityRoute: typeof AppCommunityRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -420,6 +440,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAdvisorRoute: AppAdvisorRoute,
   AppAlertsRoute: AppAlertsRoute,
   AppBdiCompareRoute: AppBdiCompareRoute,
+  AppBusinessProfileRoute: AppBusinessProfileRoute,
   AppCommunityRoute: AppCommunityRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppDashboardRoute: AppDashboardRoute,
