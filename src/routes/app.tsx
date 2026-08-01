@@ -5,7 +5,7 @@ import { Logo } from "@/components/foundr/Logo";
 import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
   LayoutDashboard, Compass, Map, FileText, Store, GraduationCap,
-  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3
+  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3, Building2
 } from "lucide-react";
 import { FoundrAI } from "@/components/foundr/FoundrAI";
 
