@@ -15,8 +15,9 @@ function Onboarding() {
 
   function choose(m: "start" | "grow") {
     setMode(m);
-    navigate({ to: m === "start" ? "/app/dashboard" : "/app/grow" });
+    navigate({ to: m === "start" ? "/app/dashboard" : "/discover" });
   }
+
 
   return (
     <div className="min-h-screen bg-hero-gradient">

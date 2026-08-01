@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -24,6 +25,7 @@ import { Route as AppGrowRouteImport } from './routes/app.grow'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
 import { Route as AppCommunityRouteImport } from './routes/app.community'
+import { Route as AppBusinessProfileRouteImport } from './routes/app.business-profile'
 import { Route as AppBdiCompareRouteImport } from './routes/app.bdi-compare'
 import { Route as AppAlertsRouteImport } from './routes/app.alerts'
 import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
@@ -36,6 +38,11 @@ const PricingRoute = PricingRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -103,6 +110,11 @@ const AppCommunityRoute = AppCommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBusinessProfileRoute = AppBusinessProfileRouteImport.update({
+  id: '/business-profile',
+  path: '/business-profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBdiCompareRoute = AppBdiCompareRouteImport.update({
   id: '/bdi-compare',
   path: '/bdi-compare',
@@ -123,11 +135,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -142,11 +156,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -163,11 +179,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
+  '/app/business-profile': typeof AppBusinessProfileRoute
   '/app/community': typeof AppCommunityRoute
   '/app/competitors': typeof AppCompetitorsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -185,11 +203,13 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/auth'
+    | '/discover'
     | '/onboarding'
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -204,11 +224,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/discover'
     | '/onboarding'
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -224,11 +246,13 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/auth'
+    | '/discover'
     | '/onboarding'
     | '/pricing'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
+    | '/app/business-profile'
     | '/app/community'
     | '/app/competitors'
     | '/app/dashboard'
@@ -245,6 +269,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  DiscoverRoute: typeof DiscoverRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
 }
@@ -263,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -356,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommunityRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/business-profile': {
+      id: '/app/business-profile'
+      path: '/business-profile'
+      fullPath: '/app/business-profile'
+      preLoaderRoute: typeof AppBusinessProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/bdi-compare': {
       id: '/app/bdi-compare'
       path: '/bdi-compare'
@@ -384,6 +423,7 @@ interface AppRouteChildren {
   AppAdvisorRoute: typeof AppAdvisorRoute
   AppAlertsRoute: typeof AppAlertsRoute
   AppBdiCompareRoute: typeof AppBdiCompareRoute
+  AppBusinessProfileRoute: typeof AppBusinessProfileRoute
   AppCommunityRoute: typeof AppCommunityRoute
   AppCompetitorsRoute: typeof AppCompetitorsRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -400,6 +440,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAdvisorRoute: AppAdvisorRoute,
   AppAlertsRoute: AppAlertsRoute,
   AppBdiCompareRoute: AppBdiCompareRoute,
+  AppBusinessProfileRoute: AppBusinessProfileRoute,
   AppCommunityRoute: AppCommunityRoute,
   AppCompetitorsRoute: AppCompetitorsRoute,
   AppDashboardRoute: AppDashboardRoute,
@@ -418,19 +459,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  DiscoverRoute: DiscoverRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
