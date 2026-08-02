@@ -283,7 +283,21 @@ function VerifyPage() {
                 />
               ))}
             </div>
-            <p className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <button
+              onClick={() => { setStage("manual"); setError(null); }}
+              className="mt-3 w-full rounded-2xl border border-dashed border-border bg-card p-5 text-left"
+            >
+              <span className="text-sm font-bold">Request manual review</span>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Can't use any of the options above? Our team will review documentary evidence of ownership.
+              </p>
+            </button>
+            {claim && (
+              <p className="mt-4 text-center text-xs text-muted-foreground">
+                Claim reference {claim.id.slice(0, 8).toUpperCase()} · recorded {new Date(claim.createdAt).toLocaleDateString()}
+              </p>
+            )}
+            <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Lock className="h-3.5 w-3.5" /> Contact details are never shown in full. Every attempt is logged and rate-limited.
             </p>
             {isDemoPlace(place.id) && (
@@ -293,6 +307,64 @@ function VerifyPage() {
             )}
           </>
         )}
+
+        {stage === "blocked" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <ShieldCheck className="h-9 w-9 text-[color:var(--warning)]" />
+            <h2 className="mt-3 text-lg font-bold">This business has already been claimed</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{ALREADY_CLAIMED_MESSAGE}</p>
+            <button
+              onClick={() => { setStage("manual"); setError(null); }}
+              className="mt-5 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white"
+            >
+              Submit a review request
+            </button>
+          </div>
+        )}
+
+        {stage === "manual" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <h2 className="text-lg font-bold">Request manual ownership review</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tell us how you're connected to this business. Include anything that proves ownership — company number,
+              website, invoices or trading history.
+            </p>
+            <textarea
+              value={reviewMessage}
+              onChange={(e) => setReviewMessage(e.target.value.slice(0, 2000))}
+              rows={5}
+              placeholder="I'm the registered director of…"
+              className="mt-4 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-dark"
+            />
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                onClick={submitManualReview}
+                disabled={reviewBusy || reviewMessage.trim().length < 10}
+                className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white disabled:opacity-50"
+              >
+                {reviewBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Submit review request
+              </button>
+              <button
+                onClick={() => { setStage("methods"); setError(null); }}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" /> Back
+              </button>
+            </div>
+          </div>
+        )}
+
+        {stage === "review_sent" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 text-center shadow-soft">
+            <ShieldCheck className="mx-auto h-10 w-10 text-[color:var(--success)]" />
+            <h2 className="mt-3 text-lg font-bold">Review request submitted</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your request is recorded against this business. We'll email you once our team has reviewed it. Ownership
+              stays unverified until then.
+            </p>
+          </div>
+        )}
+
 
         {stage === "code" && active && (
           <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
