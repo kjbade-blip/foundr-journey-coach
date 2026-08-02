@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_verifications: {
+        Row: {
+          business_name: string
+          confidence: number
+          created_at: string
+          id: string
+          ip_address: string | null
+          method: string
+          place_id: string
+          user_id: string
+          verified_at: string
+          verified_target: string | null
+        }
+        Insert: {
+          business_name: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          method: string
+          place_id: string
+          user_id: string
+          verified_at?: string
+          verified_target?: string | null
+        }
+        Update: {
+          business_name?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          method?: string
+          place_id?: string
+          user_id?: string
+          verified_at?: string
+          verified_target?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -38,6 +77,93 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      verification_audit_log: {
+        Row: {
+          created_at: string
+          detail: string | null
+          event: string
+          id: string
+          ip_address: string | null
+          method: string | null
+          place_id: string | null
+          success: boolean
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          event: string
+          id?: string
+          ip_address?: string | null
+          method?: string | null
+          place_id?: string | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          event?: string
+          id?: string
+          ip_address?: string | null
+          method?: string | null
+          place_id?: string | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      verification_requests: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          masked_target: string
+          max_attempts: number
+          method: string
+          place_id: string
+          target_hash: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          masked_target: string
+          max_attempts?: number
+          method: string
+          place_id: string
+          target_hash: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          masked_target?: string
+          max_attempts?: number
+          method?: string
+          place_id?: string
+          target_hash?: string
+          user_id?: string
         }
         Relationships: []
       }
