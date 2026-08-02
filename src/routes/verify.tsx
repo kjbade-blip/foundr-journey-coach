@@ -73,6 +73,15 @@ function VerifyPage() {
     };
   }, [profile]);
 
+  const applyClaim = useCallback((c: BusinessClaim | null) => {
+    setClaim(c);
+    if (!c) return false;
+    if (c.status === "verified") { setStage("done"); return true; }
+    if (c.status === "review_requested") { setStage("pending"); return true; }
+    if (c.status === "rejected") { setStage("rejected"); return true; }
+    return false;
+  }, []);
+
   useEffect(() => {
     const base = ctx();
     if (!base) return;
@@ -82,6 +91,14 @@ function VerifyPage() {
       if (cancelled) return;
       if (!data.session) { setStage("signin"); return; }
       try {
+        // Any existing claim of the signed-in user decides the screen first —
+        // a pending manual review must survive reloads.
+        const mine = await fetchClaim({ data: { businessId: base.placeId } });
+        if (cancelled) return;
+        setAttempts(mine.attempts);
+        if (applyClaim(mine.claim)) return;
+        if (!mine.claim && mine.claimedByOther) { setStage("blocked"); return; }
+
         // The claim record is written to the database before any verification runs.
         const claimOut = await openClaim({ data: { businessId: base.placeId, businessName: base.businessName } });
         if (cancelled) return;
@@ -91,8 +108,7 @@ function VerifyPage() {
           setStage("blocked");
           return;
         }
-        setClaim(claimOut.claim);
-        if (claimOut.claim.status === "verified") { setStage("done"); return; }
+        if (applyClaim(claimOut.claim)) return;
 
         const existing = await loadState({ data: { placeId: base.placeId } });
         if (cancelled) return;
@@ -110,7 +126,7 @@ function VerifyPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [ctx, loadMethods, loadState, openClaim]);
+  }, [ctx, loadMethods, loadState, openClaim, fetchClaim, applyClaim]);
 
   async function submitManualReview() {
     const base = ctx();
@@ -121,11 +137,18 @@ function VerifyPage() {
         data: { businessId: base.placeId, businessName: base.businessName, message: reviewMessage.trim() },
       });
       if (!out.ok) { setError(out.error ?? "We couldn't submit your review request."); return; }
-      setStage("review_sent");
+      setClaim(out.claim);
+      setReviewMessage("");
+      try {
+        const refreshed = await fetchClaim({ data: { businessId: base.placeId } });
+        setAttempts(refreshed.attempts);
+      } catch { /* history is non-critical for the pending screen */ }
+      setStage("pending");
     } catch {
       setError("We couldn't submit your review request. Please try again.");
     } finally { setReviewBusy(false); }
   }
+
 
 
   async function signIn() {
