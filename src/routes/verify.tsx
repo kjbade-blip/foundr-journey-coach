@@ -9,6 +9,7 @@ import { VerificationSuccess } from "@/components/foundr/VerificationSuccess";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { loadProfile, type BusinessProfile } from "@/lib/business-profile";
+import { DEMO_CODE, isDemoPlace } from "@/lib/demo-business";
 import {
   saveLocalVerification, type VerificationMethod, type VerificationMethodId, type VerificationTarget,
 } from "@/lib/verification";
