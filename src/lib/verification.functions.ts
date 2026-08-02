@@ -90,7 +90,14 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
     }
 
     if (isDemoPlace(data.placeId)) {
-      if (email.toLowerCase() !== DEMO_OWNER_EMAIL) {
+      const canonicalGoogleEmail = (value: string) => {
+        const normalized = value.trim().toLowerCase();
+        const [localPart = "", domain = ""] = normalized.split("@");
+        const canonicalDomain = domain === "googlemail.com" ? "gmail.com" : domain;
+        return `${localPart}@${canonicalDomain}`;
+      };
+
+      if (canonicalGoogleEmail(email) !== canonicalGoogleEmail(DEMO_OWNER_EMAIL)) {
         await log(false, "demo_owner_mismatch");
         return { ok: false as const, error: `This demo business can only be claimed by ${DEMO_OWNER_EMAIL}.` };
       }
