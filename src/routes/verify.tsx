@@ -14,8 +14,8 @@ import { DEMO_CODE, isDemoPlace } from "@/lib/demo-business";
 import {
   saveLocalVerification, type VerificationMethod, type VerificationMethodId, type VerificationTarget,
 } from "@/lib/verification";
-import { ALREADY_CLAIMED_MESSAGE, type BusinessClaim } from "@/lib/claims";
-import { startBusinessClaim, requestManualReview } from "@/lib/claims.functions";
+import { ALREADY_CLAIMED_MESSAGE, CLAIM_METHOD_LABEL, type BusinessClaim, type ClaimAttempt } from "@/lib/claims";
+import { startBusinessClaim, requestManualReview, getBusinessClaim } from "@/lib/claims.functions";
 import {
   getVerificationMethods, getVerificationState, verifyWithGoogle,
   requestVerificationCode, confirmVerificationCode,
