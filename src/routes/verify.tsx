@@ -62,6 +62,7 @@ function VerifyPage() {
   const [claim, setClaim] = useState<BusinessClaim | null>(null);
   const [reviewMessage, setReviewMessage] = useState("");
   const [reviewBusy, setReviewBusy] = useState(false);
+  const [attempts, setAttempts] = useState<ClaimAttempt[]>([]);
 
   useEffect(() => { setProfile(loadProfile()); }, []);
 
