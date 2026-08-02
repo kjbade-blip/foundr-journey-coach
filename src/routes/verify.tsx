@@ -9,6 +9,7 @@ import { VerificationSuccess } from "@/components/foundr/VerificationSuccess";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { loadProfile, type BusinessProfile } from "@/lib/business-profile";
+import { DEMO_CODE, isDemoPlace } from "@/lib/demo-business";
 import {
   saveLocalVerification, type VerificationMethod, type VerificationMethodId, type VerificationTarget,
 } from "@/lib/verification";
@@ -261,6 +262,12 @@ function VerifyPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               We sent a 6-digit code to <strong>{active.masked}</strong>. It expires in 10 minutes.
             </p>
+            {isDemoPlace(place.id) && (
+              <p className="mt-3 rounded-xl bg-muted px-3 py-2 text-sm font-semibold">
+                Demo business — use code {DEMO_CODE}
+              </p>
+            )}
+
             <input
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}

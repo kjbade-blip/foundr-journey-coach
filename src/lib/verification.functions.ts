@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { VerificationMethod, VerificationRecord } from "./verification";
+import { DEMO_CODE, DEMO_OWNER_EMAIL, DEMO_PHONE, isDemoPlace } from "./demo-business";
 
 type Ctx = { placeId: string; businessName?: string; website?: string | null; phone?: string | null; email?: string | null };
 
@@ -31,6 +32,22 @@ export const getVerificationMethods = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<VerificationMethod[]> => {
     const { discoverEmails, toEmailTargets, phoneTarget, buildMethods, domainOf } =
       await import("./verification.server");
+
+    // Demo listing: expose both code channels with a fixed test code.
+    if (isDemoPlace(data.placeId)) {
+      const methods = buildMethods({
+        emails: toEmailTargets([{ email: DEMO_OWNER_EMAIL, source: "Business profile" }]),
+        phones: phoneTarget(DEMO_PHONE),
+        googleAvailable: true,
+        websiteDomain: null,
+      });
+      return methods.map((m) =>
+        m.id === "google"
+          ? m
+          : { ...m, available: m.targets.length > 0, reason: undefined, description: `${m.description} (demo listing — code is ${DEMO_CODE})` },
+      );
+    }
+
     const emails = await discoverEmails(data.website ?? null, data.email ?? null);
     return buildMethods({
       emails: toEmailTargets(emails),
@@ -72,8 +89,16 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
       return { ok: false as const, error: "Sign in with the Google account that manages this business, then try again." };
     }
 
-    const businessDomain = server.domainOf(data.website ?? null);
+    if (isDemoPlace(data.placeId)) {
+      if (email.toLowerCase() !== DEMO_OWNER_EMAIL) {
+        await log(false, "demo_owner_mismatch");
+        return { ok: false as const, error: `This demo business can only be claimed by ${DEMO_OWNER_EMAIL}.` };
+      }
+    }
+
+    const businessDomain = isDemoPlace(data.placeId) ? emailDomainOverride(email) : server.domainOf(data.website ?? null);
     const emailDomain = email.split("@")[1]?.toLowerCase() ?? "";
+    function emailDomainOverride(e: string) { return e.split("@")[1]?.toLowerCase() ?? null; }
     const matches = Boolean(businessDomain && emailDomain && (emailDomain === businessDomain || businessDomain.endsWith(`.${emailDomain}`)));
 
     if (!matches) {
@@ -150,7 +175,16 @@ export const requestVerificationCode = createServerFn({ method: "POST" })
     // Re-derive the destination server-side; the browser only ever holds an opaque id.
     let destination: string | null = null;
     let masked = "";
-    if (data.method === "email") {
+    const demo = isDemoPlace(data.placeId);
+    if (demo) {
+      const targets =
+        data.method === "email"
+          ? server.toEmailTargets([{ email: DEMO_OWNER_EMAIL, source: "Business profile" }])
+          : server.phoneTarget(DEMO_PHONE);
+      const t = targets.find((x) => x.id === data.targetId);
+      destination = t ? (data.method === "email" ? DEMO_OWNER_EMAIL : DEMO_PHONE) : null;
+      masked = t?.masked ?? "";
+    } else if (data.method === "email") {
       const emails = await server.discoverEmails(data.website ?? null, data.email ?? null);
       const match = server.toEmailTargets(emails).findIndex((t) => t.id === data.targetId);
       destination = match >= 0 ? (emails[match]?.email ?? null) : null;
@@ -167,9 +201,10 @@ export const requestVerificationCode = createServerFn({ method: "POST" })
       return { ok: false as const, error: "That contact method is no longer available. Choose another." };
     }
 
-    const code = server.generateCode();
-    const delivery =
-      data.method === "email"
+    const code = demo ? DEMO_CODE : server.generateCode();
+    const delivery = demo
+      ? { ok: true as const }
+      : data.method === "email"
         ? await server.sendEmailCode(destination, code, data.businessName)
         : await server.sendSmsCode(destination, code);
 
@@ -191,7 +226,7 @@ export const requestVerificationCode = createServerFn({ method: "POST" })
     if (error) throw error;
     await audit(true, "code_sent");
 
-    return { ok: true as const, masked, expiresInMinutes: server.CODE_TTL_MINUTES };
+    return { ok: true as const, masked, expiresInMinutes: server.CODE_TTL_MINUTES, demoCode: demo ? DEMO_CODE : null };
   });
 
 export const confirmVerificationCode = createServerFn({ method: "POST" })
