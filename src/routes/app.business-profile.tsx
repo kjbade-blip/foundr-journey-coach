@@ -10,10 +10,10 @@ import { AIBadge, VerifiedBadge, EditableField, Section, Chips, BulletList } fro
 import { discoverDeep } from "@/lib/business-discovery.functions";
 import { loadLocalVerification, METHOD_LABEL, type VerificationRecord } from "@/lib/verification";
 import {
-import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
-import { isDemoPlace } from "@/lib/demo-business";
   loadProfile, saveProfile, scoreColor, scoreTone, type BusinessProfile,
 } from "@/lib/business-profile";
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
+import { isDemoPlace } from "@/lib/demo-business";
 
 export const Route = createFileRoute("/app/business-profile")({
   head: () => ({
