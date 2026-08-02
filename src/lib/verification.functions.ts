@@ -321,3 +321,21 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
       },
     };
   });
+
+/**
+ * One-click reset of the synthetic demo listing: wipes verification state,
+ * outstanding codes and audit entries for the demo place for the current user
+ * so the claim flow can be tested repeatedly. Only ever touches DEMO_PLACE_ID.
+ */
+export const resetDemoBusiness = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: Record<string, never>) => d)
+  .handler(async ({ context }) => {
+    const { DEMO_PLACE_ID } = await import("./demo-business");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    for (const table of ["business_verifications", "verification_requests", "verification_audit_log"] as const) {
+      await supabaseAdmin.from(table).delete().eq("user_id", context.userId).eq("place_id", DEMO_PLACE_ID);
+    }
+    return { ok: true as const, placeId: DEMO_PLACE_ID };
+  });

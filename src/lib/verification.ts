@@ -73,3 +73,9 @@ export function isVerifiedFor(placeId: string | undefined): boolean {
   const v = loadLocalVerification();
   return !!v && !!placeId && v.placeId === placeId;
 }
+
+export function clearLocalVerification() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(KEY);
+  window.dispatchEvent(new Event("foundr:verification"));
+}
