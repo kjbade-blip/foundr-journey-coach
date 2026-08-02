@@ -36,7 +36,9 @@ export const Route = createFileRoute("/verify")({
   component: VerifyPage,
 });
 
-type Stage = "loading" | "signin" | "methods" | "code" | "done" | "blocked" | "manual" | "review_sent";
+type Stage =
+  | "loading" | "signin" | "methods" | "code" | "done"
+  | "blocked" | "manual" | "pending" | "rejected";
 
 function VerifyPage() {
   const navigate = useNavigate();
