@@ -81,6 +81,26 @@ function AuthPage() {
     }
   }
 
+  async function handleApple() {
+    setError(null);
+    setAppleLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin + "/auth",
+      });
+      if (result.error) {
+        setError(result.error.message ?? "Apple sign-in failed");
+        setAppleLoading(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate({ to: destination() });
+    } catch (e: any) {
+      setError(e?.message ?? "Apple sign-in failed");
+      setAppleLoading(false);
+    }
+  }
+
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
