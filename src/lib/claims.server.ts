@@ -113,7 +113,7 @@ export async function recordAttempt(
     claim_id: claimId,
     verification_type: verificationType,
     verification_status: verificationStatus,
-    verification_data: verificationData,
+    verification_data: verificationData as never,
   });
   logClaim("attempt_recorded", { claimId, verificationType, verificationStatus, error: error?.message ?? null });
 }
