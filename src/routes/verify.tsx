@@ -389,16 +389,73 @@ function VerifyPage() {
           </div>
         )}
 
-        {stage === "review_sent" && (
-          <div className="mt-8 rounded-3xl border border-border bg-card p-6 text-center shadow-soft">
-            <ShieldCheck className="mx-auto h-10 w-10 text-[color:var(--success)]" />
-            <h2 className="mt-3 text-lg font-bold">Review request submitted</h2>
+        {stage === "pending" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-muted">
+              <Loader2 className="h-5 w-5 text-brand-dark" />
+            </span>
+            <h2 className="mt-4 text-lg font-bold">Manual review in progress</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Your request is recorded against this business. We'll email you once our team has reviewed it. Ownership
-              stays unverified until then.
+              Your ownership request for <strong>{place.name}</strong> is with our review team. We'll email you as soon
+              as a decision is made. Ownership stays unverified until then, so premium tools remain locked.
             </p>
+            <dl className="mt-5 grid gap-3 rounded-2xl bg-muted/60 p-4 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-muted-foreground">Status</dt>
+                <dd className="font-semibold">Awaiting admin decision</dd>
+              </div>
+              {claim && (
+                <>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-muted-foreground">Reference</dt>
+                    <dd className="font-semibold">{claim.id.slice(0, 8).toUpperCase()}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-muted-foreground">Submitted</dt>
+                    <dd className="font-semibold">{new Date(claim.createdAt).toLocaleDateString()}</dd>
+                  </div>
+                </>
+              )}
+            </dl>
+
+            {attempts.length > 0 && (
+              <div className="mt-5">
+                <h3 className="text-sm font-bold">Attempt history</h3>
+                <ul className="mt-2 space-y-2 text-sm">
+                  {attempts.map((a) => (
+                    <li key={a.id} className="flex items-center justify-between gap-3 border-b border-border pb-2 last:border-0">
+                      <span>{CLAIM_METHOD_LABEL[a.verificationType] ?? a.verificationType}</span>
+                      <span className="text-muted-foreground">
+                        {a.verificationStatus} · {new Date(a.createdAt).toLocaleDateString()}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <Link to="/" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground">
+              <ArrowLeft className="h-3.5 w-3.5" /> Back to Found-r
+            </Link>
           </div>
         )}
+
+        {stage === "rejected" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <AlertCircle className="h-9 w-9 text-[color:var(--danger,#dc2626)]" />
+            <h2 className="mt-3 text-lg font-bold">Ownership request declined</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {claim?.rejectedReason ?? "Our team couldn't confirm your connection to this business."}
+            </p>
+            <button
+              onClick={() => { setStage("manual"); setError(null); }}
+              className="mt-5 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white"
+            >
+              Submit new evidence
+            </button>
+          </div>
+        )}
+
 
 
         {stage === "code" && active && (
