@@ -10,6 +10,8 @@ import { AIBadge, VerifiedBadge, EditableField, Section, Chips, BulletList } fro
 import { discoverDeep } from "@/lib/business-discovery.functions";
 import { loadLocalVerification, METHOD_LABEL, type VerificationRecord } from "@/lib/verification";
 import {
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
+import { isDemoPlace } from "@/lib/demo-business";
   loadProfile, saveProfile, scoreColor, scoreTone, type BusinessProfile,
 } from "@/lib/business-profile";
 
@@ -88,9 +90,12 @@ function BusinessProfilePage() {
         title={core.tradingName || place.name}
         subtitle={place.address}
         actions={
-          <Link to="/discover" className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
-            <RefreshCw className="h-4 w-4" /> Re-discover
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            {isDemoPlace(place.id) && <ResetDemoButton label="Reset demo listing" />}
+            <Link to="/discover" className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
+              <RefreshCw className="h-4 w-4" /> Re-discover
+            </Link>
+          </div>
         }
       />
 

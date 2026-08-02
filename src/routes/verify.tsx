@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/foundr/Logo";
 import { VerificationSuccess } from "@/components/foundr/VerificationSuccess";
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { loadProfile, type BusinessProfile } from "@/lib/business-profile";
@@ -250,6 +251,11 @@ function VerifyPage() {
             <p className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Lock className="h-3.5 w-3.5" /> Contact details are never shown in full. Every attempt is logged and rate-limited.
             </p>
+            {isDemoPlace(place.id) && (
+              <div className="mt-4 flex justify-center">
+                <ResetDemoButton label="Reset demo listing" />
+              </div>
+            )}
           </>
         )}
 
@@ -311,9 +317,12 @@ function VerifyPage() {
           <div className="mt-8 rounded-3xl border border-border bg-card p-6 text-center shadow-soft">
             <ShieldCheck className="mx-auto h-10 w-10 text-[color:var(--success)]" />
             <h2 className="mt-3 text-lg font-bold">This business is already verified</h2>
-            <Link to="/app/business-profile" className="mt-5 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
-              Go to my business profile
-            </Link>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <Link to="/app/business-profile" className="inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
+                Go to my business profile
+              </Link>
+              {isDemoPlace(place.id) && <ResetDemoButton label="Reset & claim again" />}
+            </div>
           </div>
         )}
       </div>
