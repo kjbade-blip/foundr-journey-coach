@@ -65,11 +65,18 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { ip, userAgent } = server.requestMeta();
 
-    const claims = context.claims as Record<string, unknown>;
-    const appMeta = (claims['app_metadata'] ?? {}) as { provider?: string; providers?: string[] };
-    const email = String(claims['email'] ?? "");
+    const { data: authData, error: authError } = await context.supabase.auth.getUser();
+    if (authError || !authData.user) {
+      return { ok: false as const, error: "Your sign-in session could not be confirmed. Sign in with Google again." };
+    }
+
+    const user = authData.user;
+    const appMeta = user.app_metadata as { provider?: string; providers?: string[] };
+    const email = user.email ?? "";
     const isGoogle =
-      appMeta.provider === "google" || (appMeta.providers ?? []).includes("google");
+      appMeta.provider === "google" ||
+      (appMeta.providers ?? []).includes("google") ||
+      (user.identities ?? []).some((identity) => identity.provider === "google");
 
     const log = async (success: boolean, detail: string) => {
       await supabaseAdmin.from("verification_audit_log").insert({
@@ -84,11 +91,6 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
       });
     };
 
-    if (!isGoogle) {
-      await log(false, "not_google_account");
-      return { ok: false as const, error: "Sign in with the Google account that manages this business, then try again." };
-    }
-
     if (isDemoPlace(data.placeId)) {
       const canonicalGoogleEmail = (value: string) => {
         const normalized = value.trim().toLowerCase();
@@ -101,6 +103,9 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
         await log(false, "demo_owner_mismatch");
         return { ok: false as const, error: `This demo business can only be claimed by ${DEMO_OWNER_EMAIL}.` };
       }
+    } else if (!isGoogle) {
+      await log(false, "not_google_account");
+      return { ok: false as const, error: "Sign in with the Google account that manages this business, then try again." };
     }
 
     const businessDomain = isDemoPlace(data.placeId) ? emailDomainOverride(email) : server.domainOf(data.website ?? null);
