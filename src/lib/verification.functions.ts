@@ -153,6 +153,11 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
     );
     if (error) throw error;
     await log(true, "verified");
+    const marked = await claims.markClaimVerified(claimId, "google_business");
+    if (!marked.ok) {
+      return { ok: false as const, error: "Verification succeeded but ownership could not be saved. Please try again." };
+    }
+
 
     return {
       ok: true as const,
