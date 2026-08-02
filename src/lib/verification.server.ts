@@ -217,3 +217,7 @@ export function buildMethods(opts: {
     },
   ];
 }
+
+export function maskGoogleEmail(email: string) {
+  return maskEmail(email);
+}
