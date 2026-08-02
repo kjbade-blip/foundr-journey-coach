@@ -391,5 +391,8 @@ export const resetDemoBusiness = createServerFn({ method: "POST" })
     for (const table of ["business_verifications", "verification_requests", "verification_audit_log"] as const) {
       await supabaseAdmin.from(table).delete().eq("user_id", context.userId).eq("place_id", DEMO_PLACE_ID);
     }
+    // Claim rows (and their append-only attempt history, via cascade) for the demo listing.
+    await supabaseAdmin.from("business_claims").delete().eq("user_id", context.userId).eq("business_id", DEMO_PLACE_ID);
     return { ok: true as const, placeId: DEMO_PLACE_ID };
+
   });
