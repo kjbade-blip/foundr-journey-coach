@@ -267,11 +267,25 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
   .inputValidator((d: { placeId: string; businessName: string; code: string }) => d)
   .handler(async ({ data, context }) => {
     const server = await import("./verification.server");
+    const claims = await import("./claims.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { ip, userAgent } = server.requestMeta();
 
-    const audit = (success: boolean, detail: string, method?: string) =>
-      supabaseAdmin.from("verification_audit_log").insert({
+    const claimResult = await claims.ensureClaim(data.placeId, data.businessName, context.userId);
+    if (!claimResult.ok) {
+      const { ALREADY_CLAIMED_MESSAGE } = await import("./claims");
+      return {
+        ok: false as const,
+        alreadyClaimed: claimResult.alreadyClaimed,
+        error: claimResult.alreadyClaimed ? ALREADY_CLAIMED_MESSAGE : claimResult.error,
+      };
+    }
+    const claimId = claimResult.claim.id;
+
+    const audit = async (success: boolean, detail: string, method?: string) => {
+      await claims.recordAttempt(claimId, method === "phone" ? "phone" : "email", success ? "success" : "failed", { detail });
+      claims.logClaim("confirm_code", { userId: context.userId, businessId: data.placeId, claimId, method, success, detail });
+      await supabaseAdmin.from("verification_audit_log").insert({
         user_id: context.userId,
         place_id: data.placeId,
         method: method ?? null,
@@ -281,6 +295,8 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
         ip_address: ip,
         user_agent: userAgent,
       });
+    };
+
 
     const { data: reqRow } = await supabaseAdmin
       .from("verification_requests")
