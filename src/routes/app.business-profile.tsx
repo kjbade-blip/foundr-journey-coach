@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
-  Building2, MapPin, Star, Globe, Phone, Clock, Loader2, RefreshCw, Sparkles, Users, Target,
+  Building2, MapPin, Star, Globe, Phone, Clock, Loader2, RefreshCw, Sparkles, Users, Target, ShieldAlert, Lock,
 } from "lucide-react";
 import { PageHeader, Card, Stat } from "@/components/foundr/ui";
 import { HealthScore } from "@/components/foundr/discovery/HealthScore";
@@ -31,8 +31,14 @@ function BusinessProfilePage() {
   const runDeep = useServerFn(discoverDeep);
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [enriching, setEnriching] = useState(false);
+  const [verification, setVerification] = useState<VerificationRecord | null>(null);
 
-  useEffect(() => { setProfile(loadProfile()); }, []);
+  useEffect(() => {
+    const p = loadProfile();
+    setProfile(p);
+    const v = loadLocalVerification();
+    setVerification(v && p && v.placeId === p.place.id ? v : null);
+  }, []);
 
   useEffect(() => {
     if (!profile || profile.deep || enriching) return;
@@ -106,7 +112,13 @@ function BusinessProfilePage() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand text-brand-foreground"><Building2 className="h-5 w-5" /></span>
             <div className="text-lg font-bold">{place.name}</div>
-            <VerifiedBadge />
+            {verification ? (
+              <VerifiedBadge />
+            ) : (
+              <Link to="/verify" className="inline-flex items-center gap-1 rounded-full bg-[color:var(--warning)]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[color:var(--warning)]">
+                <ShieldAlert className="h-3 w-3" /> Unverified · verify now
+              </Link>
+            )}
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <Info icon={MapPin} label="Address" value={place.address} />
@@ -147,8 +159,17 @@ function BusinessProfilePage() {
 
       {/* Business information (editable) */}
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <Section title="Business Information" subtitle="Everything Found-r found or inferred — edit anything">
-          <div className="grid gap-3">
+        <Section
+          title="Business Information"
+          subtitle={verification ? "Everything Found-r found or inferred — edit anything" : "Verify ownership to unlock editing"}
+        >
+          {!verification && (
+            <Link to="/verify" className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm font-semibold">
+              <Lock className="h-4 w-4 shrink-0 text-[color:var(--warning)]" />
+              Editing is locked until you verify ownership of this business.
+            </Link>
+          )}
+          <div className={`grid gap-3 ${verification ? "" : "pointer-events-none select-none opacity-60"}`}>
             <EditableField label="Description" value={core.description} multiline onSave={(v) => update((p) => ({ ...p, core: { ...p.core, description: v } }))} />
             <EditableField label="Trading name" value={core.tradingName} ai={false} onSave={(v) => update((p) => ({ ...p, core: { ...p.core, tradingName: v } }))} />
             <EditableField label="Industry" value={core.industry} onSave={(v) => update((p) => ({ ...p, core: { ...p.core, industry: v } }))} />
@@ -343,6 +364,9 @@ function BusinessProfilePage() {
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
         Confidence: {deep?.scores.aiConfidence ?? "—"}/100 · Last updated {new Date(profile.updatedAt).toLocaleString()}
+        {verification && (
+          <> · Verified via {METHOD_LABEL[verification.method]} on {new Date(verification.verifiedAt).toLocaleDateString()} ({verification.confidence}% confidence)</>
+        )}
       </p>
     </div>
   );
