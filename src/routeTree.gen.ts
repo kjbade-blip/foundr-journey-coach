@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DiscoverRouteImport } from './routes/discover'
@@ -30,6 +31,11 @@ import { Route as AppBdiCompareRouteImport } from './routes/app.bdi-compare'
 import { Route as AppAlertsRouteImport } from './routes/app.alerts'
 import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
 
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/verify': typeof VerifyRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/verify': typeof VerifyRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/verify': typeof VerifyRoute
   '/app/advisor': typeof AppAdvisorRoute
   '/app/alerts': typeof AppAlertsRoute
   '/app/bdi-compare': typeof AppBdiCompareRoute
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/onboarding'
     | '/pricing'
+    | '/verify'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/onboarding'
     | '/pricing'
+    | '/verify'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/onboarding'
     | '/pricing'
+    | '/verify'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
@@ -272,10 +284,18 @@ export interface RootRouteChildren {
   DiscoverRoute: typeof DiscoverRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
+  VerifyRoute: typeof VerifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -462,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscoverRoute: DiscoverRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
+  VerifyRoute: VerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

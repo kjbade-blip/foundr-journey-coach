@@ -67,7 +67,7 @@ function Discover() {
 
   function finish() {
     setMode("grow");
-    navigate({ to: "/app/business-profile" });
+    navigate({ to: "/verify" });
   }
 
   return (
