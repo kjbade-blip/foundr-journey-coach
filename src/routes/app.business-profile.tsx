@@ -8,6 +8,7 @@ import { PageHeader, Card, Stat } from "@/components/foundr/ui";
 import { HealthScore } from "@/components/foundr/discovery/HealthScore";
 import { AIBadge, VerifiedBadge, EditableField, Section, Chips, BulletList } from "@/components/foundr/discovery/ProfileBits";
 import { discoverDeep } from "@/lib/business-discovery.functions";
+import { loadLocalVerification, METHOD_LABEL, type VerificationRecord } from "@/lib/verification";
 import {
   loadProfile, saveProfile, scoreColor, scoreTone, type BusinessProfile,
 } from "@/lib/business-profile";
