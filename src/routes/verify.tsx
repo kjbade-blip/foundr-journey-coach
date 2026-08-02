@@ -14,8 +14,8 @@ import { DEMO_CODE, isDemoPlace } from "@/lib/demo-business";
 import {
   saveLocalVerification, type VerificationMethod, type VerificationMethodId, type VerificationTarget,
 } from "@/lib/verification";
-import { ALREADY_CLAIMED_MESSAGE, type BusinessClaim } from "@/lib/claims";
-import { startBusinessClaim, requestManualReview } from "@/lib/claims.functions";
+import { ALREADY_CLAIMED_MESSAGE, CLAIM_METHOD_LABEL, type BusinessClaim, type ClaimAttempt } from "@/lib/claims";
+import { startBusinessClaim, requestManualReview, getBusinessClaim } from "@/lib/claims.functions";
 import {
   getVerificationMethods, getVerificationState, verifyWithGoogle,
   requestVerificationCode, confirmVerificationCode,
@@ -36,7 +36,9 @@ export const Route = createFileRoute("/verify")({
   component: VerifyPage,
 });
 
-type Stage = "loading" | "signin" | "methods" | "code" | "done" | "blocked" | "manual" | "review_sent";
+type Stage =
+  | "loading" | "signin" | "methods" | "code" | "done"
+  | "blocked" | "manual" | "pending" | "rejected";
 
 function VerifyPage() {
   const navigate = useNavigate();
@@ -47,6 +49,7 @@ function VerifyPage() {
   const checkCode = useServerFn(confirmVerificationCode);
   const openClaim = useServerFn(startBusinessClaim);
   const sendManualReview = useServerFn(requestManualReview);
+  const fetchClaim = useServerFn(getBusinessClaim);
 
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [stage, setStage] = useState<Stage>("loading");
@@ -59,6 +62,7 @@ function VerifyPage() {
   const [claim, setClaim] = useState<BusinessClaim | null>(null);
   const [reviewMessage, setReviewMessage] = useState("");
   const [reviewBusy, setReviewBusy] = useState(false);
+  const [attempts, setAttempts] = useState<ClaimAttempt[]>([]);
 
   useEffect(() => { setProfile(loadProfile()); }, []);
 
@@ -73,6 +77,15 @@ function VerifyPage() {
     };
   }, [profile]);
 
+  const applyClaim = useCallback((c: BusinessClaim | null) => {
+    setClaim(c);
+    if (!c) return false;
+    if (c.status === "verified") { setStage("done"); return true; }
+    if (c.status === "review_requested") { setStage("pending"); return true; }
+    if (c.status === "rejected") { setStage("rejected"); return true; }
+    return false;
+  }, []);
+
   useEffect(() => {
     const base = ctx();
     if (!base) return;
@@ -82,6 +95,14 @@ function VerifyPage() {
       if (cancelled) return;
       if (!data.session) { setStage("signin"); return; }
       try {
+        // Any existing claim of the signed-in user decides the screen first —
+        // a pending manual review must survive reloads.
+        const mine = await fetchClaim({ data: { businessId: base.placeId } });
+        if (cancelled) return;
+        setAttempts(mine.attempts);
+        if (applyClaim(mine.claim)) return;
+        if (!mine.claim && mine.claimedByOther) { setStage("blocked"); return; }
+
         // The claim record is written to the database before any verification runs.
         const claimOut = await openClaim({ data: { businessId: base.placeId, businessName: base.businessName } });
         if (cancelled) return;
@@ -91,8 +112,7 @@ function VerifyPage() {
           setStage("blocked");
           return;
         }
-        setClaim(claimOut.claim);
-        if (claimOut.claim.status === "verified") { setStage("done"); return; }
+        if (applyClaim(claimOut.claim)) return;
 
         const existing = await loadState({ data: { placeId: base.placeId } });
         if (cancelled) return;
@@ -110,7 +130,7 @@ function VerifyPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [ctx, loadMethods, loadState, openClaim]);
+  }, [ctx, loadMethods, loadState, openClaim, fetchClaim, applyClaim]);
 
   async function submitManualReview() {
     const base = ctx();
@@ -121,11 +141,18 @@ function VerifyPage() {
         data: { businessId: base.placeId, businessName: base.businessName, message: reviewMessage.trim() },
       });
       if (!out.ok) { setError(out.error ?? "We couldn't submit your review request."); return; }
-      setStage("review_sent");
+      setClaim(out.claim);
+      setReviewMessage("");
+      try {
+        const refreshed = await fetchClaim({ data: { businessId: base.placeId } });
+        setAttempts(refreshed.attempts);
+      } catch { /* history is non-critical for the pending screen */ }
+      setStage("pending");
     } catch {
       setError("We couldn't submit your review request. Please try again.");
     } finally { setReviewBusy(false); }
   }
+
 
 
   async function signIn() {
@@ -362,16 +389,73 @@ function VerifyPage() {
           </div>
         )}
 
-        {stage === "review_sent" && (
-          <div className="mt-8 rounded-3xl border border-border bg-card p-6 text-center shadow-soft">
-            <ShieldCheck className="mx-auto h-10 w-10 text-[color:var(--success)]" />
-            <h2 className="mt-3 text-lg font-bold">Review request submitted</h2>
+        {stage === "pending" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-muted">
+              <Loader2 className="h-5 w-5 text-brand-dark" />
+            </span>
+            <h2 className="mt-4 text-lg font-bold">Manual review in progress</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Your request is recorded against this business. We'll email you once our team has reviewed it. Ownership
-              stays unverified until then.
+              Your ownership request for <strong>{place.name}</strong> is with our review team. We'll email you as soon
+              as a decision is made. Ownership stays unverified until then, so premium tools remain locked.
             </p>
+            <dl className="mt-5 grid gap-3 rounded-2xl bg-muted/60 p-4 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-muted-foreground">Status</dt>
+                <dd className="font-semibold">Awaiting admin decision</dd>
+              </div>
+              {claim && (
+                <>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-muted-foreground">Reference</dt>
+                    <dd className="font-semibold">{claim.id.slice(0, 8).toUpperCase()}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="text-muted-foreground">Submitted</dt>
+                    <dd className="font-semibold">{new Date(claim.createdAt).toLocaleDateString()}</dd>
+                  </div>
+                </>
+              )}
+            </dl>
+
+            {attempts.length > 0 && (
+              <div className="mt-5">
+                <h3 className="text-sm font-bold">Attempt history</h3>
+                <ul className="mt-2 space-y-2 text-sm">
+                  {attempts.map((a) => (
+                    <li key={a.id} className="flex items-center justify-between gap-3 border-b border-border pb-2 last:border-0">
+                      <span>{CLAIM_METHOD_LABEL[a.verificationType] ?? a.verificationType}</span>
+                      <span className="text-muted-foreground">
+                        {a.verificationStatus} · {new Date(a.createdAt).toLocaleDateString()}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <Link to="/" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground">
+              <ArrowLeft className="h-3.5 w-3.5" /> Back to Found-r
+            </Link>
           </div>
         )}
+
+        {stage === "rejected" && (
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-soft">
+            <AlertCircle className="h-9 w-9 text-[color:var(--danger,#dc2626)]" />
+            <h2 className="mt-3 text-lg font-bold">Ownership request declined</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {claim?.rejectedReason ?? "Our team couldn't confirm your connection to this business."}
+            </p>
+            <button
+              onClick={() => { setStage("manual"); setError(null); }}
+              className="mt-5 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white"
+            >
+              Submit new evidence
+            </button>
+          </div>
+        )}
+
 
 
         {stage === "code" && active && (
