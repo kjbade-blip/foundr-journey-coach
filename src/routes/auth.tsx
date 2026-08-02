@@ -19,6 +19,7 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [appleLoading, setAppleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -80,6 +81,26 @@ function AuthPage() {
     }
   }
 
+  async function handleApple() {
+    setError(null);
+    setAppleLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin + "/auth",
+      });
+      if (result.error) {
+        setError(result.error.message ?? "Apple sign-in failed");
+        setAppleLoading(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate({ to: destination() });
+    } catch (e: any) {
+      setError(e?.message ?? "Apple sign-in failed");
+      setAppleLoading(false);
+    }
+  }
+
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -138,6 +159,19 @@ function AuthPage() {
                 <GoogleIcon className="h-5 w-5" />
               )}
               <span>{mode === "signin" ? "Continue with Google" : "Sign up with Google"}</span>
+            </button>
+
+            <button
+              onClick={handleApple}
+              disabled={appleLoading}
+              className="mt-3 inline-flex w-full items-center justify-center gap-3 rounded-full border border-border bg-background px-5 py-3.5 text-base font-semibold text-foreground shadow-soft transition hover:bg-muted disabled:opacity-60"
+            >
+              {appleLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <AppleIcon className="h-5 w-5" />
+              )}
+              <span>{mode === "signin" ? "Continue with Apple" : "Sign up with Apple"}</span>
             </button>
 
             <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
@@ -235,6 +269,14 @@ function UserIcon() {
     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function AppleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.01-.83.96-2.19 1.7-3.31 1.61a3.6 3.6 0 0 1-.03-.42c0-1.1.48-2.24 1.2-3.02.83-.9 2.22-1.58 3.24-1.62.02.15.03.3.03.44zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.57-2.38 3.52-4.1 3.53-1.53.02-1.93-1-4.01-.99-2.08.01-2.51 1.01-4.05.99-1.72-.02-3.04-1.78-4.02-3.34C.44 15.86-.06 10.68 1.75 8.02c1.29-1.9 3.32-3.01 5.23-3.01 1.95 0 3.17 1.07 4.78 1.07 1.56 0 2.51-1.07 4.77-1.07 1.7 0 3.5.93 4.79 2.53-4.21 2.31-3.53 8.32.58 9.56z"/>
     </svg>
   );
 }
