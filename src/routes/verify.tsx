@@ -49,6 +49,7 @@ function VerifyPage() {
   const checkCode = useServerFn(confirmVerificationCode);
   const openClaim = useServerFn(startBusinessClaim);
   const sendManualReview = useServerFn(requestManualReview);
+  const fetchClaim = useServerFn(getBusinessClaim);
 
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [stage, setStage] = useState<Stage>("loading");
