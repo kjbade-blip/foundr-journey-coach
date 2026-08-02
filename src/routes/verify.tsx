@@ -36,7 +36,7 @@ export const Route = createFileRoute("/verify")({
   component: VerifyPage,
 });
 
-type Stage = "loading" | "signin" | "methods" | "code" | "done";
+type Stage = "loading" | "signin" | "methods" | "code" | "done" | "blocked" | "manual" | "review_sent";
 
 function VerifyPage() {
   const navigate = useNavigate();
@@ -45,6 +45,8 @@ function VerifyPage() {
   const runGoogle = useServerFn(verifyWithGoogle);
   const sendCode = useServerFn(requestVerificationCode);
   const checkCode = useServerFn(confirmVerificationCode);
+  const openClaim = useServerFn(startBusinessClaim);
+  const sendManualReview = useServerFn(requestManualReview);
 
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [stage, setStage] = useState<Stage>("loading");
@@ -54,6 +56,9 @@ function VerifyPage() {
   const [active, setActive] = useState<{ method: "email" | "phone"; masked: string; targetId: string } | null>(null);
   const [code, setCode] = useState("");
   const [success, setSuccess] = useState(false);
+  const [claim, setClaim] = useState<BusinessClaim | null>(null);
+  const [reviewMessage, setReviewMessage] = useState("");
+  const [reviewBusy, setReviewBusy] = useState(false);
 
   useEffect(() => { setProfile(loadProfile()); }, []);
 
@@ -77,6 +82,18 @@ function VerifyPage() {
       if (cancelled) return;
       if (!data.session) { setStage("signin"); return; }
       try {
+        // The claim record is written to the database before any verification runs.
+        const claimOut = await openClaim({ data: { businessId: base.placeId, businessName: base.businessName } });
+        if (cancelled) return;
+        if (!claimOut.ok) {
+          if (claimOut.alreadyClaimed) { setStage("blocked"); return; }
+          setError(claimOut.error ?? "We couldn't create your ownership claim. Please try again.");
+          setStage("blocked");
+          return;
+        }
+        setClaim(claimOut.claim);
+        if (claimOut.claim.status === "verified") { setStage("done"); return; }
+
         const existing = await loadState({ data: { placeId: base.placeId } });
         if (cancelled) return;
         if (existing) {
@@ -93,7 +110,23 @@ function VerifyPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [ctx, loadMethods, loadState]);
+  }, [ctx, loadMethods, loadState, openClaim]);
+
+  async function submitManualReview() {
+    const base = ctx();
+    if (!base || reviewMessage.trim().length < 10) return;
+    setReviewBusy(true); setError(null);
+    try {
+      const out = await sendManualReview({
+        data: { businessId: base.placeId, businessName: base.businessName, message: reviewMessage.trim() },
+      });
+      if (!out.ok) { setError(out.error ?? "We couldn't submit your review request."); return; }
+      setStage("review_sent");
+    } catch {
+      setError("We couldn't submit your review request. Please try again.");
+    } finally { setReviewBusy(false); }
+  }
+
 
   async function signIn() {
     setError(null);
