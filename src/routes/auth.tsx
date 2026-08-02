@@ -273,6 +273,14 @@ function UserIcon() {
   );
 }
 
+function AppleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.01-.83.96-2.19 1.7-3.31 1.61a3.6 3.6 0 0 1-.03-.42c0-1.1.48-2.24 1.2-3.02.83-.9 2.22-1.58 3.24-1.62.02.15.03.3.03.44zM20.9 17.1c-.55 1.27-.82 1.84-1.53 2.96-.99 1.57-2.38 3.52-4.1 3.53-1.53.02-1.93-1-4.01-.99-2.08.01-2.51 1.01-4.05.99-1.72-.02-3.04-1.78-4.02-3.34C.44 15.86-.06 10.68 1.75 8.02c1.29-1.9 3.32-3.01 5.23-3.01 1.95 0 3.17 1.07 4.78 1.07 1.56 0 2.51-1.07 4.77-1.07 1.7 0 3.5.93 4.79 2.53-4.21 2.31-3.53 8.32.58 9.56z"/>
+    </svg>
+  );
+}
+
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
