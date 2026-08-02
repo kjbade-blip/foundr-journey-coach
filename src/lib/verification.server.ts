@@ -84,10 +84,14 @@ export async function discoverEmails(website: string | null, known: string | nul
     }
   }
 
-  return [...found.entries()].slice(0, 4).map<VerificationTarget>(([email, source]) => ({
-    id: hashValue(email).slice(0, 24),
-    masked: maskEmail(email),
-    source,
+  return [...found.entries()].slice(0, 4).map(([email, source]) => ({ email, source }));
+}
+
+export function toEmailTargets(list: Array<{ email: string; source: string }>): VerificationTarget[] {
+  return list.map((e) => ({
+    id: hashValue(e.email).slice(0, 24),
+    masked: maskEmail(e.email),
+    source: e.source,
   }));
 }
 
