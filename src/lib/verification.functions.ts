@@ -357,6 +357,11 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
     );
     if (error) throw error;
     await audit(true, "verified", reqRow.method);
+    const marked = await claims.markClaimVerified(claimId, reqRow.method === "phone" ? "phone" : "email");
+    if (!marked.ok) {
+      return { ok: false as const, error: "Verification succeeded but ownership could not be saved. Please try again." };
+    }
+
 
     return {
       ok: true as const,
