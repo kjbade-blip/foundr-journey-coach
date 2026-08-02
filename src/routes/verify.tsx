@@ -176,7 +176,11 @@ function VerifyPage() {
     setBusy(active?.method ?? "email"); setError(null);
     try {
       const out = await checkCode({ data: { placeId: base.placeId, businessName: base.businessName, code } });
-      if (!out.ok) { setError(out.error); return; }
+      if (!out.ok) {
+        if ("alreadyClaimed" in out && out.alreadyClaimed) { setStage("blocked"); return; }
+        setError(out.error);
+        return;
+      }
       saveLocalVerification(out.record);
       setSuccess(true);
     } catch {
