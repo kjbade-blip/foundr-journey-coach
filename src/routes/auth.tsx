@@ -29,10 +29,36 @@ function AuthPage() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: destination() });
+    let done = false;
+    const go = () => {
+      if (done) return;
+      done = true;
+      navigate({ to: destination() });
+    };
+
+    // Returning from the Google redirect: the session lands slightly after mount,
+    // so listen for it instead of only checking once.
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) go();
     });
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) go();
+    });
+
+    // Safety net for the full-page OAuth return in case no event fires.
+    const timer = window.setTimeout(() => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) go();
+      });
+    }, 1200);
+
+    return () => {
+      sub.subscription.unsubscribe();
+      window.clearTimeout(timer);
+    };
   }, [navigate]);
+
 
   async function handleGoogle() {
     setError(null);
