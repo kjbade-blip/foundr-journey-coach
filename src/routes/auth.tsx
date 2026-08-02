@@ -161,6 +161,19 @@ function AuthPage() {
               <span>{mode === "signin" ? "Continue with Google" : "Sign up with Google"}</span>
             </button>
 
+            <button
+              onClick={handleApple}
+              disabled={appleLoading}
+              className="mt-3 inline-flex w-full items-center justify-center gap-3 rounded-full border border-border bg-background px-5 py-3.5 text-base font-semibold text-foreground shadow-soft transition hover:bg-muted disabled:opacity-60"
+            >
+              {appleLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <AppleIcon className="h-5 w-5" />
+              )}
+              <span>{mode === "signin" ? "Continue with Apple" : "Sign up with Apple"}</span>
+            </button>
+
             <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
               <div className="h-px flex-1 bg-border" />
               <span>or with email</span>
