@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_claim_verifications: {
+        Row: {
+          claim_id: string
+          created_at: string
+          id: string
+          verification_data: Json
+          verification_status: string
+          verification_type: string
+        }
+        Insert: {
+          claim_id: string
+          created_at?: string
+          id?: string
+          verification_data?: Json
+          verification_status?: string
+          verification_type: string
+        }
+        Update: {
+          claim_id?: string
+          created_at?: string
+          id?: string
+          verification_data?: Json
+          verification_status?: string
+          verification_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_claim_verifications_claim_id_fkey"
+            columns: ["claim_id"]
+            isOneToOne: false
+            referencedRelation: "business_claims"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_claims: {
+        Row: {
+          business_id: string
+          business_name: string | null
+          created_at: string
+          id: string
+          rejected_reason: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          verification_method: string | null
+          verification_status: string
+          verified_at: string | null
+        }
+        Insert: {
+          business_id: string
+          business_name?: string | null
+          created_at?: string
+          id?: string
+          rejected_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          verification_method?: string | null
+          verification_status?: string
+          verified_at?: string | null
+        }
+        Update: {
+          business_id?: string
+          business_name?: string | null
+          created_at?: string
+          id?: string
+          rejected_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          verification_method?: string | null
+          verification_status?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       business_verifications: {
         Row: {
           business_name: string
@@ -77,6 +154,27 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -172,10 +270,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -302,6 +406,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

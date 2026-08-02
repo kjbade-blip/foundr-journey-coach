@@ -62,6 +62,7 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
   .inputValidator((d: Ctx & { businessName: string }) => d)
   .handler(async ({ data, context }) => {
     const server = await import("./verification.server");
+    const claims = await import("./claims.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { ip, userAgent } = server.requestMeta();
 
@@ -78,7 +79,21 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
       (appMeta.providers ?? []).includes("google") ||
       (user.identities ?? []).some((identity) => identity.provider === "google");
 
+    // The claim record must exist before any verification is attempted.
+    const claimResult = await claims.ensureClaim(data.placeId, data.businessName, context.userId);
+    if (!claimResult.ok) {
+      const { ALREADY_CLAIMED_MESSAGE } = await import("./claims");
+      return {
+        ok: false as const,
+        alreadyClaimed: claimResult.alreadyClaimed,
+        error: claimResult.alreadyClaimed ? ALREADY_CLAIMED_MESSAGE : claimResult.error,
+      };
+    }
+    const claimId = claimResult.claim.id;
+
     const log = async (success: boolean, detail: string) => {
+      await claims.recordAttempt(claimId, "google_business", success ? "success" : "failed", { detail });
+      claims.logClaim("google_verify", { userId: context.userId, businessId: data.placeId, claimId, success, detail });
       await supabaseAdmin.from("verification_audit_log").insert({
         user_id: context.userId,
         place_id: data.placeId,
@@ -90,6 +105,7 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
         user_agent: userAgent,
       });
     };
+
 
     if (isDemoPlace(data.placeId)) {
       const canonicalGoogleEmail = (value: string) => {
@@ -137,6 +153,11 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
     );
     if (error) throw error;
     await log(true, "verified");
+    const marked = await claims.markClaimVerified(claimId, "google_business");
+    if (!marked.ok) {
+      return { ok: false as const, error: "Verification succeeded but ownership could not be saved. Please try again." };
+    }
+
 
     return {
       ok: true as const,
@@ -246,11 +267,25 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
   .inputValidator((d: { placeId: string; businessName: string; code: string }) => d)
   .handler(async ({ data, context }) => {
     const server = await import("./verification.server");
+    const claims = await import("./claims.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { ip, userAgent } = server.requestMeta();
 
-    const audit = (success: boolean, detail: string, method?: string) =>
-      supabaseAdmin.from("verification_audit_log").insert({
+    const claimResult = await claims.ensureClaim(data.placeId, data.businessName, context.userId);
+    if (!claimResult.ok) {
+      const { ALREADY_CLAIMED_MESSAGE } = await import("./claims");
+      return {
+        ok: false as const,
+        alreadyClaimed: claimResult.alreadyClaimed,
+        error: claimResult.alreadyClaimed ? ALREADY_CLAIMED_MESSAGE : claimResult.error,
+      };
+    }
+    const claimId = claimResult.claim.id;
+
+    const audit = async (success: boolean, detail: string, method?: string) => {
+      await claims.recordAttempt(claimId, method === "phone" ? "phone" : "email", success ? "success" : "failed", { detail });
+      claims.logClaim("confirm_code", { userId: context.userId, businessId: data.placeId, claimId, method, success, detail });
+      await supabaseAdmin.from("verification_audit_log").insert({
         user_id: context.userId,
         place_id: data.placeId,
         method: method ?? null,
@@ -260,6 +295,8 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
         ip_address: ip,
         user_agent: userAgent,
       });
+    };
+
 
     const { data: reqRow } = await supabaseAdmin
       .from("verification_requests")
@@ -320,6 +357,11 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
     );
     if (error) throw error;
     await audit(true, "verified", reqRow.method);
+    const marked = await claims.markClaimVerified(claimId, reqRow.method === "phone" ? "phone" : "email");
+    if (!marked.ok) {
+      return { ok: false as const, error: "Verification succeeded but ownership could not be saved. Please try again." };
+    }
+
 
     return {
       ok: true as const,
@@ -349,5 +391,8 @@ export const resetDemoBusiness = createServerFn({ method: "POST" })
     for (const table of ["business_verifications", "verification_requests", "verification_audit_log"] as const) {
       await supabaseAdmin.from(table).delete().eq("user_id", context.userId).eq("place_id", DEMO_PLACE_ID);
     }
+    // Claim rows (and their append-only attempt history, via cascade) for the demo listing.
+    await supabaseAdmin.from("business_claims").delete().eq("user_id", context.userId).eq("business_id", DEMO_PLACE_ID);
     return { ok: true as const, placeId: DEMO_PLACE_ID };
+
   });
