@@ -62,6 +62,7 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
   .inputValidator((d: Ctx & { businessName: string }) => d)
   .handler(async ({ data, context }) => {
     const server = await import("./verification.server");
+    const claims = await import("./claims.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { ip, userAgent } = server.requestMeta();
 
@@ -78,7 +79,21 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
       (appMeta.providers ?? []).includes("google") ||
       (user.identities ?? []).some((identity) => identity.provider === "google");
 
+    // The claim record must exist before any verification is attempted.
+    const claimResult = await claims.ensureClaim(data.placeId, data.businessName, context.userId);
+    if (!claimResult.ok) {
+      const { ALREADY_CLAIMED_MESSAGE } = await import("./claims");
+      return {
+        ok: false as const,
+        alreadyClaimed: claimResult.alreadyClaimed,
+        error: claimResult.alreadyClaimed ? ALREADY_CLAIMED_MESSAGE : claimResult.error,
+      };
+    }
+    const claimId = claimResult.claim.id;
+
     const log = async (success: boolean, detail: string) => {
+      await claims.recordAttempt(claimId, "google_business", success ? "success" : "failed", { detail });
+      claims.logClaim("google_verify", { userId: context.userId, businessId: data.placeId, claimId, success, detail });
       await supabaseAdmin.from("verification_audit_log").insert({
         user_id: context.userId,
         place_id: data.placeId,
@@ -90,6 +105,7 @@ export const verifyWithGoogle = createServerFn({ method: "POST" })
         user_agent: userAgent,
       });
     };
+
 
     if (isDemoPlace(data.placeId)) {
       const canonicalGoogleEmail = (value: string) => {
