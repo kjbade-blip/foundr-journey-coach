@@ -9,7 +9,8 @@ import {
   Settings, LogOut
 } from "lucide-react";
 import { FoundrAI } from "@/components/foundr/FoundrAI";
-import { useAuth, initialsFor } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/auth-context";
+import { initialsFor } from "@/features/auth/profile";
 
 export const Route = createFileRoute("/_authenticated/app")({
   component: AppShell,
