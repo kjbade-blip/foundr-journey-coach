@@ -15,11 +15,15 @@ export const Route = createFileRoute("/auth")({
       { property: "og:description", content: "Sign in or create your Found-r account with Google, Apple or email." },
     ],
   }),
+  // Auth state lives in browser storage only; SSR would render a mismatched tree.
+  ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search["redirect"] === "string" ? (search["redirect"] as string) : undefined,
   }),
   component: AuthPage,
 });
+
+const PENDING_KEY = "foundr:auth:redirect";
 
 function AuthPage() {
   const navigate = useNavigate();
