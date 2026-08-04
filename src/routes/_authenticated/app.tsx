@@ -71,7 +71,7 @@ function AppShell() {
           </div>
           <div className="ml-auto flex items-center gap-2">
             <ModeSwitcher mode={mode} onChange={(m) => { setMode(m); setLocalMode(m); navigate({ to: m === "start" ? "/app/dashboard" : "/app/grow" }); }} />
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-brand text-sm font-bold text-brand-foreground">AM</div>
+            <UserMenu />
           </div>
         </div>
       </header>
