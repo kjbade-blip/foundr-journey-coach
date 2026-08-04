@@ -31,6 +31,7 @@ import { Route as AuthenticatedAppBusinessProfileRouteImport } from './routes/_a
 import { Route as AuthenticatedAppBdiCompareRouteImport } from './routes/_authenticated/app.bdi-compare'
 import { Route as AuthenticatedAppAlertsRouteImport } from './routes/_authenticated/app.alerts'
 import { Route as AuthenticatedAppAdvisorRouteImport } from './routes/_authenticated/app.advisor'
+import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/app.account'
 
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
@@ -149,6 +150,11 @@ const AuthenticatedAppAdvisorRoute = AuthenticatedAppAdvisorRouteImport.update({
   path: '/advisor',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppAccountRoute = AuthenticatedAppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/discover': typeof AuthenticatedDiscoverRoute
   '/verify': typeof AuthenticatedVerifyRoute
+  '/app/account': typeof AuthenticatedAppAccountRoute
   '/app/advisor': typeof AuthenticatedAppAdvisorRoute
   '/app/alerts': typeof AuthenticatedAppAlertsRoute
   '/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/discover': typeof AuthenticatedDiscoverRoute
   '/verify': typeof AuthenticatedVerifyRoute
+  '/app/account': typeof AuthenticatedAppAccountRoute
   '/app/advisor': typeof AuthenticatedAppAdvisorRoute
   '/app/alerts': typeof AuthenticatedAppAlertsRoute
   '/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
   '/_authenticated/verify': typeof AuthenticatedVerifyRoute
+  '/_authenticated/app/account': typeof AuthenticatedAppAccountRoute
   '/_authenticated/app/advisor': typeof AuthenticatedAppAdvisorRoute
   '/_authenticated/app/alerts': typeof AuthenticatedAppAlertsRoute
   '/_authenticated/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/discover'
     | '/verify'
+    | '/app/account'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/discover'
     | '/verify'
+    | '/app/account'
     | '/app/advisor'
     | '/app/alerts'
     | '/app/bdi-compare'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app'
     | '/_authenticated/discover'
     | '/_authenticated/verify'
+    | '/_authenticated/app/account'
     | '/_authenticated/app/advisor'
     | '/_authenticated/app/alerts'
     | '/_authenticated/app/bdi-compare'
@@ -456,10 +468,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAdvisorRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/account': {
+      id: '/_authenticated/app/account'
+      path: '/account'
+      fullPath: '/app/account'
+      preLoaderRoute: typeof AuthenticatedAppAccountRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
 interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppAccountRoute: typeof AuthenticatedAppAccountRoute
   AuthenticatedAppAdvisorRoute: typeof AuthenticatedAppAdvisorRoute
   AuthenticatedAppAlertsRoute: typeof AuthenticatedAppAlertsRoute
   AuthenticatedAppBdiCompareRoute: typeof AuthenticatedAppBdiCompareRoute
@@ -477,6 +497,7 @@ interface AuthenticatedAppRouteChildren {
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppAccountRoute: AuthenticatedAppAccountRoute,
   AuthenticatedAppAdvisorRoute: AuthenticatedAppAdvisorRoute,
   AuthenticatedAppAlertsRoute: AuthenticatedAppAlertsRoute,
   AuthenticatedAppBdiCompareRoute: AuthenticatedAppBdiCompareRoute,
