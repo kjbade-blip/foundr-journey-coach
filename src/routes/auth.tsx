@@ -81,7 +81,7 @@ function AuthPage() {
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + "/auth",
+        redirect_uri: window.location.origin + "/auth" + window.location.search,
       });
       if (result.error) {
         setError(result.error.message ?? "Google sign-in failed");
@@ -101,7 +101,7 @@ function AuthPage() {
     setAppleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("apple", {
-        redirect_uri: window.location.origin + "/auth",
+        redirect_uri: window.location.origin + "/auth" + window.location.search,
       });
       if (result.error) {
         setError(result.error.message ?? "Apple sign-in failed");
