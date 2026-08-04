@@ -110,7 +110,7 @@ function PricingPage() {
             <Link to="/pricing" className="text-foreground">Pricing</Link>
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/auth" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted sm:inline-flex">Sign in</Link>
+            <Link to="/login" className="hidden rounded-full px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted sm:inline-flex">Sign in</Link>
             <Link to="/onboarding" className="inline-flex items-center gap-1.5 rounded-full bg-brand-dark px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90">
               Get started <ArrowRight className="h-4 w-4" />
             </Link>

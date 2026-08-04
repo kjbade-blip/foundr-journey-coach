@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useAuth, initialsFor } from "@/hooks/useAuth";
+import { useAuth } from "@/features/auth/auth-context";
+import { initialsFor } from "@/features/auth/profile";
 import { Loader2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/app/account")({
@@ -22,7 +23,8 @@ const PROVIDER_LABEL: Record<string, string> = {
 };
 
 function AccountPage() {
-  const { user, profile, provider, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
+  const provider = (user?.app_metadata?.provider as string | undefined) ?? "email";
   const [fullName, setFullName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [saving, setSaving] = useState(false);
