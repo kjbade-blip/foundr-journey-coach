@@ -8,6 +8,7 @@ import {
   SubmitButton,
   TextField,
 } from "@/features/auth/components/auth-ui";
+import { SocialAuthButtons } from "@/features/auth/components/social-auth";
 import {
   safeRedirect,
   useRedirectIfAuthenticated,
