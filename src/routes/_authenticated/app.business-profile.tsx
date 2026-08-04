@@ -15,7 +15,7 @@ import {
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { isDemoPlace } from "@/lib/demo-business";
 
-export const Route = createFileRoute("/app/business-profile")({
+export const Route = createFileRoute("/_authenticated/app/business-profile")({
   head: () => ({
     meta: [
       { title: "Business Profile · Found-r" },

@@ -5,7 +5,7 @@ import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { sampleBDI } from "@/lib/bdi-samples";
 
-export const Route = createFileRoute("/app/competitors")({
+export const Route = createFileRoute("/_authenticated/app/competitors")({
   head: () => ({ meta: [{ title: "Competitor Intelligence · Found-r" }] }),
   component: Competitors,
 });

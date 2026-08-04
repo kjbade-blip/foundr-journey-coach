@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Stat, Pill, Bar } from "@/components/foundr/ui";
 import { TrendingUp, TrendingDown, Sparkles, Radar, Bell, ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/app/grow")({
+export const Route = createFileRoute("/_authenticated/app/grow")({
   head: () => ({ meta: [{ title: "Growth Dashboard · Found-r" }] }),
   component: Grow,
 });

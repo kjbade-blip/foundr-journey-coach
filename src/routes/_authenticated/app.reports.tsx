@@ -3,7 +3,7 @@ import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { FileText, Download, Share2, Search } from "lucide-react";
 import { bdiColor } from "@/components/foundr/bdi/BDIGauge";
 
-export const Route = createFileRoute("/app/reports")({
+export const Route = createFileRoute("/_authenticated/app/reports")({
   head: () => ({ meta: [{ title: "Reports · Found-r" }] }),
   component: Reports,
 });

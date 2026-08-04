@@ -10,7 +10,7 @@ import { BDIGauge } from "@/components/foundr/bdi/BDIGauge";
 import { Loader2, MapPin, Plus, X } from "lucide-react";
 import type { BDIResult } from "@/lib/bdi";
 
-export const Route = createFileRoute("/app/bdi-compare")({
+export const Route = createFileRoute("/_authenticated/app/bdi-compare")({
   head: () => ({ meta: [{ title: "BDI Compare · Found-r" }] }),
   validateSearch: (s: Record<string, unknown>) => ({
     q: typeof s.q === "string" ? s.q : undefined,

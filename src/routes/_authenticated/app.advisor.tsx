@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Sparkles, ArrowRight, TrendingUp, Users, PiggyBank, Megaphone, Building2 } from "lucide-react";
 
-export const Route = createFileRoute("/app/advisor")({
+export const Route = createFileRoute("/_authenticated/app/advisor")({
   head: () => ({ meta: [{ title: "AI Growth Advisor · Found-r" }] }),
   component: Advisor,
 });

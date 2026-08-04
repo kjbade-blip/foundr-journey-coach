@@ -5,7 +5,7 @@ import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { bdiColor } from "@/components/foundr/bdi/BDIGauge";
 import { sampleBDI } from "@/lib/bdi-samples";
 
-export const Route = createFileRoute("/app/dashboard")({
+export const Route = createFileRoute("/_authenticated/app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · Found-r" }] }),
   component: Dashboard,
 });

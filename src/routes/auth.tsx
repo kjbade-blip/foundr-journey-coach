@@ -7,12 +7,23 @@ import { getMode } from "@/lib/mode";
 import { Loader2, Mail, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in · Found-r" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in · Found-r" },
+      { name: "description", content: "Sign in or create your Found-r account with Google, Apple or email." },
+      { property: "og:title", content: "Sign in · Found-r" },
+      { property: "og:description", content: "Sign in or create your Found-r account with Google, Apple or email." },
+    ],
+  }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: typeof search["redirect"] === "string" ? (search["redirect"] as string) : undefined,
+  }),
   component: AuthPage,
 });
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { redirect: redirectTo } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +35,10 @@ function AuthPage() {
   const [info, setInfo] = useState<string | null>(null);
 
   function destination() {
+    // Only same-origin in-app paths are honoured.
+    if (redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
+      return redirectTo;
+    }
     const m = getMode();
     if (!m) return "/onboarding";
     return m === "grow" ? "/app/grow" : "/app/dashboard";
@@ -66,7 +81,7 @@ function AuthPage() {
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + "/auth",
+        redirect_uri: window.location.origin + "/auth" + window.location.search,
       });
       if (result.error) {
         setError(result.error.message ?? "Google sign-in failed");
@@ -86,7 +101,7 @@ function AuthPage() {
     setAppleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("apple", {
-        redirect_uri: window.location.origin + "/auth",
+        redirect_uri: window.location.origin + "/auth" + window.location.search,
       });
       if (result.error) {
         setError(result.error.message ?? "Apple sign-in failed");

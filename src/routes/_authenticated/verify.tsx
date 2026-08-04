@@ -21,7 +21,7 @@ import {
   requestVerificationCode, confirmVerificationCode,
 } from "@/lib/verification.functions";
 
-export const Route = createFileRoute("/verify")({
+export const Route = createFileRoute("/_authenticated/verify")({
   head: () => ({
     meta: [
       { title: "Verify business ownership · Found-r" },

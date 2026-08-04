@@ -3,7 +3,7 @@ import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { MessageCircle, Award, Calendar, MapPin } from "lucide-react";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 
-export const Route = createFileRoute("/app/community")({
+export const Route = createFileRoute("/_authenticated/app/community")({
   head: () => ({ meta: [{ title: "Community · Found-r" }] }),
   component: Community,
 });

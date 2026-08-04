@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { PlayCircle, BookOpen, Clock } from "lucide-react";
 
-export const Route = createFileRoute("/app/learning")({
+export const Route = createFileRoute("/_authenticated/app/learning")({
   head: () => ({ meta: [{ title: "Learning Centre · Found-r" }] }),
   component: Learning,
 });

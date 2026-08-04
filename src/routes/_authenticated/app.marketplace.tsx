@@ -3,7 +3,7 @@ import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Star, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/app/marketplace")({
+export const Route = createFileRoute("/_authenticated/app/marketplace")({
   head: () => ({ meta: [{ title: "Marketplace · Found-r" }] }),
   component: Marketplace,
 });
