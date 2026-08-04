@@ -8,6 +8,7 @@ import {
   SubmitButton,
   TextField,
 } from "@/features/auth/components/auth-ui";
+import { SocialAuthButtons } from "@/features/auth/components/social-auth";
 import {
   safeRedirect,
   useRedirectIfAuthenticated,
@@ -92,6 +93,11 @@ function LoginPage() {
         <FormMessage error={error} />
         <SubmitButton pending={pending}>Sign in</SubmitButton>
       </form>
+
+      <div className="mt-5">
+        <SocialAuthButtons redirect={redirect} />
+      </div>
+
 
       <p className="mt-4 text-center text-sm">
         <Link to="/forgot-password" className="text-muted-foreground hover:underline">

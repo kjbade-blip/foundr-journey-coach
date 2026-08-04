@@ -8,6 +8,7 @@ import {
   SubmitButton,
   TextField,
 } from "@/features/auth/components/auth-ui";
+import { SocialAuthButtons } from "@/features/auth/components/social-auth";
 import {
   safeRedirect,
   useRedirectIfAuthenticated,
@@ -112,6 +113,11 @@ function RegisterPage() {
         <FormMessage error={error} info={info} />
         <SubmitButton pending={pending}>Create account</SubmitButton>
       </form>
+
+      <div className="mt-5">
+        <SocialAuthButtons redirect={redirect} />
+      </div>
+
     </AuthLayout>
   );
 }
