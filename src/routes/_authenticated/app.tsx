@@ -5,9 +5,11 @@ import { Logo } from "@/components/foundr/Logo";
 import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
   LayoutDashboard, Compass, Map, FileText, Store, GraduationCap,
-  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3, Building2
+  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3, Building2,
+  Settings, LogOut
 } from "lucide-react";
 import { FoundrAI } from "@/components/foundr/FoundrAI";
+import { useAuth, initialsFor } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/app")({
   component: AppShell,
@@ -99,6 +101,49 @@ function AppShell() {
       </div>
 
       <FoundrAI />
+    </div>
+  );
+}
+
+function UserMenu() {
+  const { user, profile, signOut } = useAuth();
+  const [open, setOpen] = useState(false);
+  const name = profile?.full_name ?? profile?.email ?? user?.email ?? "Your account";
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        aria-label="Account menu"
+        className="grid h-10 w-10 place-items-center overflow-hidden rounded-full bg-brand text-sm font-bold text-brand-foreground"
+      >
+        {profile?.avatar_url ? (
+          <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+        ) : (
+          initialsFor(profile, user?.email)
+        )}
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-60 overflow-hidden rounded-xl border border-border bg-card shadow-pop">
+          <div className="border-b border-border px-4 py-3">
+            <div className="truncate text-sm font-semibold">{name}</div>
+            <div className="truncate text-xs text-muted-foreground">{profile?.email ?? user?.email}</div>
+          </div>
+          <Link
+            to="/app/account"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-muted"
+          >
+            <Settings className="h-4 w-4" /> Account settings
+          </Link>
+          <button
+            onClick={() => { setOpen(false); void signOut(); }}
+            className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-muted"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </div>
+      )}
     </div>
   );
 }
