@@ -113,6 +113,11 @@ function RegisterPage() {
         <FormMessage error={error} info={info} />
         <SubmitButton pending={pending}>Create account</SubmitButton>
       </form>
+
+      <div className="mt-5">
+        <SocialAuthButtons redirect={redirect} />
+      </div>
+
     </AuthLayout>
   );
 }

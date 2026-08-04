@@ -94,6 +94,11 @@ function LoginPage() {
         <SubmitButton pending={pending}>Sign in</SubmitButton>
       </form>
 
+      <div className="mt-5">
+        <SocialAuthButtons redirect={redirect} />
+      </div>
+
+
       <p className="mt-4 text-center text-sm">
         <Link to="/forgot-password" className="text-muted-foreground hover:underline">
           Forgot your password?
