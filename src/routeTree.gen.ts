@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -36,6 +37,11 @@ import { Route as AuthenticatedAppAlertsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAppAdvisorRouteImport } from './routes/_authenticated/app.advisor'
 import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/app.account'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/discover': typeof AuthenticatedDiscoverRoute
   '/verify': typeof AuthenticatedVerifyRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/discover': typeof AuthenticatedDiscoverRoute
   '/verify': typeof AuthenticatedVerifyRoute
   '/app/account': typeof AuthenticatedAppAccountRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
   '/_authenticated/verify': typeof AuthenticatedVerifyRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/register'
+    | '/reset-password'
     | '/app'
     | '/discover'
     | '/verify'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/register'
+    | '/reset-password'
     | '/discover'
     | '/verify'
     | '/app/account'
@@ -320,6 +331,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/register'
+    | '/reset-password'
     | '/_authenticated/app'
     | '/_authenticated/discover'
     | '/_authenticated/verify'
@@ -349,10 +361,18 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -602,6 +622,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
