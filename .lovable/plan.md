@@ -1,77 +1,36 @@
-## Business Diversity Index (BDI)
+# Wire user accounts into the app
 
-Introduce BDI as a first-class Found-r metric, computed from Google Places data and shown consistently across every analysis.
+## Current state (verified)
 
-### 1. Core calculation library
+The backend is already the Lovable Cloud database (managed Supabase) — this is the same thing as "Supabase as the backend", so no migration to a different backend is needed.
 
-New file `src/lib/bdi.ts` (pure TS, no side effects):
+- Email/password, Google and Apple sign-in are live on `/auth`.
+- A `profiles` table exists and a database trigger automatically creates a profile row (email, full name, avatar) whenever anyone signs up — via email, Google or Apple.
+- Checked the data: 1 user account, 1 matching profile row, 0 users missing a profile. Storage of logins is working.
 
-- Exports `BDIFactor`, `BDIBreakdown`, `BDIResult` types.
-- `computeBDI(places, opts)` — takes an array of Google Places (New) results (`types[]`, `businessStatus`, `primaryType`, etc.) plus optional `vacancyRate`, `footfallIndex`, `demographics`.
-- Maps Google place types → the 16 Found-r sectors (Food & Drink, Retail, Health, Fitness, Professional Services, Financial Services, Beauty, Hospitality, Entertainment, Education, Automotive, Home & DIY, Children & Family, Culture, Public Services, Technology).
-- Computes weighted sub-scores (0–100):
-  - Category Diversity 30% (normalised Shannon entropy across sectors)
-  - Concentration 15% (inverse Herfindahl on primary types — penalises 15 barbers etc.)
-  - Independent vs Chain Balance 10% (chain heuristic on repeated brand names)
-  - Vacancy 10% (from input; 12% default)
-  - Hospitality & Experience 10% (share of restaurants/cafes/bars/entertainment)
-  - Essential Services 10% (presence of doctor/dentist/bank/pharmacy/post/grocer/optician)
-  - Evening Economy 5% (share of venues typically open past 17:00)
-  - Complementarity 5% (bonus for coexisting complementary pairs)
-  - Footfall 5% (from input; neutral 60 default)
-  - Optional demographic modifier ±3 pts.
-- Returns overall score (0–100), band (`Critical`/`High Risk`/`Weak`/`Stable`/`Strong`/`Exceptional`), colour token, per-factor breakdown, top strengths/weaknesses, and recommended vs oversaturated sector lists.
+The real gap is on the app side: **nothing in the app actually reads or shows the signed-in user.** The app shell shows hardcoded initials "AM", there is no sign-out, no account screen, and `/app/*` pages are reachable without signing in.
 
-Deterministic and fully unit-testable — no AI required for the number itself.
+## What to build
 
-### 2. AI narrative
+1. **Auth hook** (`src/hooks/useAuth.tsx`)
+   - Provider that subscribes to auth state changes, exposes `user`, `profile`, `loading`, and `signOut`.
+   - Loads the user's profile row on sign-in; mounted once in the root route.
 
-New server function `src/lib/bdi.functions.ts` → `generateBDINarrative({ locationName, result })` using Lovable AI Gateway (`google/gemini-3-flash-preview`). Returns `{ summary, insights[], recommendations[] }`. Falls back to a template string if the gateway errors.
+2. **Real user in the app shell** (`src/routes/app.tsx`)
+   - Replace the hardcoded "AM" avatar with the user's real avatar image or initials from their profile.
+   - Add a dropdown with name, email, "Account settings" and "Sign out".
 
-### 3. Shared UI components
+3. **Account page** (`src/routes/app.account.tsx`)
+   - Shows email and sign-in method; lets the user edit full name and avatar URL, saved back to their profile row.
 
-Under `src/components/foundr/bdi/`:
+4. **Protect the app area**
+   - Signed-out visitors hitting `/app/*`, `/discover` or `/verify` get sent to `/auth`, then returned to where they were heading after signing in.
 
-- `BDIGauge.tsx` — circular SVG progress gauge (green ≥75, amber 40–74, red <40) with big score, band label.
-- `BDICard.tsx` — the "Business Diversity Index" card: gauge + one-paragraph explanation + "View breakdown" toggle.
-- `BDIBreakdown.tsx` — factor bars with score and weight.
-- `BDIInsights.tsx` — AI narrative + recommendation chips (recommended vs avoid).
-- `BDICompare.tsx` — side-by-side table of BDI scores across multiple locations, highlighting best/worst factors.
+5. **Profile safety net**
+   - On sign-in, if a profile row is somehow missing, create it from the account details so no signed-in user is ever profile-less.
 
-All colour tokens driven from `src/styles.css` (add `--bdi-green`, `--bdi-amber`, `--bdi-red` semantic tokens).
+## Technical notes
 
-### 4. Data fetching
-
-New server function `getLocationBDI({ lat, lng, radius, name })` in `src/lib/bdi.functions.ts`:
-
-- Calls Places API (New) `places:searchNearby` through the connector gateway with a broad `includedTypes` list covering all 16 sectors, `maxResultCount: 20`, then paginates by widening sector groups to gather ~60–100 places.
-- Feeds results into `computeBDI` and returns `{ result, narrative }`.
-- Cached in TanStack Query with `['bdi', lat, lng, radius]`.
-
-### 5. Integration points
-
-Wire BDI into every analysis surface:
-
-- `app.opportunity-finder.tsx` — add BDI card + breakdown to the Location Analysis panel, next to Opportunity Score. Feed the BDI band into the existing recommendations list.
-- `app.competitors.tsx` — show BDI card for the selected area, with Concentration factor highlighted (it's the competition story).
-- `app.dashboard.tsx` — add BDI to the KPI strip alongside Opportunity/Demand/Competition/Risk.
-- `app.reports.tsx` — include a full BDI section (gauge + breakdown + AI narrative + recommendations) in every generated Location Analysis, Business Analysis and Opportunity Report.
-- `app.journey.tsx` — surface BDI on the "Validate location" step.
-- `index.tsx` (marketing) — add BDI to the metrics list as one of the signature scores.
-
-### 6. Comparison feature
-
-New route `src/routes/app.bdi-compare.tsx` — user picks 2–4 locations (reuse Places autocomplete from opportunity-finder), renders `BDICompare` with per-factor winners and an AI summary of each location's strengths/weaknesses. Also add a "Compare" button on each BDI card that deep-links to this route with the current location pre-filled.
-
-### 7. Nav + copy
-
-- Add "BDI Compare" entry to the sidebar in `app.tsx`.
-- Add a short "What is BDI?" tooltip/info popover on every BDI card linking to a docs paragraph in the pricing/marketing site.
-
-### Technical notes
-
-- All Places calls go through `https://connector-gateway.lovable.dev/google_maps/places/v1/places:searchNearby` with `Authorization: Bearer ${LOVABLE_API_KEY}` and `X-Connection-Api-Key: ${GOOGLE_MAPS_API_KEY}` — server-side only.
-- Field mask kept tight: `places.displayName,places.primaryType,places.types,places.businessStatus,places.regularOpeningHours`.
-- No DB changes required in this pass; results are computed on demand and cached via TanStack Query. If persistence is wanted later, we can add a `bdi_snapshots` table.
-- Colour tokens added to `src/styles.css`; no hard-coded hex in components.
-- Vacancy + footfall are best-effort inputs — when missing we surface a "based on public data" note rather than fabricating precision.
+- Follows the existing pattern: browser Supabase client for session/profile reads, existing RLS ("users can view/update own profile") already covers this — no schema change or migration required.
+- Protected pages move under a `_authenticated` layout so the guard is defined once rather than per page; the public marketing pages, pricing and `/auth` stay public and server-rendered.
+- Sign-out clears the cached query data to avoid stale user data leaking between accounts.
