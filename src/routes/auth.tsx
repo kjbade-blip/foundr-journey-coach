@@ -15,11 +15,15 @@ export const Route = createFileRoute("/auth")({
       { property: "og:description", content: "Sign in or create your Found-r account with Google, Apple or email." },
     ],
   }),
+  // Auth state lives in browser storage only; SSR would render a mismatched tree.
+  ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     redirect: typeof search["redirect"] === "string" ? (search["redirect"] as string) : undefined,
   }),
   component: AuthPage,
 });
+
+const PENDING_KEY = "foundr:auth:redirect";
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -36,8 +40,12 @@ function AuthPage() {
 
   function destination() {
     // Only same-origin in-app paths are honoured.
-    if (redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
-      return redirectTo;
+    let target = redirectTo;
+    if (!target && typeof window !== "undefined") {
+      target = window.sessionStorage.getItem(PENDING_KEY) ?? undefined;
+    }
+    if (target && target.startsWith("/") && !target.startsWith("//")) {
+      return target;
     }
     const m = getMode();
     if (!m) return "/onboarding";
@@ -49,10 +57,12 @@ function AuthPage() {
     const go = () => {
       if (done) return;
       done = true;
-      navigate({ to: destination() });
+      const to = destination();
+      window.sessionStorage.removeItem(PENDING_KEY);
+      navigate({ to, replace: true });
     };
 
-    // Returning from the Google redirect: the session lands slightly after mount,
+    // Returning from the OAuth redirect: the session lands slightly after mount,
     // so listen for it instead of only checking once.
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) go();
@@ -75,46 +85,41 @@ function AuthPage() {
     };
   }, [navigate]);
 
-
-  async function handleGoogle() {
+  async function startOAuth(provider: "google" | "apple", done: (v: boolean) => void) {
     setError(null);
-    setGoogleLoading(true);
+    done(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin + "/auth" + window.location.search,
+      // Remember where the user was heading; the OAuth return URL must be a
+      // plain, public, same-origin URL with no extra query string.
+      const target = destination();
+      window.sessionStorage.setItem(PENDING_KEY, target);
+
+      const result = await lovable.auth.signInWithOAuth(provider, {
+        redirect_uri: window.location.origin + "/auth",
       });
       if (result.error) {
-        setError(result.error.message ?? "Google sign-in failed");
-        setGoogleLoading(false);
+        setError(result.error.message ?? "Sign-in failed");
+        done(false);
         return;
       }
       if (result.redirected) return;
-      navigate({ to: destination() });
+      // Popup flow: wait for the session to be persisted before navigating so
+      // the protected route guard does not bounce us straight back here.
+      for (let i = 0; i < 20; i++) {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) break;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      window.sessionStorage.removeItem(PENDING_KEY);
+      navigate({ to: target, replace: true });
     } catch (e: any) {
-      setError(e?.message ?? "Google sign-in failed");
-      setGoogleLoading(false);
+      setError(e?.message ?? "Sign-in failed");
+      done(false);
     }
   }
 
-  async function handleApple() {
-    setError(null);
-    setAppleLoading(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth("apple", {
-        redirect_uri: window.location.origin + "/auth" + window.location.search,
-      });
-      if (result.error) {
-        setError(result.error.message ?? "Apple sign-in failed");
-        setAppleLoading(false);
-        return;
-      }
-      if (result.redirected) return;
-      navigate({ to: destination() });
-    } catch (e: any) {
-      setError(e?.message ?? "Apple sign-in failed");
-      setAppleLoading(false);
-    }
-  }
+  const handleGoogle = () => startOAuth("google", setGoogleLoading);
+  const handleApple = () => startOAuth("apple", setAppleLoading);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
