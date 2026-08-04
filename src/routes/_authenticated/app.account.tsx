@@ -23,7 +23,8 @@ const PROVIDER_LABEL: Record<string, string> = {
 };
 
 function AccountPage() {
-  const { user, profile, provider, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
+  const provider = (user?.app_metadata?.provider as string | undefined) ?? "email";
   const [fullName, setFullName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [saving, setSaving] = useState(false);

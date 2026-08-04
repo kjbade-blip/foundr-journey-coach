@@ -108,6 +108,7 @@ function AppShell() {
 
 function UserMenu() {
   const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const name = profile?.full_name ?? profile?.email ?? user?.email ?? "Your account";
 
@@ -138,7 +139,10 @@ function UserMenu() {
             <Settings className="h-4 w-4" /> Account settings
           </Link>
           <button
-            onClick={() => { setOpen(false); void signOut(); }}
+            onClick={() => {
+              setOpen(false);
+              void signOut().then(() => navigate({ to: "/login", replace: true }));
+            }}
             className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-muted"
           >
             <LogOut className="h-4 w-4" /> Sign out
