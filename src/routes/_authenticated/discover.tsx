@@ -8,7 +8,7 @@ import { saveProfile, type PlaceSummary } from "@/lib/business-profile";
 import { setMode } from "@/lib/mode";
 import { DiscoveryEngine } from "@/components/foundr/discovery/DiscoveryEngine";
 
-export const Route = createFileRoute("/discover")({
+export const Route = createFileRoute("/_authenticated/discover")({
   head: () => ({
     meta: [
       { title: "Discover your business · Found-r" },

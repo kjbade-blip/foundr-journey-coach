@@ -10,7 +10,7 @@ import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/app/opportunity-finder")({
+export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
   head: () => ({ meta: [{ title: "Opportunity Finder · Found-r" }] }),
   component: Finder,
 });

@@ -3,7 +3,7 @@ import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
 import { Check, Lock, Brain, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/app/journey")({
+export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({ meta: [{ title: "My Journey · Found-r" }] }),
   component: Journey,
 });

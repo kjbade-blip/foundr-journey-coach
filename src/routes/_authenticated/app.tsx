@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { FoundrAI } from "@/components/foundr/FoundrAI";
 
-export const Route = createFileRoute("/app")({
+export const Route = createFileRoute("/_authenticated/app")({
   component: AppShell,
 });
 

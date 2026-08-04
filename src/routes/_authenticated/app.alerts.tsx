@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Building, Hammer, Landmark, Newspaper, AlertTriangle } from "lucide-react";
 
-export const Route = createFileRoute("/app/alerts")({
+export const Route = createFileRoute("/_authenticated/app/alerts")({
   head: () => ({ meta: [{ title: "Market Alerts · Found-r" }] }),
   component: Alerts,
 });

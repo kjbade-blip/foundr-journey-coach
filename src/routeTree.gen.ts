@@ -9,33 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AppRouteImport } from './routes/app'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppIndexRouteImport } from './routes/app.index'
-import { Route as AppReportsRouteImport } from './routes/app.reports'
-import { Route as AppOpportunityFinderRouteImport } from './routes/app.opportunity-finder'
-import { Route as AppMarketplaceRouteImport } from './routes/app.marketplace'
-import { Route as AppLearningRouteImport } from './routes/app.learning'
-import { Route as AppJourneyRouteImport } from './routes/app.journey'
-import { Route as AppGrowRouteImport } from './routes/app.grow'
-import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
-import { Route as AppCompetitorsRouteImport } from './routes/app.competitors'
-import { Route as AppCommunityRouteImport } from './routes/app.community'
-import { Route as AppBusinessProfileRouteImport } from './routes/app.business-profile'
-import { Route as AppBdiCompareRouteImport } from './routes/app.bdi-compare'
-import { Route as AppAlertsRouteImport } from './routes/app.alerts'
-import { Route as AppAdvisorRouteImport } from './routes/app.advisor'
+import { Route as AuthenticatedVerifyRouteImport } from './routes/_authenticated/verify'
+import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app.reports'
+import { Route as AuthenticatedAppOpportunityFinderRouteImport } from './routes/_authenticated/app.opportunity-finder'
+import { Route as AuthenticatedAppMarketplaceRouteImport } from './routes/_authenticated/app.marketplace'
+import { Route as AuthenticatedAppLearningRouteImport } from './routes/_authenticated/app.learning'
+import { Route as AuthenticatedAppJourneyRouteImport } from './routes/_authenticated/app.journey'
+import { Route as AuthenticatedAppGrowRouteImport } from './routes/_authenticated/app.grow'
+import { Route as AuthenticatedAppDashboardRouteImport } from './routes/_authenticated/app.dashboard'
+import { Route as AuthenticatedAppCompetitorsRouteImport } from './routes/_authenticated/app.competitors'
+import { Route as AuthenticatedAppCommunityRouteImport } from './routes/_authenticated/app.community'
+import { Route as AuthenticatedAppBusinessProfileRouteImport } from './routes/_authenticated/app.business-profile'
+import { Route as AuthenticatedAppBdiCompareRouteImport } from './routes/_authenticated/app.bdi-compare'
+import { Route as AuthenticatedAppAlertsRouteImport } from './routes/_authenticated/app.alerts'
+import { Route as AuthenticatedAppAdvisorRouteImport } from './routes/_authenticated/app.advisor'
 
-const VerifyRoute = VerifyRouteImport.update({
-  id: '/verify',
-  path: '/verify',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -46,19 +42,13 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DiscoverRoute = DiscoverRouteImport.update({
-  id: '/discover',
-  path: '/discover',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRoute = AppRouteImport.update({
-  id: '/app',
-  path: '/app',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -66,155 +56,179 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
+const AuthenticatedVerifyRoute = AuthenticatedVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDiscoverRoute = AuthenticatedDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AppReportsRoute = AppReportsRouteImport.update({
+const AuthenticatedAppReportsRoute = AuthenticatedAppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AppOpportunityFinderRoute = AppOpportunityFinderRouteImport.update({
-  id: '/opportunity-finder',
-  path: '/opportunity-finder',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMarketplaceRoute = AppMarketplaceRouteImport.update({
-  id: '/marketplace',
-  path: '/marketplace',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLearningRoute = AppLearningRouteImport.update({
-  id: '/learning',
-  path: '/learning',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppJourneyRoute = AppJourneyRouteImport.update({
+const AuthenticatedAppOpportunityFinderRoute =
+  AuthenticatedAppOpportunityFinderRouteImport.update({
+    id: '/opportunity-finder',
+    path: '/opportunity-finder',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppMarketplaceRoute =
+  AuthenticatedAppMarketplaceRouteImport.update({
+    id: '/marketplace',
+    path: '/marketplace',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppLearningRoute =
+  AuthenticatedAppLearningRouteImport.update({
+    id: '/learning',
+    path: '/learning',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppJourneyRoute = AuthenticatedAppJourneyRouteImport.update({
   id: '/journey',
   path: '/journey',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AppGrowRoute = AppGrowRouteImport.update({
+const AuthenticatedAppGrowRoute = AuthenticatedAppGrowRouteImport.update({
   id: '/grow',
   path: '/grow',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCompetitorsRoute = AppCompetitorsRouteImport.update({
-  id: '/competitors',
-  path: '/competitors',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCommunityRoute = AppCommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBusinessProfileRoute = AppBusinessProfileRouteImport.update({
-  id: '/business-profile',
-  path: '/business-profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBdiCompareRoute = AppBdiCompareRouteImport.update({
-  id: '/bdi-compare',
-  path: '/bdi-compare',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAlertsRoute = AppAlertsRouteImport.update({
+const AuthenticatedAppDashboardRoute =
+  AuthenticatedAppDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCompetitorsRoute =
+  AuthenticatedAppCompetitorsRouteImport.update({
+    id: '/competitors',
+    path: '/competitors',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCommunityRoute =
+  AuthenticatedAppCommunityRouteImport.update({
+    id: '/community',
+    path: '/community',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppBusinessProfileRoute =
+  AuthenticatedAppBusinessProfileRouteImport.update({
+    id: '/business-profile',
+    path: '/business-profile',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppBdiCompareRoute =
+  AuthenticatedAppBdiCompareRouteImport.update({
+    id: '/bdi-compare',
+    path: '/bdi-compare',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppAlertsRoute = AuthenticatedAppAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AppAdvisorRoute = AppAdvisorRouteImport.update({
+const AuthenticatedAppAdvisorRoute = AuthenticatedAppAdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AuthenticatedAppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
-  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
-  '/verify': typeof VerifyRoute
-  '/app/advisor': typeof AppAdvisorRoute
-  '/app/alerts': typeof AppAlertsRoute
-  '/app/bdi-compare': typeof AppBdiCompareRoute
-  '/app/business-profile': typeof AppBusinessProfileRoute
-  '/app/community': typeof AppCommunityRoute
-  '/app/competitors': typeof AppCompetitorsRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/grow': typeof AppGrowRoute
-  '/app/journey': typeof AppJourneyRoute
-  '/app/learning': typeof AppLearningRoute
-  '/app/marketplace': typeof AppMarketplaceRoute
-  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
-  '/app/reports': typeof AppReportsRoute
-  '/app/': typeof AppIndexRoute
+  '/app': typeof AuthenticatedAppRouteWithChildren
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/verify': typeof AuthenticatedVerifyRoute
+  '/app/advisor': typeof AuthenticatedAppAdvisorRoute
+  '/app/alerts': typeof AuthenticatedAppAlertsRoute
+  '/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
+  '/app/business-profile': typeof AuthenticatedAppBusinessProfileRoute
+  '/app/community': typeof AuthenticatedAppCommunityRoute
+  '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
+  '/app/dashboard': typeof AuthenticatedAppDashboardRoute
+  '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/journey': typeof AuthenticatedAppJourneyRoute
+  '/app/learning': typeof AuthenticatedAppLearningRoute
+  '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
+  '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/app/reports': typeof AuthenticatedAppReportsRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
-  '/verify': typeof VerifyRoute
-  '/app/advisor': typeof AppAdvisorRoute
-  '/app/alerts': typeof AppAlertsRoute
-  '/app/bdi-compare': typeof AppBdiCompareRoute
-  '/app/business-profile': typeof AppBusinessProfileRoute
-  '/app/community': typeof AppCommunityRoute
-  '/app/competitors': typeof AppCompetitorsRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/grow': typeof AppGrowRoute
-  '/app/journey': typeof AppJourneyRoute
-  '/app/learning': typeof AppLearningRoute
-  '/app/marketplace': typeof AppMarketplaceRoute
-  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
-  '/app/reports': typeof AppReportsRoute
-  '/app': typeof AppIndexRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/verify': typeof AuthenticatedVerifyRoute
+  '/app/advisor': typeof AuthenticatedAppAdvisorRoute
+  '/app/alerts': typeof AuthenticatedAppAlertsRoute
+  '/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
+  '/app/business-profile': typeof AuthenticatedAppBusinessProfileRoute
+  '/app/community': typeof AuthenticatedAppCommunityRoute
+  '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
+  '/app/dashboard': typeof AuthenticatedAppDashboardRoute
+  '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/journey': typeof AuthenticatedAppJourneyRoute
+  '/app/learning': typeof AuthenticatedAppLearningRoute
+  '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
+  '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/app/reports': typeof AuthenticatedAppReportsRoute
+  '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
-  '/verify': typeof VerifyRoute
-  '/app/advisor': typeof AppAdvisorRoute
-  '/app/alerts': typeof AppAlertsRoute
-  '/app/bdi-compare': typeof AppBdiCompareRoute
-  '/app/business-profile': typeof AppBusinessProfileRoute
-  '/app/community': typeof AppCommunityRoute
-  '/app/competitors': typeof AppCompetitorsRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/grow': typeof AppGrowRoute
-  '/app/journey': typeof AppJourneyRoute
-  '/app/learning': typeof AppLearningRoute
-  '/app/marketplace': typeof AppMarketplaceRoute
-  '/app/opportunity-finder': typeof AppOpportunityFinderRoute
-  '/app/reports': typeof AppReportsRoute
-  '/app/': typeof AppIndexRoute
+  '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
+  '/_authenticated/verify': typeof AuthenticatedVerifyRoute
+  '/_authenticated/app/advisor': typeof AuthenticatedAppAdvisorRoute
+  '/_authenticated/app/alerts': typeof AuthenticatedAppAlertsRoute
+  '/_authenticated/app/bdi-compare': typeof AuthenticatedAppBdiCompareRoute
+  '/_authenticated/app/business-profile': typeof AuthenticatedAppBusinessProfileRoute
+  '/_authenticated/app/community': typeof AuthenticatedAppCommunityRoute
+  '/_authenticated/app/competitors': typeof AuthenticatedAppCompetitorsRoute
+  '/_authenticated/app/dashboard': typeof AuthenticatedAppDashboardRoute
+  '/_authenticated/app/grow': typeof AuthenticatedAppGrowRoute
+  '/_authenticated/app/journey': typeof AuthenticatedAppJourneyRoute
+  '/_authenticated/app/learning': typeof AuthenticatedAppLearningRoute
+  '/_authenticated/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
+  '/_authenticated/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/app'
     | '/auth'
-    | '/discover'
     | '/onboarding'
     | '/pricing'
+    | '/app'
+    | '/discover'
     | '/verify'
     | '/app/advisor'
     | '/app/alerts'
@@ -234,9 +248,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/discover'
     | '/onboarding'
     | '/pricing'
+    | '/discover'
     | '/verify'
     | '/app/advisor'
     | '/app/alerts'
@@ -255,47 +269,39 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/app'
+    | '/_authenticated'
     | '/auth'
-    | '/discover'
     | '/onboarding'
     | '/pricing'
-    | '/verify'
-    | '/app/advisor'
-    | '/app/alerts'
-    | '/app/bdi-compare'
-    | '/app/business-profile'
-    | '/app/community'
-    | '/app/competitors'
-    | '/app/dashboard'
-    | '/app/grow'
-    | '/app/journey'
-    | '/app/learning'
-    | '/app/marketplace'
-    | '/app/opportunity-finder'
-    | '/app/reports'
-    | '/app/'
+    | '/_authenticated/app'
+    | '/_authenticated/discover'
+    | '/_authenticated/verify'
+    | '/_authenticated/app/advisor'
+    | '/_authenticated/app/alerts'
+    | '/_authenticated/app/bdi-compare'
+    | '/_authenticated/app/business-profile'
+    | '/_authenticated/app/community'
+    | '/_authenticated/app/competitors'
+    | '/_authenticated/app/dashboard'
+    | '/_authenticated/app/grow'
+    | '/_authenticated/app/journey'
+    | '/_authenticated/app/learning'
+    | '/_authenticated/app/marketplace'
+    | '/_authenticated/app/opportunity-finder'
+    | '/_authenticated/app/reports'
+    | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRouteWithChildren
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  DiscoverRoute: typeof DiscoverRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
-  VerifyRoute: typeof VerifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/verify': {
-      id: '/verify'
-      path: '/verify'
-      fullPath: '/verify'
-      preLoaderRoute: typeof VerifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -310,13 +316,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/discover': {
-      id: '/discover'
-      path: '/discover'
-      fullPath: '/discover'
-      preLoaderRoute: typeof DiscoverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -324,11 +323,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -338,162 +337,188 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/': {
-      id: '/app/'
+    '/_authenticated/verify': {
+      id: '/_authenticated/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthenticatedVerifyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/discover': {
+      id: '/_authenticated/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof AuthenticatedDiscoverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
       path: '/'
       fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/reports': {
-      id: '/app/reports'
+    '/_authenticated/app/reports': {
+      id: '/_authenticated/app/reports'
       path: '/reports'
       fullPath: '/app/reports'
-      preLoaderRoute: typeof AppReportsRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppReportsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/opportunity-finder': {
-      id: '/app/opportunity-finder'
+    '/_authenticated/app/opportunity-finder': {
+      id: '/_authenticated/app/opportunity-finder'
       path: '/opportunity-finder'
       fullPath: '/app/opportunity-finder'
-      preLoaderRoute: typeof AppOpportunityFinderRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppOpportunityFinderRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/marketplace': {
-      id: '/app/marketplace'
+    '/_authenticated/app/marketplace': {
+      id: '/_authenticated/app/marketplace'
       path: '/marketplace'
       fullPath: '/app/marketplace'
-      preLoaderRoute: typeof AppMarketplaceRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppMarketplaceRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/learning': {
-      id: '/app/learning'
+    '/_authenticated/app/learning': {
+      id: '/_authenticated/app/learning'
       path: '/learning'
       fullPath: '/app/learning'
-      preLoaderRoute: typeof AppLearningRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppLearningRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/journey': {
-      id: '/app/journey'
+    '/_authenticated/app/journey': {
+      id: '/_authenticated/app/journey'
       path: '/journey'
       fullPath: '/app/journey'
-      preLoaderRoute: typeof AppJourneyRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppJourneyRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/grow': {
-      id: '/app/grow'
+    '/_authenticated/app/grow': {
+      id: '/_authenticated/app/grow'
       path: '/grow'
       fullPath: '/app/grow'
-      preLoaderRoute: typeof AppGrowRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppGrowRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/dashboard': {
-      id: '/app/dashboard'
+    '/_authenticated/app/dashboard': {
+      id: '/_authenticated/app/dashboard'
       path: '/dashboard'
       fullPath: '/app/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppDashboardRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/competitors': {
-      id: '/app/competitors'
+    '/_authenticated/app/competitors': {
+      id: '/_authenticated/app/competitors'
       path: '/competitors'
       fullPath: '/app/competitors'
-      preLoaderRoute: typeof AppCompetitorsRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppCompetitorsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/community': {
-      id: '/app/community'
+    '/_authenticated/app/community': {
+      id: '/_authenticated/app/community'
       path: '/community'
       fullPath: '/app/community'
-      preLoaderRoute: typeof AppCommunityRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppCommunityRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/business-profile': {
-      id: '/app/business-profile'
+    '/_authenticated/app/business-profile': {
+      id: '/_authenticated/app/business-profile'
       path: '/business-profile'
       fullPath: '/app/business-profile'
-      preLoaderRoute: typeof AppBusinessProfileRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppBusinessProfileRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/bdi-compare': {
-      id: '/app/bdi-compare'
+    '/_authenticated/app/bdi-compare': {
+      id: '/_authenticated/app/bdi-compare'
       path: '/bdi-compare'
       fullPath: '/app/bdi-compare'
-      preLoaderRoute: typeof AppBdiCompareRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppBdiCompareRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/alerts': {
-      id: '/app/alerts'
+    '/_authenticated/app/alerts': {
+      id: '/_authenticated/app/alerts'
       path: '/alerts'
       fullPath: '/app/alerts'
-      preLoaderRoute: typeof AppAlertsRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppAlertsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
-    '/app/advisor': {
-      id: '/app/advisor'
+    '/_authenticated/app/advisor': {
+      id: '/_authenticated/app/advisor'
       path: '/advisor'
       fullPath: '/app/advisor'
-      preLoaderRoute: typeof AppAdvisorRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof AuthenticatedAppAdvisorRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
   }
 }
 
-interface AppRouteChildren {
-  AppAdvisorRoute: typeof AppAdvisorRoute
-  AppAlertsRoute: typeof AppAlertsRoute
-  AppBdiCompareRoute: typeof AppBdiCompareRoute
-  AppBusinessProfileRoute: typeof AppBusinessProfileRoute
-  AppCommunityRoute: typeof AppCommunityRoute
-  AppCompetitorsRoute: typeof AppCompetitorsRoute
-  AppDashboardRoute: typeof AppDashboardRoute
-  AppGrowRoute: typeof AppGrowRoute
-  AppJourneyRoute: typeof AppJourneyRoute
-  AppLearningRoute: typeof AppLearningRoute
-  AppMarketplaceRoute: typeof AppMarketplaceRoute
-  AppOpportunityFinderRoute: typeof AppOpportunityFinderRoute
-  AppReportsRoute: typeof AppReportsRoute
-  AppIndexRoute: typeof AppIndexRoute
+interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppAdvisorRoute: typeof AuthenticatedAppAdvisorRoute
+  AuthenticatedAppAlertsRoute: typeof AuthenticatedAppAlertsRoute
+  AuthenticatedAppBdiCompareRoute: typeof AuthenticatedAppBdiCompareRoute
+  AuthenticatedAppBusinessProfileRoute: typeof AuthenticatedAppBusinessProfileRoute
+  AuthenticatedAppCommunityRoute: typeof AuthenticatedAppCommunityRoute
+  AuthenticatedAppCompetitorsRoute: typeof AuthenticatedAppCompetitorsRoute
+  AuthenticatedAppDashboardRoute: typeof AuthenticatedAppDashboardRoute
+  AuthenticatedAppGrowRoute: typeof AuthenticatedAppGrowRoute
+  AuthenticatedAppJourneyRoute: typeof AuthenticatedAppJourneyRoute
+  AuthenticatedAppLearningRoute: typeof AuthenticatedAppLearningRoute
+  AuthenticatedAppMarketplaceRoute: typeof AuthenticatedAppMarketplaceRoute
+  AuthenticatedAppOpportunityFinderRoute: typeof AuthenticatedAppOpportunityFinderRoute
+  AuthenticatedAppReportsRoute: typeof AuthenticatedAppReportsRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
-  AppAdvisorRoute: AppAdvisorRoute,
-  AppAlertsRoute: AppAlertsRoute,
-  AppBdiCompareRoute: AppBdiCompareRoute,
-  AppBusinessProfileRoute: AppBusinessProfileRoute,
-  AppCommunityRoute: AppCommunityRoute,
-  AppCompetitorsRoute: AppCompetitorsRoute,
-  AppDashboardRoute: AppDashboardRoute,
-  AppGrowRoute: AppGrowRoute,
-  AppJourneyRoute: AppJourneyRoute,
-  AppLearningRoute: AppLearningRoute,
-  AppMarketplaceRoute: AppMarketplaceRoute,
-  AppOpportunityFinderRoute: AppOpportunityFinderRoute,
-  AppReportsRoute: AppReportsRoute,
-  AppIndexRoute: AppIndexRoute,
+const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppAdvisorRoute: AuthenticatedAppAdvisorRoute,
+  AuthenticatedAppAlertsRoute: AuthenticatedAppAlertsRoute,
+  AuthenticatedAppBdiCompareRoute: AuthenticatedAppBdiCompareRoute,
+  AuthenticatedAppBusinessProfileRoute: AuthenticatedAppBusinessProfileRoute,
+  AuthenticatedAppCommunityRoute: AuthenticatedAppCommunityRoute,
+  AuthenticatedAppCompetitorsRoute: AuthenticatedAppCompetitorsRoute,
+  AuthenticatedAppDashboardRoute: AuthenticatedAppDashboardRoute,
+  AuthenticatedAppGrowRoute: AuthenticatedAppGrowRoute,
+  AuthenticatedAppJourneyRoute: AuthenticatedAppJourneyRoute,
+  AuthenticatedAppLearningRoute: AuthenticatedAppLearningRoute,
+  AuthenticatedAppMarketplaceRoute: AuthenticatedAppMarketplaceRoute,
+  AuthenticatedAppOpportunityFinderRoute:
+    AuthenticatedAppOpportunityFinderRoute,
+  AuthenticatedAppReportsRoute: AuthenticatedAppReportsRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+const AuthenticatedAppRouteWithChildren =
+  AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
+  AuthenticatedDiscoverRoute: typeof AuthenticatedDiscoverRoute
+  AuthenticatedVerifyRoute: typeof AuthenticatedVerifyRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
+  AuthenticatedDiscoverRoute: AuthenticatedDiscoverRoute,
+  AuthenticatedVerifyRoute: AuthenticatedVerifyRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRouteWithChildren,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  DiscoverRoute: DiscoverRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
-  VerifyRoute: VerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
