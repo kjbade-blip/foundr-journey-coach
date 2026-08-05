@@ -9,6 +9,8 @@ import { getLocationBDI } from "@/lib/bdi.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
+import { CompetitorList } from "@/components/foundr/CompetitorList";
+
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
