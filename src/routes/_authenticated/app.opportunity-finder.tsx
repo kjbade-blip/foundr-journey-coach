@@ -127,22 +127,8 @@ function Finder() {
               </div>
             </div>
 
-            {places.length > 0 && (
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {places.slice(0, 6).map((p, i) => (
-                  <li key={p.id} className="flex items-start gap-3 rounded-xl border border-border p-3">
-                    <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-dark text-xs font-bold text-white">{i + 1}</div>
-                    <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold">{p.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">{p.address}</div>
-                      {p.rating !== null && (
-                        <div className="mt-1 text-xs">★ {p.rating} · {p.reviews ?? 0} reviews</div>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <CompetitorList places={places} />
+
           </div>
         </Card>
 
