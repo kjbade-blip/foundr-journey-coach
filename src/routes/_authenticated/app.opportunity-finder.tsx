@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { geocodeAddress, searchPlacesNearby } from "@/lib/maps.functions";
 import { getLocationBDI } from "@/lib/bdi.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { Link } from "@tanstack/react-router";
 
@@ -70,7 +71,6 @@ function Finder() {
           <LocationAutocomplete
             value={postcode}
             onChange={setPostcode}
-            onSelect={() => analyse.mutate()}
           />
 
           <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
