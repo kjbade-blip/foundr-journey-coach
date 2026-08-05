@@ -67,10 +67,12 @@ function Finder() {
 
       <Card>
         <div className="grid gap-3 sm:grid-cols-[1fr_1fr_140px_auto]">
-          <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <input value={postcode} onChange={(e) => setPostcode(e.target.value)} placeholder="Postcode or city" className="w-full bg-transparent text-sm outline-none" />
-          </label>
+          <LocationAutocomplete
+            value={postcode}
+            onChange={setPostcode}
+            onSelect={() => analyse.mutate()}
+          />
+
           <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
             <Search className="h-4 w-4 text-muted-foreground" />
             <select value={cat} onChange={(e) => setCat(e.target.value)} className="w-full bg-transparent text-sm outline-none">
