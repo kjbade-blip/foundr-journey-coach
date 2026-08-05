@@ -70,7 +70,7 @@ function RegisterPage() {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Start building with Found-r in seconds."
+      subtitle="Start building your business in seconds."
       footer={
         <>
           Already have an account?{" "}
