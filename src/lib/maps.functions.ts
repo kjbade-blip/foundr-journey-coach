@@ -89,7 +89,7 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
         locationBias: {
           circle: { center: { latitude: data.lat, longitude: data.lng }, radius: data.radius },
         },
-        maxResultCount: 12,
+        maxResultCount: 20,
       }),
     });
     if (!res.ok) throw new Error(`Places search failed: ${res.status}`);
@@ -112,4 +112,63 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
       rating: p.rating ?? null,
       reviews: p.userRatingCount ?? null,
     }));
+  });
+
+export const getPlaceDetails = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ placeId: z.string().min(1).max(200) }).parse(d))
+  .handler(async ({ data }) => {
+    const res = await fetch(
+      `${GATEWAY}/places/v1/places/${encodeURIComponent(data.placeId)}`,
+      {
+        headers: {
+          ...authHeaders(),
+          "X-Goog-FieldMask":
+            "id,displayName,formattedAddress,location,rating,userRatingCount,priceLevel,businessStatus,primaryTypeDisplayName,websiteUri,nationalPhoneNumber,googleMapsUri,regularOpeningHours.weekdayDescriptions,reviews.text,reviews.rating,reviews.relativePublishTimeDescription,reviews.authorAttribution.displayName",
+        },
+      },
+    );
+    if (!res.ok) throw new Error(`Place details failed: ${res.status}`);
+    const p = (await res.json()) as {
+      id: string;
+      displayName?: { text: string };
+      formattedAddress?: string;
+      location?: { latitude: number; longitude: number };
+      rating?: number;
+      userRatingCount?: number;
+      priceLevel?: string;
+      businessStatus?: string;
+      primaryTypeDisplayName?: { text: string };
+      websiteUri?: string;
+      nationalPhoneNumber?: string;
+      googleMapsUri?: string;
+      regularOpeningHours?: { weekdayDescriptions?: string[] };
+      reviews?: Array<{
+        text?: { text: string };
+        rating?: number;
+        relativePublishTimeDescription?: string;
+        authorAttribution?: { displayName?: string };
+      }>;
+    };
+    return {
+      id: p.id,
+      name: p.displayName?.text ?? "Unknown",
+      address: p.formattedAddress ?? "",
+      lat: p.location?.latitude ?? 0,
+      lng: p.location?.longitude ?? 0,
+      rating: p.rating ?? null,
+      reviews: p.userRatingCount ?? null,
+      priceLevel: p.priceLevel ?? null,
+      businessStatus: p.businessStatus ?? null,
+      category: p.primaryTypeDisplayName?.text ?? null,
+      website: p.websiteUri ?? null,
+      phone: p.nationalPhoneNumber ?? null,
+      mapsUri: p.googleMapsUri ?? null,
+      openingHours: p.regularOpeningHours?.weekdayDescriptions ?? [],
+      topReviews: (p.reviews ?? []).slice(0, 3).map((r) => ({
+        text: r.text?.text ?? "",
+        rating: r.rating ?? null,
+        when: r.relativePublishTimeDescription ?? "",
+        author: r.authorAttribution?.displayName ?? "Google user",
+      })),
+    };
   });
