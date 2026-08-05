@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Search, Filter, MapPin, Download, Share2, Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coins, Loader2 } from "lucide-react";
+import { Search, Filter, Download, Share2, Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coins, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
