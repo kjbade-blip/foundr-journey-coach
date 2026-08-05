@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Search, Filter, MapPin, Download, Share2, Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coins, Loader2 } from "lucide-react";
+import { Search, Filter, Download, Share2, Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coins, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { geocodeAddress, searchPlacesNearby } from "@/lib/maps.functions";
 import { getLocationBDI } from "@/lib/bdi.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { Link } from "@tanstack/react-router";
 
@@ -67,10 +68,11 @@ function Finder() {
 
       <Card>
         <div className="grid gap-3 sm:grid-cols-[1fr_1fr_140px_auto]">
-          <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <input value={postcode} onChange={(e) => setPostcode(e.target.value)} placeholder="Postcode or city" className="w-full bg-transparent text-sm outline-none" />
-          </label>
+          <LocationAutocomplete
+            value={postcode}
+            onChange={setPostcode}
+          />
+
           <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
             <Search className="h-4 w-4 text-muted-foreground" />
             <select value={cat} onChange={(e) => setCat(e.target.value)} className="w-full bg-transparent text-sm outline-none">

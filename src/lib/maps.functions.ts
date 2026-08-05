@@ -32,6 +32,38 @@ export const geocodeAddress = createServerFn({ method: "GET" })
     };
   });
 
+export const autocompleteLocation = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ input: z.string().min(2).max(120) }).parse(d))
+  .handler(async ({ data }) => {
+    const res = await fetch(`${GATEWAY}/places/v1/places:autocomplete`, {
+      method: "POST",
+      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: data.input,
+        includedRegionCodes: ["gb"],
+      }),
+    });
+    if (!res.ok) throw new Error(`Autocomplete failed: ${res.status}`);
+    const json = (await res.json()) as {
+      suggestions?: Array<{
+        placePrediction?: {
+          placeId: string;
+          text?: { text: string };
+          structuredFormat?: { mainText?: { text: string }; secondaryText?: { text: string } };
+        };
+      }>;
+    };
+    return (json.suggestions ?? [])
+      .map((s) => s.placePrediction)
+      .filter(Boolean)
+      .map((p) => ({
+        id: p!.placeId,
+        description: p!.text?.text ?? "",
+        main: p!.structuredFormat?.mainText?.text ?? p!.text?.text ?? "",
+        secondary: p!.structuredFormat?.secondaryText?.text ?? "",
+      }));
+  });
+
 export const searchPlacesNearby = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
