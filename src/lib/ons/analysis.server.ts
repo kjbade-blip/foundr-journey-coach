@@ -97,6 +97,7 @@ export async function compareLocationProfiles(
 ): Promise<{
   profiles: LocationProfile[];
   scores: Array<{ displayName: string; score: ViabilityScore } | null>;
+  businessType: string | null;
 }> {
   const profiles = await Promise.all(queries.map((query) => buildLocationProfile({ query })));
   const type = matchBusinessType(businessType);
