@@ -7,7 +7,7 @@ import { scanCompetitors, type CompetitorScan } from "./competition.server";
 import { interpretForBusiness, type Interpretation } from "./interpret.server";
 import { scoreLocation, type ViabilityScore } from "./viability";
 import { BUSINESS_TYPES, matchBusinessType, INDICATOR_BY_KEY } from "./business-relevance";
-import type { LocationProfile } from "./types";
+import type { LocationProfile, OpportunitySuggestion } from "./types";
 
 export interface LocationInput {
   query?: string;
@@ -43,14 +43,7 @@ export async function analyseLocationForBusiness(
   return { profile, businessType: type.label, score, competition, interpretation };
 }
 
-export interface OpportunitySuggestion {
-  businessType: string;
-  key: string;
-  score: number;
-  drivers: Array<{ label: string; value: string }>;
-  rationale: string;
-  competition: CompetitorScan | null;
-}
+export type { OpportunitySuggestion };
 
 /**
  * Rank business types for a location. ONS evidence ranks every type, then the

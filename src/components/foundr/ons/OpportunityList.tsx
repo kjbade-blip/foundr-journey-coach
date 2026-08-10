@@ -1,5 +1,5 @@
 import { Card, Pill } from "@/components/foundr/ui";
-import type { OpportunitySuggestion } from "@/lib/ons/analysis.server";
+import type { OpportunitySuggestion } from "@/lib/ons/types";
 import { scoreBand } from "@/lib/ons/viability";
 
 export function OpportunityList({

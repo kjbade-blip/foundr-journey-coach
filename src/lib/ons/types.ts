@@ -123,3 +123,18 @@ export interface Interpretation {
   inference: string[];
   recommendation: string[];
 }
+
+/** Ranked business-type suggestion for a location. */
+export interface OpportunitySuggestion {
+  businessType: string;
+  key: string;
+  score: number;
+  drivers: Array<{ label: string; value: string }>;
+  rationale: string;
+  competition: {
+    count: number;
+    radiusMiles: number;
+    averageRating: number | null;
+    topRated: Array<{ name: string; rating: number | null }>;
+  } | null;
+}
