@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Check, Lock, Brain, ChevronRight } from "lucide-react";
+import { Check, Lock, Brain, ChevronRight, BarChart3 } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
