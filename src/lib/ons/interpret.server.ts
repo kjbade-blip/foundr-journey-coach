@@ -5,6 +5,7 @@
 import type { Interpretation, LocationProfile } from "./types";
 import type { ViabilityScore } from "./viability";
 import type { CompetitorScan } from "./competition.server";
+import type { CrimeProfile, CrimeRisk } from "../crime/types";
 
 export type { Interpretation };
 
@@ -55,6 +56,7 @@ export async function interpretForBusiness(
   businessType: string,
   score: ViabilityScore,
   competition: CompetitorScan | null,
+  crime?: { profile: CrimeProfile; risk: CrimeRisk } | null,
 ): Promise<Interpretation> {
   const key = process.env["LOVABLE_API_KEY"];
   if (!key) return fallback(profile, businessType, score);
@@ -64,12 +66,32 @@ export async function interpretForBusiness(
     ? `Google Places found ${competition.count} comparable businesses within ${competition.radiusMiles} miles, ${competition.strongCount} rated 4.3+.`
     : "No competitor scan was available.";
 
+  const crimeFacts = crime
+    ? [
+        `Police-recorded crime (Home Office, ${crime.profile.windowLabel}, within ${crime.profile.radiusMiles} mile): ${crime.profile.totalCrimes.toLocaleString()} offences across ${crime.profile.monthsReturned} months, averaging ${crime.profile.averagePerMonth} a month.`,
+        ...crime.profile.categories
+          .slice(0, 5)
+          .map((c) => `  - ${c.name}: ${c.count.toLocaleString()} offences (${c.share}% of all recorded crime, ${c.perMonth} a month).`),
+        crime.profile.trendPct !== null
+          ? `Trend: recorded crime in the most recent 6 months is ${crime.profile.trendPct > 0 ? "up" : "down"} ${Math.abs(crime.profile.trendPct)}% on the previous 6 months (calculated by Found-r).`
+          : "Trend: not enough published months to compare six-month periods.",
+        crime.profile.rate
+          ? `Indicative rate: ${crime.profile.rate.value} crimes per 1,000 residents over the window (calculated by Found-r; ${crime.profile.rate.caveat})`
+          : "Crimes per 1,000 residents: UNAVAILABLE — no population figure for this area.",
+        crime.profile.benchmark
+          ? `Benchmark: weighted crime load is higher than ${crime.profile.benchmark.percentile}% of ${crime.profile.benchmark.comparedWith} Found-r reference areas measured over the same months.`
+          : "Benchmark: UNAVAILABLE — reference areas not yet measured for this window.",
+        `Found-r crime score for this business type: ${crime.risk.score}/100 (${crime.risk.band.label}); confidence ${crime.risk.confidence}.`,
+      ].join("\n")
+    : "No police crime data was available for this point.";
+
   const system = `You are Found-r's location analyst for UK small businesses.
 You may ONLY use the figures supplied. Never invent, estimate or round-trip a statistic.
 Return strict JSON: {"fact":[..],"inference":[..],"recommendation":[..]}.
 - "fact": 3-5 short restatements of supplied figures, each naming the value.
 - "inference": 2-3 sentences on what the evidence may mean for the business type. Use hedged language ("may support", "evidence suggests"). Never claim demographics guarantee success or prove causation.
 - "recommendation": 2-3 concrete next validation steps.
+Crime figures are police-recorded FACT: restate counts exactly and never soften or exaggerate them. Any statement about how safe an area feels, or what a business should do about crime, belongs in "inference" or "recommendation" and must be hedged. Where crime is materially relevant to this business type, include one crime fact and one practical security recommendation (for example opening hours, shopfront security, cash handling, staffing).
 If a figure is listed as UNAVAILABLE, say it is unavailable rather than estimating it.`;
 
   const user = `Business type: ${businessType}
@@ -78,6 +100,8 @@ Primary ONS geography: ${profile.primaryGeography.name} (${profile.primaryGeogra
 ONS evidence:
 ${facts}
 Competition (Google Places, not ONS): ${comp}
+Crime evidence (Home Office police.uk, not ONS):
+${crimeFacts}
 Modelled viability score: ${score.overall ?? "not scored"} / 100`;
 
   try {

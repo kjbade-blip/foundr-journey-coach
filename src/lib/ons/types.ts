@@ -137,4 +137,6 @@ export interface OpportunitySuggestion {
     radiusMiles: number;
     examples: Array<{ name: string; rating: number | null; reviews: number | null }>;
   } | null;
+  /** Found-r crime score (100 = lowest measured crime load), or null. */
+  crimeScore: number | null;
 }
