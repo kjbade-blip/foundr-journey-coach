@@ -8,6 +8,7 @@
 
 import { INDICATOR_BY_KEY, type BusinessTypeDef, type IndicatorKey } from "./business-relevance";
 import type { LocationProfile } from "./types";
+import type { CrimeProfile, CrimeRisk } from "../crime/types";
 
 export interface CompetitionInput {
   /** Competing businesses of the selected type found nearby. */
@@ -49,6 +50,7 @@ export function scoreLocation(
   profile: LocationProfile,
   businessType: BusinessTypeDef,
   competition: CompetitionInput | null,
+  crime?: { profile: CrimeProfile; risk: CrimeRisk } | null,
 ): ViabilityScore {
   const missing: string[] = [];
 
@@ -122,6 +124,22 @@ export function scoreLocation(
   } else {
     missing.push("Competitor scan");
   }
+
+  if (crime) {
+    const c = crime.profile;
+    categories.push({
+      key: "crime",
+      label: "Crime & security risk",
+      score: crime.risk.score,
+      weight: 12,
+      sources: ["Police.uk street-level crime data (Home Office)", "Found-r model"],
+      explanation: `${c.totalCrimes.toLocaleString()} crimes were recorded by police within ${c.radiusMiles} mile of this point over ${c.monthsReturned} months (${c.windowLabel}), an average of ${c.averagePerMonth} a month. Weighted for the offences that matter most to a ${businessType.label.toLowerCase()}${c.benchmark ? `, this area sits below ${100 - c.benchmark.percentile}% of Found-r's ${c.benchmark.comparedWith} reference areas for weighted crime load` : ""}. Counts are police-recorded fact; the weighting and score are a Found-r model.`,
+    });
+  } else {
+    missing.push("Crime & security data");
+  }
+
+
 
   const distinctiveness = weighted(["pay", "population", "workingAge"]);
   if (distinctiveness !== null) {

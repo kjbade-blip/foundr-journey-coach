@@ -130,6 +130,162 @@ export type Database = {
         }
         Relationships: []
       }
+      crime_area_months: {
+        Row: {
+          area_key: string
+          by_category: Json
+          created_at: string
+          id: string
+          latitude: number
+          local_authority_code: string | null
+          longitude: number
+          lsoa_code: string | null
+          month: string
+          radius_miles: number
+          refresh_after: string
+          region_code: string | null
+          retrieved_at: string
+          source: string
+          source_url: string
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          area_key: string
+          by_category?: Json
+          created_at?: string
+          id?: string
+          latitude: number
+          local_authority_code?: string | null
+          longitude: number
+          lsoa_code?: string | null
+          month: string
+          radius_miles?: number
+          refresh_after: string
+          region_code?: string | null
+          retrieved_at?: string
+          source?: string
+          source_url?: string
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          area_key?: string
+          by_category?: Json
+          created_at?: string
+          id?: string
+          latitude?: number
+          local_authority_code?: string | null
+          longitude?: number
+          lsoa_code?: string | null
+          month?: string
+          radius_miles?: number
+          refresh_after?: string
+          region_code?: string | null
+          retrieved_at?: string
+          source?: string
+          source_url?: string
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crime_business_weights: {
+        Row: {
+          business_key: string
+          category_slug: string
+          created_at: string
+          id: string
+          note: string | null
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          business_key: string
+          category_slug: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          business_key?: string
+          category_slug?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      crime_categories: {
+        Row: {
+          business_relevance: string | null
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          business_relevance?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          business_relevance?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crime_reference_areas: {
+        Row: {
+          area_type: string
+          created_at: string
+          id: string
+          key: string
+          latitude: number
+          longitude: number
+          name: string
+          population: number | null
+          updated_at: string
+        }
+        Insert: {
+          area_type: string
+          created_at?: string
+          id?: string
+          key: string
+          latitude: number
+          longitude: number
+          name: string
+          population?: number | null
+          updated_at?: string
+        }
+        Update: {
+          area_type?: string
+          created_at?: string
+          id?: string
+          key?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          population?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       data_sources: {
         Row: {
           created_at: string
