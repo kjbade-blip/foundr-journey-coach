@@ -23,7 +23,7 @@ function Reports() {
         eyebrow="Reports"
         title="All your intelligence in one place."
         subtitle="Every Location, Business and Opportunity report now includes the Business Diversity Index — Found-r's proprietary measure of high-street health."
-        actions={<Link to="/app/bdi-compare" className="rounded-full bg-brand-dark px-4 py-2 text-sm font-semibold text-white">Compare BDI</Link>}
+        actions={<Link to="/app/bdi-compare" search={{ q: undefined }} className="rounded-full bg-brand-dark px-4 py-2 text-sm font-semibold text-white">Compare BDI</Link>}
       />
 
 
