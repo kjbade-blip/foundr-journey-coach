@@ -87,6 +87,8 @@ function Reports() {
       />
 
 
+      <OnsAnalyses />
+
       <Card className="p-0">
         <div className="flex items-center gap-3 border-b border-border p-4">
           <Search className="h-4 w-4 text-muted-foreground" />
