@@ -1,5 +1,5 @@
 import { Card } from "@/components/foundr/ui";
-import type { Interpretation } from "@/lib/ons/interpret.server";
+import type { Interpretation } from "@/lib/ons/types";
 import { CheckCircle2, Lightbulb, ListChecks } from "lucide-react";
 
 const SECTIONS = [

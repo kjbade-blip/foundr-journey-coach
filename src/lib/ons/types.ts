@@ -116,3 +116,10 @@ export interface LocationProfile {
   retrievedAt: string;
   refreshAfter: string;
 }
+
+/** AI interpretation, strictly separated into evidence, reading and action. */
+export interface Interpretation {
+  fact: string[];
+  inference: string[];
+  recommendation: string[];
+}

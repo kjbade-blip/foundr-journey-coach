@@ -2,15 +2,11 @@
 // were actually retrieved, and is required to separate fact, inference and
 // recommendation. It must never produce a statistic of its own.
 
-import type { LocationProfile } from "./types";
+import type { Interpretation, LocationProfile } from "./types";
 import type { ViabilityScore } from "./viability";
 import type { CompetitorScan } from "./competition.server";
 
-export interface Interpretation {
-  fact: string[];
-  inference: string[];
-  recommendation: string[];
-}
+export type { Interpretation };
 
 /** Compact, fact-only view of a profile for prompting or AI context. */
 export function profileFacts(profile: LocationProfile): string[] {
