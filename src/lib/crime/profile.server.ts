@@ -92,6 +92,12 @@ async function buildBenchmark(
   for (const area of areas) {
     const list = rows.get(areaKey(area.latitude, area.longitude, RADIUS_MILES)) ?? [];
     if (list.length < 6) continue;
+    // Not every police force publishes street-level data. An area returning
+    // almost nothing is a data gap, not a safe area, so it must not sit at the
+    // bottom of the benchmark and flatter everywhere else.
+    const rawPerMonth =
+      list.reduce((sum, r) => sum + Object.values(r.byCategory).reduce((a, b) => a + b, 0), 0) / list.length;
+    if (rawPerMonth < 8) continue;
     const total = list.reduce((sum, r) => sum + indexOf(r.byCategory, weights), 0);
     byArea.push({ area, perMonth: total / list.length, months: list.length });
   }
