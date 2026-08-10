@@ -133,8 +133,8 @@ export interface OpportunitySuggestion {
   rationale: string;
   competition: {
     count: number;
+    strongCount: number;
     radiusMiles: number;
-    averageRating: number | null;
-    topRated: Array<{ name: string; rating: number | null }>;
+    examples: Array<{ name: string; rating: number | null; reviews: number | null }>;
   } | null;
 }

@@ -103,5 +103,5 @@ export async function compareLocationProfiles(
   const scores = type
     ? profiles.map((p) => ({ displayName: p.displayName, score: scoreLocation(p, type, null) }))
     : profiles.map(() => null);
-  return { profiles, scores };
+  return { profiles, scores, businessType: type?.label ?? null };
 }
