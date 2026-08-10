@@ -128,12 +128,6 @@ export function LocationProfileCard({ profile }: { profile: LocationProfile }) {
           tooltip="ONS Annual Survey of Hours and Earnings: median gross weekly pay for full-time residents of this local authority. This is earnings, not household income, and it is measured at local authority level."
         />
         <DerivedStat
-          label="Largest age group"
-          value={null}
-          unit=""
-          tooltip=""
-        />
-        <DerivedStat
           label="Working age (20–64)"
           value={d.workingAgePct}
           unit="%"

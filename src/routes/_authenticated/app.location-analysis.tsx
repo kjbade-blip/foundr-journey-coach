@@ -54,14 +54,6 @@ function LocationAnalysis() {
   const opportunitiesFn = useServerFn(findLocationOpportunities);
   const compareFn = useServerFn(compareLocations);
 
-  const analyse = useMutation({
-    mutationFn: async (typeOverride?: string) => {
-      const type = typeOverride ?? businessType;
-      if (!type) return { kind: "opportunities" as const, data: await opportunitiesFn({ data: { query } }) };
-      return { kind: "analysis" as const, data: await analyseLocation.name ? { kind: "analysis" as const } : null } as never;
-    },
-  });
-
   const runAnalysis = useMutation({
     mutationFn: async (typeOverride?: string) => {
       const type = typeOverride ?? businessType;
