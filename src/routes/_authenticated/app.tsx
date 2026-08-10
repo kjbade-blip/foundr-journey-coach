@@ -20,6 +20,7 @@ const START_NAV = [
   { to: "/app/dashboard",          label: "Dashboard",          icon: LayoutDashboard },
   { to: "/app/journey",            label: "My Journey",         icon: Map },
   { to: "/app/opportunity-finder", label: "Opportunity Finder", icon: Compass },
+  { to: "/app/location-analysis",  label: "Location Analysis",   icon: BarChart3 },
   { to: "/app/bdi-compare",        label: "BDI Compare",        icon: BarChart3 },
   { to: "/app/reports",            label: "Reports",            icon: FileText },
   { to: "/app/marketplace",        label: "Marketplace",        icon: Store },
@@ -30,6 +31,7 @@ const GROW_NAV = [
   { to: "/app/grow",             label: "Growth Dashboard",        icon: TrendingUp },
   { to: "/app/business-profile", label: "Business Profile",        icon: Building2 },
   { to: "/app/competitors",  label: "Competitor Intelligence", icon: Radar },
+  { to: "/app/location-analysis", label: "Location Analysis",  icon: BarChart3 },
 
   { to: "/app/bdi-compare",  label: "BDI Compare",           icon: BarChart3 },
   { to: "/app/alerts",       label: "Market Alerts",         icon: Bell },
