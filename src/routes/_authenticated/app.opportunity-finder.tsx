@@ -1,15 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
+import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Search, Filter, Download, Share2, Sparkles, TrendingUp, AlertTriangle, ShieldCheck, Coins, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { geocodeAddress, searchPlacesNearby } from "@/lib/maps.functions";
 import { getLocationBDI } from "@/lib/bdi.functions";
+import { analyseLocation } from "@/lib/ons.functions";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { CompetitorList } from "@/components/foundr/CompetitorList";
+import { ViabilityScoreCard } from "@/components/foundr/ons/ViabilityScoreCard";
+import { LocationProfileCard } from "@/components/foundr/ons/LocationProfileCard";
+import { InterpretationCard } from "@/components/foundr/ons/InterpretationCard";
+import { EvidencePanel } from "@/components/foundr/ons/EvidencePanel";
 
 import { Link } from "@tanstack/react-router";
 
@@ -28,16 +33,29 @@ function Finder() {
   const geocodeFn = useServerFn(geocodeAddress);
   const searchFn = useServerFn(searchPlacesNearby);
   const bdiFn = useServerFn(getLocationBDI);
+  const onsFn = useServerFn(analyseLocation);
 
   const analyse = useMutation({
     mutationFn: async () => {
       const geo = await geocodeFn({ data: { address: postcode } });
       if (!geo) throw new Error("Location not found");
-      const [places, bdi] = await Promise.all([
+      const [places, bdi, ons] = await Promise.all([
         searchFn({ data: { query: cat, lat: geo.lat, lng: geo.lng, radius: Math.round(radius * 1609) } }),
         bdiFn({ data: { lat: geo.lat, lng: geo.lng, radius: Math.max(800, Math.round(radius * 1609)), locationName: geo.address } }),
+        onsFn({
+          data: {
+            latitude: geo.lat,
+            longitude: geo.lng,
+            label: geo.address,
+            businessType: cat,
+            radiusMiles: radius,
+          },
+        }).catch((e: unknown) => {
+          console.error("[ONS] analysis failed:", e);
+          return null;
+        }),
       ]);
-      return { geo, places, bdi };
+      return { geo, places, bdi, ons };
     },
   });
 
