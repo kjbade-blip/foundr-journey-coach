@@ -34,7 +34,7 @@ function Dashboard() {
         <Stat label="Saved Opportunities" value="6" hint="3 high-confidence" />
         <Stat label="Reports Generated" value="4" hint="2 viability, 2 location" />
         <Card>
-          <Link to="/app/bdi-compare" className="block">
+          <Link to="/app/bdi-compare" search={{ q: undefined }} className="block">
             <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Business Diversity Index</div>
             <div className="mt-2 flex items-baseline gap-2">
               <div className="text-4xl font-extrabold" style={{ color: bdiColor(bdi.overall) }}>{bdi.overall}</div>
