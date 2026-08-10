@@ -13,6 +13,7 @@ import { InterpretationCard } from "@/components/foundr/ons/InterpretationCard";
 import { EvidencePanel } from "@/components/foundr/ons/EvidencePanel";
 import { OpportunityList } from "@/components/foundr/ons/OpportunityList";
 import { LocationCompare } from "@/components/foundr/ons/LocationCompare";
+import { CrimeRiskCard } from "@/components/foundr/crime/CrimeRiskCard";
 import { BUSINESS_TYPES } from "@/lib/ons/business-relevance";
 import { analyseLocation, findLocationOpportunities, compareLocations } from "@/lib/ons.functions";
 
@@ -42,6 +43,20 @@ export const Route = createFileRoute("/_authenticated/app/location-analysis")({
   }),
   component: LocationAnalysis,
 });
+
+type CrimeBlock = { profile: { windowLabel: string; monthsReturned: number; totalCrimes: number; radiusMiles: number } } | null | undefined;
+
+/** Evidence-panel entry describing the police crime source, when used. */
+function crimeSources(crime: CrimeBlock) {
+  if (!crime) return [];
+  return [
+    {
+      label: `Police-recorded crime — ${crime.profile.totalCrimes.toLocaleString()} offences within ${crime.profile.radiusMiles} mile`,
+      detail: `${crime.profile.monthsReturned} months, ${crime.profile.windowLabel}`,
+      source: "Police.uk street-level crime data (Home Office)",
+    },
+  ];
+}
 
 function LocationAnalysis() {
   const search = Route.useSearch();
@@ -171,7 +186,20 @@ function LocationAnalysis() {
             scores={runCompare.data.scores}
             businessType={runCompare.data.businessType ?? undefined}
           />
-          <EvidencePanel evidence={runCompare.data.profiles.flatMap((p) => p.evidence)} />
+          {runCompare.data.crime.map((c, i) =>
+            c ? (
+              <CrimeRiskCard
+                key={c.profile.latitude + ":" + c.profile.longitude}
+                profile={c.profile}
+                risk={c.risk}
+                locationName={runCompare.data!.profiles[i]?.displayName ?? "Location"}
+              />
+            ) : null,
+          )}
+          <EvidencePanel
+            evidence={runCompare.data.profiles.flatMap((p) => p.evidence)}
+            extraSources={crimeSources(runCompare.data.crime.find(Boolean) ?? null)}
+          />
         </div>
       )}
 
@@ -182,7 +210,17 @@ function LocationAnalysis() {
             opportunities={result.opportunities}
             onSelect={(key) => runAnalysis.mutate(key)}
           />
-          <EvidencePanel evidence={result.profile.evidence} />
+          {result.crime && (
+            <CrimeRiskCard
+              profile={result.crime.profile}
+              risk={result.crime.risk}
+              locationName={result.profile.displayName}
+            />
+          )}
+          <EvidencePanel
+            evidence={result.profile.evidence}
+            extraSources={crimeSources(result.crime)}
+          />
         </div>
       )}
 
@@ -194,10 +232,17 @@ function LocationAnalysis() {
           </div>
           <div className="space-y-6">
             <LocationProfileCard profile={result.profile} />
+            {result.crime && (
+              <CrimeRiskCard
+                profile={result.crime.profile}
+                risk={result.crime.risk}
+                locationName={result.profile.displayName}
+              />
+            )}
             <EvidencePanel
               evidence={result.profile.evidence}
-              extraSources={
-                result.competition
+              extraSources={[
+                ...(result.competition
                   ? [
                       {
                         label: `Competitor scan — ${result.competition.count} businesses within ${result.competition.radiusMiles} miles`,
@@ -205,8 +250,9 @@ function LocationAnalysis() {
                         source: "Google Places",
                       },
                     ]
-                  : []
-              }
+                  : []),
+                ...crimeSources(result.crime),
+              ]}
             />
           </div>
         </div>
