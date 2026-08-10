@@ -130,6 +130,245 @@ export type Database = {
         }
         Relationships: []
       }
+      data_sources: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          name: string
+          provider: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          name: string
+          provider: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          name?: string
+          provider?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      location_analyses: {
+        Row: {
+          business_type: string | null
+          created_at: string
+          display_name: string
+          evidence: Json
+          id: string
+          location_profile_id: string | null
+          overall_score: number | null
+          score_breakdown: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_type?: string | null
+          created_at?: string
+          display_name: string
+          evidence?: Json
+          id?: string
+          location_profile_id?: string | null
+          overall_score?: number | null
+          score_breakdown?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_type?: string | null
+          created_at?: string
+          display_name?: string
+          evidence?: Json
+          id?: string
+          location_profile_id?: string | null
+          overall_score?: number | null
+          score_breakdown?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_analyses_location_profile_id_fkey"
+            columns: ["location_profile_id"]
+            isOneToOne: false
+            referencedRelation: "location_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      location_profiles: {
+        Row: {
+          cache_key: string
+          created_at: string
+          display_name: string
+          evidence: Json
+          geographies: Json
+          id: string
+          latitude: number | null
+          longitude: number | null
+          postcode: string | null
+          primary_geography_code: string
+          primary_geography_type: string
+          profile: Json
+          refresh_after: string
+          retrieved_at: string
+          unavailable: Json
+          updated_at: string
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          display_name: string
+          evidence?: Json
+          geographies?: Json
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          postcode?: string | null
+          primary_geography_code: string
+          primary_geography_type: string
+          profile?: Json
+          refresh_after: string
+          retrieved_at?: string
+          unavailable?: Json
+          updated_at?: string
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          display_name?: string
+          evidence?: Json
+          geographies?: Json
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          postcode?: string | null
+          primary_geography_code?: string
+          primary_geography_type?: string
+          profile?: Json
+          refresh_after?: string
+          retrieved_at?: string
+          unavailable?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ons_geographies: {
+        Row: {
+          country: string | null
+          created_at: string
+          geography_code: string
+          geography_type: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          parent_code: string | null
+          region: string | null
+          updated_at: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          geography_code: string
+          geography_type: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          parent_code?: string | null
+          region?: string | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          geography_code?: string
+          geography_type?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          parent_code?: string | null
+          region?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ons_observations: {
+        Row: {
+          category: string
+          created_at: string
+          dataset_id: string
+          dataset_name: string
+          geography_code: string
+          geography_name: string | null
+          geography_type: string
+          id: string
+          metric: string
+          reference_period: string
+          refresh_after: string
+          retrieved_at: string
+          source: string
+          source_url: string | null
+          unit: string | null
+          updated_at: string
+          value: number | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          dataset_id: string
+          dataset_name: string
+          geography_code: string
+          geography_name?: string | null
+          geography_type: string
+          id?: string
+          metric: string
+          reference_period: string
+          refresh_after: string
+          retrieved_at?: string
+          source?: string
+          source_url?: string | null
+          unit?: string | null
+          updated_at?: string
+          value?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          dataset_id?: string
+          dataset_name?: string
+          geography_code?: string
+          geography_name?: string | null
+          geography_type?: string
+          id?: string
+          metric?: string
+          reference_period?: string
+          refresh_after?: string
+          retrieved_at?: string
+          source?: string
+          source_url?: string | null
+          unit?: string | null
+          updated_at?: string
+          value?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
