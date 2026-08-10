@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/public/refresh-crime-benchmarks")({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        if (request.headers.get("apikey") !== (process.env["SUPABASE_ANON_KEY"] ?? "")) return new Response("no", { status: 401 });
+        if (request.headers.get("apikey") !== (process.env["SUPABASE_PUBLISHABLE_KEY"] ?? "")) return new Response("no", { status: 401 });
         const { buildCrimeProfile } = await import("@/lib/crime/profile.server");
         const { assessCrimeRisk } = await import("@/lib/crime/model");
         const built = await buildCrimeProfile({ latitude: Number(url.searchParams.get("lat")), longitude: Number(url.searchParams.get("lng")), businessKey: "coffee_shop", population: 8000, populationGeography: "Test MSOA" });
