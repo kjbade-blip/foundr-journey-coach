@@ -153,36 +153,45 @@ function Finder() {
         </Card>
 
         <div className="space-y-4">
-          <Card>
-            <div className="flex items-center justify-between">
-              <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Opportunity Score</div>
-              <Pill tone="good">Strong</Pill>
-            </div>
-            <div className="mt-2 flex items-end gap-2">
-              <div className="text-6xl font-extrabold">84</div>
-              <div className="pb-1 text-sm text-muted-foreground">/ 100</div>
-            </div>
-            <div className="mt-5 grid gap-3">
-              {[
-                ["Market Demand", 88], ["Competition", 62], ["Property", 74],
-                ["Accessibility", 91], ["Demographics", 86], ["Local Economy", 79],
-              ].map(([l, v]) => (
-                <div key={l as string}>
-                  <div className="flex justify-between text-xs"><span className="text-muted-foreground">{l}</span><span className="font-semibold">{v}</span></div>
-                  <div className="mt-1"><Bar value={v as number} /></div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          {analyse.data?.ons ? (
+            <ViabilityScoreCard
+              score={analyse.data.ons.score}
+              locationName={analyse.data.ons.profile.displayName}
+            />
+          ) : (
+            <Card>
+              <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Location Viability Score</div>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Run an analysis to score this location against official ONS statistics for population, age structure,
+                households, employment and earnings — with the source of every figure shown.
+              </p>
+            </Card>
+          )}
 
-          <div className="grid grid-cols-2 gap-3">
-            <Card><div className="text-xs font-semibold uppercase text-muted-foreground">Revenue Potential</div><div className="mt-1 text-2xl font-extrabold">£312k</div><div className="text-xs text-muted-foreground">/ year</div></Card>
-            <Card><div className="text-xs font-semibold uppercase text-muted-foreground">Startup Cost</div><div className="mt-1 text-2xl font-extrabold">£78k</div><div className="text-xs text-muted-foreground">fit-out + working capital</div></Card>
-            <Card><div className="text-xs font-semibold uppercase text-muted-foreground">Profit (Yr 2)</div><div className="mt-1 text-2xl font-extrabold text-[color:var(--success)]">£64k</div></Card>
-            <Card><div className="text-xs font-semibold uppercase text-muted-foreground">Breakeven</div><div className="mt-1 text-2xl font-extrabold">Mo 9</div></Card>
-          </div>
+          {analyse.data?.ons?.interpretation && (
+            <InterpretationCard
+              interpretation={analyse.data.ons.interpretation}
+              businessType={analyse.data.ons.businessType}
+            />
+          )}
         </div>
       </div>
+
+      {analyse.data?.ons && (
+        <div className="mt-6 space-y-6">
+          <LocationProfileCard profile={analyse.data.ons.profile} />
+          <EvidencePanel
+            evidence={analyse.data.ons.profile.evidence}
+            extraSources={[
+              {
+                label: `Competitor scan — ${places.length} nearby ${cat.toLowerCase()} businesses`,
+                detail: `Live search within ${radius} mile${radius === 1 ? "" : "s"} of ${analyse.data.geo.address}`,
+                source: "Google Places",
+              },
+            ]}
+          />
+        </div>
+      )}
 
       {analyse.data?.bdi && (
         <div className="mt-6">
