@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Check, Lock, Brain, ChevronRight } from "lucide-react";
+import { Check, Lock, Brain, ChevronRight, BarChart3 } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
@@ -110,6 +110,26 @@ function Journey() {
               ))}
             </ul>
           </div>
+
+          {["Discover Opportunities", "Validate Opportunity", "Find Premises"].includes(STAGES[active].title) && (
+            <div className="mt-6 rounded-2xl border border-border p-5">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-dark">
+                <BarChart3 className="h-4 w-4" /> Evidence required for this stage
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                You can't complete {STAGES[active].title.toLowerCase()} on instinct. Run a Location Analysis to attach
+                official Office for National Statistics evidence — population, age structure, households, employment and
+                earnings for the exact neighbourhood — to your Viability Report.
+              </p>
+              <Link
+                to="/app/location-analysis"
+                search={{ q: undefined, type: undefined }}
+                className="mt-3 inline-flex rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white"
+              >
+                Validate this location with ONS data
+              </Link>
+            </div>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-2">
             <button className="rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white">Continue stage</button>
