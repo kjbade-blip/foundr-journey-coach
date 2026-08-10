@@ -15,6 +15,7 @@ import { ViabilityScoreCard } from "@/components/foundr/ons/ViabilityScoreCard";
 import { LocationProfileCard } from "@/components/foundr/ons/LocationProfileCard";
 import { InterpretationCard } from "@/components/foundr/ons/InterpretationCard";
 import { EvidencePanel } from "@/components/foundr/ons/EvidencePanel";
+import { CrimeRiskCard } from "@/components/foundr/crime/CrimeRiskCard";
 
 import { Link } from "@tanstack/react-router";
 
@@ -180,6 +181,13 @@ function Finder() {
       {analyse.data?.ons && (
         <div className="mt-6 space-y-6">
           <LocationProfileCard profile={analyse.data.ons.profile} />
+          {analyse.data.ons.crime && (
+            <CrimeRiskCard
+              profile={analyse.data.ons.crime.profile}
+              risk={analyse.data.ons.crime.risk}
+              locationName={analyse.data.ons.profile.displayName}
+            />
+          )}
           <EvidencePanel
             evidence={analyse.data.ons.profile.evidence}
             extraSources={[
@@ -188,6 +196,15 @@ function Finder() {
                 detail: `Live search within ${radius} mile${radius === 1 ? "" : "s"} of ${analyse.data.geo.address}`,
                 source: "Google Places",
               },
+              ...(analyse.data.ons.crime
+                ? [
+                    {
+                      label: `Police-recorded crime — ${analyse.data.ons.crime.profile.totalCrimes.toLocaleString()} offences within ${analyse.data.ons.crime.profile.radiusMiles} mile`,
+                      detail: `${analyse.data.ons.crime.profile.monthsReturned} months, ${analyse.data.ons.crime.profile.windowLabel}`,
+                      source: "Police.uk street-level crime data (Home Office)",
+                    },
+                  ]
+                : []),
             ]}
           />
         </div>

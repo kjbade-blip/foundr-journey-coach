@@ -21,6 +21,7 @@ import { Route as AuthenticatedVerifyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as ApiPublicRefreshCrimeBenchmarksRouteImport } from './routes/api/public/refresh-crime-benchmarks'
 import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app.reports'
 import { Route as AuthenticatedAppOpportunityFinderRouteImport } from './routes/_authenticated/app.opportunity-finder'
 import { Route as AuthenticatedAppMarketplaceRouteImport } from './routes/_authenticated/app.marketplace'
@@ -96,6 +97,12 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const ApiPublicRefreshCrimeBenchmarksRoute =
+  ApiPublicRefreshCrimeBenchmarksRouteImport.update({
+    id: '/api/public/refresh-crime-benchmarks',
+    path: '/api/public/refresh-crime-benchmarks',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAppReportsRoute = AuthenticatedAppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -207,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
+  '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -234,6 +242,7 @@ export interface FileRoutesByTo {
   '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
+  '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -264,6 +273,7 @@ export interface FileRoutesById {
   '/_authenticated/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/_authenticated/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
+  '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/app/marketplace'
     | '/app/opportunity-finder'
     | '/app/reports'
+    | '/api/public/refresh-crime-benchmarks'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/app/marketplace'
     | '/app/opportunity-finder'
     | '/app/reports'
+    | '/api/public/refresh-crime-benchmarks'
     | '/app'
   id:
     | '__root__'
@@ -350,6 +362,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/marketplace'
     | '/_authenticated/app/opportunity-finder'
     | '/_authenticated/app/reports'
+    | '/api/public/refresh-crime-benchmarks'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -362,6 +375,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicRefreshCrimeBenchmarksRoute: typeof ApiPublicRefreshCrimeBenchmarksRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -449,6 +463,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/api/public/refresh-crime-benchmarks': {
+      id: '/api/public/refresh-crime-benchmarks'
+      path: '/api/public/refresh-crime-benchmarks'
+      fullPath: '/api/public/refresh-crime-benchmarks'
+      preLoaderRoute: typeof ApiPublicRefreshCrimeBenchmarksRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/app/reports': {
       id: '/_authenticated/app/reports'
@@ -624,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicRefreshCrimeBenchmarksRoute: ApiPublicRefreshCrimeBenchmarksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

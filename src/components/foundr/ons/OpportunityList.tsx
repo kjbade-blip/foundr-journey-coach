@@ -36,6 +36,11 @@ export function OpportunityList({
                     {d.label}: {d.value}
                   </span>
                 ))}
+                {o.crimeScore !== null && (
+                  <span className="rounded-full bg-muted px-2.5 py-1 font-semibold">
+                    Crime score {o.crimeScore}/100 (Police.uk, modelled)
+                  </span>
+                )}
                 {o.competition && (
                   <span className="rounded-full bg-muted px-2.5 py-1 font-semibold">
                     {o.competition.count} similar businesses within {o.competition.radiusMiles} mi (Google Places)
