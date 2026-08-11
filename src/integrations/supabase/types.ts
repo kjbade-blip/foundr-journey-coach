@@ -130,6 +130,75 @@ export type Database = {
         }
         Relationships: []
       }
+      companies_house_areas: {
+        Row: {
+          active_count: number
+          area_key: string
+          created_at: string
+          dissolved_12m: number
+          dissolved_3y: number
+          id: string
+          incorporated_12m: number
+          incorporated_3y: number
+          latitude: number | null
+          longitude: number | null
+          median_age_years: number | null
+          net_change_12m: number
+          postcode_district: string | null
+          radius_miles: number
+          refresh_after: string
+          retrieved_at: string
+          sample: Json
+          source: string
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          active_count?: number
+          area_key: string
+          created_at?: string
+          dissolved_12m?: number
+          dissolved_3y?: number
+          id?: string
+          incorporated_12m?: number
+          incorporated_3y?: number
+          latitude?: number | null
+          longitude?: number | null
+          median_age_years?: number | null
+          net_change_12m?: number
+          postcode_district?: string | null
+          radius_miles?: number
+          refresh_after: string
+          retrieved_at?: string
+          sample?: Json
+          source?: string
+          source_url?: string
+          updated_at?: string
+        }
+        Update: {
+          active_count?: number
+          area_key?: string
+          created_at?: string
+          dissolved_12m?: number
+          dissolved_3y?: number
+          id?: string
+          incorporated_12m?: number
+          incorporated_3y?: number
+          latitude?: number | null
+          longitude?: number | null
+          median_age_years?: number | null
+          net_change_12m?: number
+          postcode_district?: string | null
+          radius_miles?: number
+          refresh_after?: string
+          retrieved_at?: string
+          sample?: Json
+          source?: string
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       crime_area_months: {
         Row: {
           area_key: string
@@ -321,40 +390,67 @@ export type Database = {
       }
       location_analyses: {
         Row: {
+          analysis: Json
           business_type: string | null
+          confidence_reason: string | null
+          confidence_score: number | null
           created_at: string
           display_name: string
           evidence: Json
           id: string
+          latitude: number | null
           location_profile_id: string | null
+          longitude: number | null
           overall_score: number | null
+          postcode: string | null
+          radius_miles: number
           score_breakdown: Json
           updated_at: string
           user_id: string
+          verdict: string | null
+          verdict_reason: string | null
         }
         Insert: {
+          analysis?: Json
           business_type?: string | null
+          confidence_reason?: string | null
+          confidence_score?: number | null
           created_at?: string
           display_name: string
           evidence?: Json
           id?: string
+          latitude?: number | null
           location_profile_id?: string | null
+          longitude?: number | null
           overall_score?: number | null
+          postcode?: string | null
+          radius_miles?: number
           score_breakdown?: Json
           updated_at?: string
           user_id: string
+          verdict?: string | null
+          verdict_reason?: string | null
         }
         Update: {
+          analysis?: Json
           business_type?: string | null
+          confidence_reason?: string | null
+          confidence_score?: number | null
           created_at?: string
           display_name?: string
           evidence?: Json
           id?: string
+          latitude?: number | null
           location_profile_id?: string | null
+          longitude?: number | null
           overall_score?: number | null
+          postcode?: string | null
+          radius_miles?: number
           score_breakdown?: Json
           updated_at?: string
           user_id?: string
+          verdict?: string | null
+          verdict_reason?: string | null
         }
         Relationships: [
           {
@@ -549,6 +645,36 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_journey_stages: {
+        Row: {
+          created_at: string
+          id: string
+          progress: number
+          stage_index: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          progress?: number
+          stage_index: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          progress?: number
+          stage_index?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
