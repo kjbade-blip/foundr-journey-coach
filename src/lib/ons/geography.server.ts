@@ -140,13 +140,55 @@ export async function resolveByCoordinates(
   return toResolved(r, label ?? `${r.admin_ward ?? r.admin_district ?? r.postcode}`, false);
 }
 
+/** Google geocoding fallback for free-text place names ("Horbury, Wakefield, UK"). */
+async function googleGeocode(q: string): Promise<{ lat: number; lng: number; label: string } | null> {
+  const lk = process.env["LOVABLE_API_KEY"];
+  const gk = process.env["GOOGLE_MAPS_API_KEY"];
+  if (!lk || !gk) return null;
+  try {
+    const res = await fetch(
+      `https://connector-gateway.lovable.dev/google_maps/maps/api/geocode/json?address=${encodeURIComponent(q)}&components=country:GB`,
+      { headers: { Authorization: `Bearer ${lk}`, "X-Connection-Api-Key": gk } },
+    );
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      results?: Array<{ formatted_address: string; geometry: { location: { lat: number; lng: number } } }>;
+    };
+    const top = json.results?.[0];
+    if (!top) return null;
+    return { lat: top.geometry.location.lat, lng: top.geometry.location.lng, label: top.formatted_address };
+  } catch {
+    return null;
+  }
+}
+
+async function placeLookup(q: string): Promise<ResolvedLocation | null> {
+  const places = await getJson<Array<{ name_1: string; district_borough: string | null; county_unitary: string | null; latitude: number; longitude: number }>>(
+    `${PC_API}/places?q=${encodeURIComponent(q)}&limit=1`,
+  );
+  const place = places?.[0];
+  if (!place) return null;
+  const resolved = await resolveByCoordinates(place.latitude, place.longitude);
+  const area = place.district_borough ?? place.county_unitary;
+  return {
+    ...resolved,
+    displayName: area && area !== place.name_1 ? `${place.name_1}, ${area}` : place.name_1,
+  };
+}
+
 /**
  * Resolve free text: full postcode, outcode (e.g. "SW11"), town, city or
- * local authority name.
+ * local authority name. Also accepts Google-style strings such as
+ * "Horbury, Wakefield, UK".
  */
 export async function resolveLocationQuery(query: string): Promise<ResolvedLocation> {
-  const q = query.trim();
-  if (!q) throw new Error("Enter a UK postcode, town or local authority.");
+  const raw = query.trim();
+  if (!raw) throw new Error("Enter a UK postcode, town or local authority.");
+
+  // Drop country suffixes Google appends.
+  const q = raw
+    .replace(/,\s*(uk|united kingdom|england|scotland|wales|northern ireland|gb)\s*$/i, "")
+    .trim();
 
   if (POSTCODE_RE.test(q)) {
     const r = await getJson<PostcodeResult>(`${PC_API}/postcodes/${encodeURIComponent(q)}`);
@@ -166,23 +208,26 @@ export async function resolveLocationQuery(query: string): Promise<ResolvedLocat
     }
   }
 
-  // Town / city / local authority name via the ONS place index.
-  const places = await getJson<Array<{ name_1: string; district_borough: string | null; county_unitary: string | null; latitude: number; longitude: number }>>(
-    `${PC_API}/places?q=${encodeURIComponent(q)}&limit=1`,
+  // Try the whole string, then each comma-separated part ("Horbury", "Wakefield").
+  const candidates = [q, ...q.split(",").map((p) => p.trim())].filter(
+    (v, i, a) => v.length > 1 && a.indexOf(v) === i,
   );
-  const place = places?.[0];
-  if (place) {
-    const resolved = await resolveByCoordinates(place.latitude, place.longitude);
-    const area = place.district_borough ?? place.county_unitary;
-    return {
-      ...resolved,
-      displayName: area && area !== place.name_1 ? `${place.name_1}, ${area}` : place.name_1,
-    };
+  for (const c of candidates) {
+    const hit = await placeLookup(c);
+    if (hit) return hit;
   }
 
-  // Last resort: partial postcode search.
+  // Partial postcode search.
   const partial = await getJson<PostcodeResult[]>(`${PC_API}/postcodes?q=${encodeURIComponent(q)}&limit=1`);
   if (partial?.[0]) return toResolved(partial[0], partial[0].postcode, true);
 
-  throw new Error(`Could not find a UK location matching "${q}".`);
+  // Google geocoding fallback, then snap to the nearest ONS geography.
+  const geo = await googleGeocode(q);
+  if (geo) {
+    const resolved = await resolveByCoordinates(geo.lat, geo.lng);
+    return { ...resolved, displayName: q };
+  }
+
+  throw new Error(`Could not find a UK location matching "${raw}".`);
 }
+
