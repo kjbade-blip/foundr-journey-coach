@@ -33,30 +33,28 @@ function Onboarding() {
             { id: "grow",  icon: TrendingUp, title: "I already own a business", body: "Monitor competitors, react to market alerts, and let the AI Growth Advisor surface your next move." },
           ].map((c) => {
             const Icon = c.icon;
-            const active = selected === c.id;
+            const busy = selected === c.id;
             return (
               <button
                 key={c.id}
-                onClick={() => setSelected(c.id as any)}
-                onDoubleClick={() => choose(c.id as any)}
-                className={`group text-left rounded-3xl border bg-card p-7 transition shadow-soft hover:-translate-y-0.5 ${active ? "border-brand-dark ring-2 ring-brand" : "border-border hover:border-brand-dark/30"}`}
+                onClick={() => choose(c.id as "start" | "grow")}
+                disabled={selected !== null}
+                className={`group text-left rounded-3xl border bg-card p-7 transition shadow-soft hover:-translate-y-0.5 disabled:opacity-60 ${busy ? "border-brand-dark ring-2 ring-brand" : "border-border hover:border-brand-dark/30"}`}
               >
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand text-brand-foreground">
                   <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="mt-5 text-2xl font-bold">{c.title}</h3>
                 <p className="mt-2 text-muted-foreground">{c.body}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-dark">
+                  {busy ? "Setting things up…" : "Choose this"} <ArrowRight className="h-4 w-4" />
+                </span>
               </button>
             );
           })}
         </div>
-        <button
-          disabled={!selected}
-          onClick={() => selected && choose(selected)}
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-dark px-7 py-3.5 text-base font-semibold text-white disabled:opacity-40"
-        >
-          Continue <ArrowRight className="h-4 w-4" />
-        </button>
+        <p className="mt-8 text-sm text-muted-foreground">One tap — you can switch modes anytime from your account.</p>
+
       </div>
     </div>
   );
