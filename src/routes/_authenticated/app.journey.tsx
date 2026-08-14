@@ -21,6 +21,7 @@ function Journey() {
   const [active, setActive] = useState(0);
   const progressFn = useServerFn(getJourneyProgress);
   const saveFn = useServerFn(setStageProgress);
+  const resetFn = useServerFn(resetJourneyProgress);
   const qc = useQueryClient();
 
   const { data: rows = [], isLoading } = useQuery({
@@ -31,6 +32,14 @@ function Journey() {
   const save = useMutation({
     mutationFn: (v: { stageIndex: number; progress: number }) => saveFn({ data: v }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["journey-progress"] }),
+  });
+
+  const reset = useMutation({
+    mutationFn: () => resetFn(),
+    onSuccess: () => {
+      setActive(0);
+      void qc.invalidateQueries({ queryKey: ["journey-progress"] });
+    },
   });
 
   const progress = progressMap(rows);
@@ -45,11 +54,29 @@ function Journey() {
         title="From idea to opening day."
         subtitle="Eleven guided stages with AI specialists, tasks, and a measurable output for each. Your progress is saved to your account."
         actions={
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold">
-            {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Overall {overall}%
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold">
+              {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Overall {overall}%
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (reset.isPending) return;
+                if (window.confirm("Reset all journey progress? This clears every stage for your account.")) {
+                  reset.mutate();
+                }
+              }}
+              disabled={reset.isPending || overall === 0}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold disabled:opacity-50"
+              title="Demo helper: clears all saved journey progress"
+            >
+              {reset.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />}
+              {reset.isPending ? "Resetting…" : "Reset journey"}
+            </button>
           </div>
         }
       />
+
 
       <div className="mb-6 h-2 w-full rounded-full bg-muted">
         <div className="h-full rounded-full bg-brand-dark transition-all" style={{ width: `${overall}%` }} />
