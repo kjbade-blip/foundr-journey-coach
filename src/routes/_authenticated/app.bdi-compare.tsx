@@ -7,7 +7,8 @@ import { geocodeAddress } from "@/lib/maps.functions";
 import { getLocationBDI } from "@/lib/bdi.functions";
 import { BDICompare } from "@/components/foundr/bdi/BDICompare";
 import { BDIGauge } from "@/components/foundr/bdi/BDIGauge";
-import { Loader2, MapPin, Plus, X } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import type { BDIResult } from "@/lib/bdi";
 
 export const Route = createFileRoute("/_authenticated/app/bdi-compare")({
@@ -63,22 +64,21 @@ function BdiCompare() {
         <div className="grid gap-3">
           {inputs.map((v, i) => (
             <div key={i} className="flex items-center gap-2">
-              <label className="flex flex-1 items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <input
+              <div className="flex-1">
+                <LocationAutocomplete
                   value={v}
-                  onChange={(e) => updateInput(i, e.target.value)}
+                  onChange={(next) => updateInput(i, next)}
                   placeholder={`Location ${i + 1} (postcode or town)`}
-                  className="w-full bg-transparent text-sm outline-none"
                 />
-              </label>
+              </div>
               {inputs.length > 2 && (
-                <button onClick={() => removeRow(i)} className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-muted">
+                <button onClick={() => removeRow(i)} className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border hover:bg-muted">
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
           ))}
+
           <div className="flex flex-wrap items-center justify-between gap-3">
             <button
               onClick={addRow}
