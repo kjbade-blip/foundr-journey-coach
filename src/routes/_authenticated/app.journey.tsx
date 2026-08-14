@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2 } from "lucide-react";
+import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { STAGES, progressMap, overallProgress } from "@/lib/journey";
-import { getJourneyProgress, setStageProgress } from "@/lib/journey.functions";
+import { getJourneyProgress, setStageProgress, resetJourneyProgress } from "@/lib/journey.functions";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({
