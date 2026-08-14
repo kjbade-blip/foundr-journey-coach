@@ -130,6 +130,476 @@ export type Database = {
         }
         Relationships: []
       }
+      ci_alert_settings: {
+        Row: {
+          business_id: string | null
+          closures: boolean
+          created_at: string
+          email_enabled: boolean
+          frequency: string
+          id: string
+          major_changes: boolean
+          market_changes: boolean
+          new_competitors: boolean
+          opportunities: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id?: string | null
+          closures?: boolean
+          created_at?: string
+          email_enabled?: boolean
+          frequency?: string
+          id?: string
+          major_changes?: boolean
+          market_changes?: boolean
+          new_competitors?: boolean
+          opportunities?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string | null
+          closures?: boolean
+          created_at?: string
+          email_enabled?: boolean
+          frequency?: string
+          id?: string
+          major_changes?: boolean
+          market_changes?: boolean
+          new_competitors?: boolean
+          opportunities?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_alert_settings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_businesses: {
+        Row: {
+          address: string | null
+          business_type: string
+          created_at: string
+          id: string
+          is_primary: boolean
+          lat: number
+          lng: number
+          name: string
+          place_id: string | null
+          radius_miles: number
+          search_term: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          business_type?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          lat: number
+          lng: number
+          name: string
+          place_id?: string | null
+          radius_miles?: number
+          search_term?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          business_type?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          lat?: number
+          lng?: number
+          name?: string
+          place_id?: string | null
+          radius_miles?: number
+          search_term?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ci_changes: {
+        Row: {
+          ai: Json | null
+          business_id: string
+          competitor_id: string | null
+          created_at: string
+          detail: string
+          dismissed: boolean
+          id: string
+          kind: string
+          metrics: Json
+          priority: number
+          read_at: string | null
+          scan_id: string | null
+          severity: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          ai?: Json | null
+          business_id: string
+          competitor_id?: string | null
+          created_at?: string
+          detail: string
+          dismissed?: boolean
+          id?: string
+          kind: string
+          metrics?: Json
+          priority?: number
+          read_at?: string | null
+          scan_id?: string | null
+          severity?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          ai?: Json | null
+          business_id?: string
+          competitor_id?: string | null
+          created_at?: string
+          detail?: string
+          dismissed?: boolean
+          id?: string
+          kind?: string
+          metrics?: Json
+          priority?: number
+          read_at?: string | null
+          scan_id?: string | null
+          severity?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_changes_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ci_changes_competitor_id_fkey"
+            columns: ["competitor_id"]
+            isOneToOne: false
+            referencedRelation: "ci_competitors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ci_changes_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "ci_scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_competitors: {
+        Row: {
+          address: string | null
+          business_id: string
+          category: string | null
+          competitor_score: number | null
+          created_at: string
+          dismissed_reason: string | null
+          distance_m: number | null
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          lat: number | null
+          lng: number | null
+          name: string
+          place_id: string | null
+          relevance: number
+          source: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          business_id: string
+          category?: string | null
+          competitor_score?: number | null
+          created_at?: string
+          dismissed_reason?: string | null
+          distance_m?: number | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          place_id?: string | null
+          relevance?: number
+          source?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          business_id?: string
+          category?: string | null
+          competitor_score?: number | null
+          created_at?: string
+          dismissed_reason?: string | null
+          distance_m?: number | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          place_id?: string | null
+          relevance?: number
+          source?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_competitors_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_decisions: {
+        Row: {
+          business_id: string | null
+          business_type: string | null
+          competitor_name: string | null
+          competitor_place_id: string | null
+          created_at: string
+          decision: string
+          distance_m: number | null
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          business_id?: string | null
+          business_type?: string | null
+          competitor_name?: string | null
+          competitor_place_id?: string | null
+          created_at?: string
+          decision: string
+          distance_m?: number | null
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          business_id?: string | null
+          business_type?: string | null
+          competitor_name?: string | null
+          competitor_place_id?: string | null
+          created_at?: string
+          decision?: string
+          distance_m?: number | null
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_decisions_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_opportunities: {
+        Row: {
+          business_id: string
+          confidence: string
+          created_at: string
+          id: string
+          kind: string
+          scan_id: string | null
+          status: string
+          title: string
+          user_id: string
+          what_to_consider: Json
+          what_we_found: string
+          why_it_matters: string
+        }
+        Insert: {
+          business_id: string
+          confidence?: string
+          created_at?: string
+          id?: string
+          kind: string
+          scan_id?: string | null
+          status?: string
+          title: string
+          user_id: string
+          what_to_consider?: Json
+          what_we_found: string
+          why_it_matters: string
+        }
+        Update: {
+          business_id?: string
+          confidence?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          scan_id?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+          what_to_consider?: Json
+          what_we_found?: string
+          why_it_matters?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_opportunities_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ci_opportunities_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "ci_scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_scans: {
+        Row: {
+          avg_rating: number | null
+          avg_reviews: number | null
+          business_id: string
+          closed_competitors: number
+          competition_score: number | null
+          id: string
+          market_density: number | null
+          new_competitors: number
+          ran_at: string
+          summary: Json
+          total_competitors: number
+          tracked_competitors: number
+          user_id: string
+        }
+        Insert: {
+          avg_rating?: number | null
+          avg_reviews?: number | null
+          business_id: string
+          closed_competitors?: number
+          competition_score?: number | null
+          id?: string
+          market_density?: number | null
+          new_competitors?: number
+          ran_at?: string
+          summary?: Json
+          total_competitors?: number
+          tracked_competitors?: number
+          user_id: string
+        }
+        Update: {
+          avg_rating?: number | null
+          avg_reviews?: number | null
+          business_id?: string
+          closed_competitors?: number
+          competition_score?: number | null
+          id?: string
+          market_density?: number | null
+          new_competitors?: number
+          ran_at?: string
+          summary?: Json
+          total_competitors?: number
+          tracked_competitors?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_scans_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "ci_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ci_snapshots: {
+        Row: {
+          business_status: string | null
+          captured_at: string
+          category: string | null
+          competitor_id: string
+          competitor_score: number | null
+          id: string
+          opening_hours: Json
+          price_level: string | null
+          rating: number | null
+          raw: Json
+          reviews: number | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          business_status?: string | null
+          captured_at?: string
+          category?: string | null
+          competitor_id: string
+          competitor_score?: number | null
+          id?: string
+          opening_hours?: Json
+          price_level?: string | null
+          rating?: number | null
+          raw?: Json
+          reviews?: number | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          business_status?: string | null
+          captured_at?: string
+          category?: string | null
+          competitor_id?: string
+          competitor_score?: number | null
+          id?: string
+          opening_hours?: Json
+          price_level?: string | null
+          rating?: number | null
+          raw?: Json
+          reviews?: number | null
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ci_snapshots_competitor_id_fkey"
+            columns: ["competitor_id"]
+            isOneToOne: false
+            referencedRelation: "ci_competitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies_house_areas: {
         Row: {
           active_count: number
