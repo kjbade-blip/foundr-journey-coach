@@ -28,3 +28,15 @@ export const setStageProgress = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { stageIndex: data.stageIndex, progress: data.progress, status };
   });
+
+/** Demo helper: wipe all saved journey progress for the signed-in user. */
+export const resetJourneyProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ ok: true }> => {
+    const { error } = await context.supabase
+      .from("user_journey_stages")
+      .delete()
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
