@@ -28,6 +28,7 @@ import { Route as AuthenticatedAppMarketplaceRouteImport } from './routes/_authe
 import { Route as AuthenticatedAppLocationAnalysisRouteImport } from './routes/_authenticated/app.location-analysis'
 import { Route as AuthenticatedAppLearningRouteImport } from './routes/_authenticated/app.learning'
 import { Route as AuthenticatedAppJourneyRouteImport } from './routes/_authenticated/app.journey'
+import { Route as AuthenticatedAppIntelligenceRouteImport } from './routes/_authenticated/app.intelligence'
 import { Route as AuthenticatedAppGrowRouteImport } from './routes/_authenticated/app.grow'
 import { Route as AuthenticatedAppDashboardRouteImport } from './routes/_authenticated/app.dashboard'
 import { Route as AuthenticatedAppCompetitorsRouteImport } from './routes/_authenticated/app.competitors'
@@ -137,6 +138,12 @@ const AuthenticatedAppJourneyRoute = AuthenticatedAppJourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppIntelligenceRoute =
+  AuthenticatedAppIntelligenceRouteImport.update({
+    id: '/intelligence',
+    path: '/intelligence',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppGrowRoute = AuthenticatedAppGrowRouteImport.update({
   id: '/grow',
   path: '/grow',
@@ -208,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/app/journey': typeof AuthenticatedAppJourneyRoute
   '/app/learning': typeof AuthenticatedAppLearningRoute
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -236,6 +244,7 @@ export interface FileRoutesByTo {
   '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/app/journey': typeof AuthenticatedAppJourneyRoute
   '/app/learning': typeof AuthenticatedAppLearningRoute
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -267,6 +276,7 @@ export interface FileRoutesById {
   '/_authenticated/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/_authenticated/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/_authenticated/app/grow': typeof AuthenticatedAppGrowRoute
+  '/_authenticated/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/_authenticated/app/journey': typeof AuthenticatedAppJourneyRoute
   '/_authenticated/app/learning': typeof AuthenticatedAppLearningRoute
   '/_authenticated/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -298,6 +308,7 @@ export interface FileRouteTypes {
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
+    | '/app/intelligence'
     | '/app/journey'
     | '/app/learning'
     | '/app/location-analysis'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
+    | '/app/intelligence'
     | '/app/journey'
     | '/app/learning'
     | '/app/location-analysis'
@@ -356,6 +368,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/competitors'
     | '/_authenticated/app/dashboard'
     | '/_authenticated/app/grow'
+    | '/_authenticated/app/intelligence'
     | '/_authenticated/app/journey'
     | '/_authenticated/app/learning'
     | '/_authenticated/app/location-analysis'
@@ -513,6 +526,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppJourneyRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/intelligence': {
+      id: '/_authenticated/app/intelligence'
+      path: '/intelligence'
+      fullPath: '/app/intelligence'
+      preLoaderRoute: typeof AuthenticatedAppIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/grow': {
       id: '/_authenticated/app/grow'
       path: '/grow'
@@ -589,6 +609,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppCompetitorsRoute: typeof AuthenticatedAppCompetitorsRoute
   AuthenticatedAppDashboardRoute: typeof AuthenticatedAppDashboardRoute
   AuthenticatedAppGrowRoute: typeof AuthenticatedAppGrowRoute
+  AuthenticatedAppIntelligenceRoute: typeof AuthenticatedAppIntelligenceRoute
   AuthenticatedAppJourneyRoute: typeof AuthenticatedAppJourneyRoute
   AuthenticatedAppLearningRoute: typeof AuthenticatedAppLearningRoute
   AuthenticatedAppLocationAnalysisRoute: typeof AuthenticatedAppLocationAnalysisRoute
@@ -608,6 +629,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppCompetitorsRoute: AuthenticatedAppCompetitorsRoute,
   AuthenticatedAppDashboardRoute: AuthenticatedAppDashboardRoute,
   AuthenticatedAppGrowRoute: AuthenticatedAppGrowRoute,
+  AuthenticatedAppIntelligenceRoute: AuthenticatedAppIntelligenceRoute,
   AuthenticatedAppJourneyRoute: AuthenticatedAppJourneyRoute,
   AuthenticatedAppLearningRoute: AuthenticatedAppLearningRoute,
   AuthenticatedAppLocationAnalysisRoute: AuthenticatedAppLocationAnalysisRoute,
