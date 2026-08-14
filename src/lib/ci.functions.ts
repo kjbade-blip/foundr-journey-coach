@@ -14,6 +14,7 @@ import type {
   CIOpportunity,
   CISnapshotPoint,
   ChangeInterpretation,
+  ChangeMetrics,
 } from "./ci/types";
 
 const DEFAULT_SETTINGS: CIAlertSettings = {
@@ -161,7 +162,7 @@ export const getIntelligence = createServerFn({ method: "GET" })
       priority: c.priority,
       title: c.title,
       detail: c.detail,
-      metrics: (c.metrics ?? {}) as Record<string, unknown>,
+      metrics: (c.metrics ?? {}) as ChangeMetrics,
       ai: (c.ai ?? null) as ChangeInterpretation | null,
       createdAt: c.created_at,
     }));
@@ -357,7 +358,7 @@ export const getCompetitorHistory = createServerFn({ method: "GET" })
         priority: c.priority,
         title: c.title,
         detail: c.detail,
-        metrics: (c.metrics ?? {}) as Record<string, unknown>,
+        metrics: (c.metrics ?? {}) as ChangeMetrics,
         ai: (c.ai ?? null) as ChangeInterpretation | null,
         createdAt: c.created_at,
       })),
@@ -403,7 +404,7 @@ export const explainChange = createServerFn({ method: "POST" })
       severity: change.severity,
       title: change.title,
       detail: change.detail,
-      metrics: (change.metrics ?? {}) as Record<string, unknown>,
+      metrics: (change.metrics ?? {}) as ChangeMetrics,
     });
 
     await context.supabase.from("ci_changes").update({ ai: ai as never, read_at: new Date().toISOString() }).eq("id", change.id);

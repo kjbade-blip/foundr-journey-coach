@@ -20,7 +20,7 @@ import {
   type PlaceObservation,
 } from "./scoring";
 import { interpretChange } from "./interpret.server";
-import { metresToMiles, type CICompetitor, type CompetitorStatus } from "./types";
+import { metresToMiles, type ChangeMetrics, type CICompetitor, type CompetitorStatus } from "./types";
 
 type DB = SupabaseClient<Database>;
 
@@ -112,7 +112,7 @@ export async function runScan(supabase: DB, userId: string, business: ScanBusine
     priority: number;
     title: string;
     detail: string;
-    metrics: Record<string, unknown>;
+    metrics: ChangeMetrics;
     competitorName: string | null;
     competitorStatus: string | null;
     distanceM: number | null;

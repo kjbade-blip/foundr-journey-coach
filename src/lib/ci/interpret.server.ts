@@ -33,7 +33,7 @@ export interface ChangeContext {
   severity: string;
   title: string;
   detail: string;
-  metrics: Record<string, unknown>;
+  metrics: Record<string, string | number | boolean | null | undefined>;
 }
 
 export function rulesInterpretation(ctx: ChangeContext): ChangeInterpretation {
