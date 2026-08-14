@@ -23,6 +23,9 @@ export const SEVERITY_LABEL: Record<Severity, string> = {
   opportunity: "Opportunity",
   informational: "Informational",
 };
+/** Serialisable evidence attached to a change. */
+export type ChangeMetrics = Record<string, string | number | boolean | null | undefined>;
+
 
 export type ChangeKind =
   | "new_competitor"

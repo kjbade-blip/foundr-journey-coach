@@ -1,7 +1,7 @@
 // Deterministic competitive intelligence maths.
 // Pure functions only — no I/O, no AI, no invented figures.
 
-import type { CICompetitor, ChangeKind, Severity } from "./types";
+import type { CICompetitor, ChangeKind, ChangeMetrics, Severity } from "./types";
 
 export interface PlaceObservation {
   placeId: string;
