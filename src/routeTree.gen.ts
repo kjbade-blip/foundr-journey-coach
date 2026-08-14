@@ -21,6 +21,7 @@ import { Route as AuthenticatedVerifyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as ApiPublicRunCiScansRouteImport } from './routes/api/public/run-ci-scans'
 import { Route as ApiPublicRefreshCrimeBenchmarksRouteImport } from './routes/api/public/refresh-crime-benchmarks'
 import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app.reports'
 import { Route as AuthenticatedAppOpportunityFinderRouteImport } from './routes/_authenticated/app.opportunity-finder'
@@ -28,6 +29,7 @@ import { Route as AuthenticatedAppMarketplaceRouteImport } from './routes/_authe
 import { Route as AuthenticatedAppLocationAnalysisRouteImport } from './routes/_authenticated/app.location-analysis'
 import { Route as AuthenticatedAppLearningRouteImport } from './routes/_authenticated/app.learning'
 import { Route as AuthenticatedAppJourneyRouteImport } from './routes/_authenticated/app.journey'
+import { Route as AuthenticatedAppIntelligenceRouteImport } from './routes/_authenticated/app.intelligence'
 import { Route as AuthenticatedAppGrowRouteImport } from './routes/_authenticated/app.grow'
 import { Route as AuthenticatedAppDashboardRouteImport } from './routes/_authenticated/app.dashboard'
 import { Route as AuthenticatedAppCompetitorsRouteImport } from './routes/_authenticated/app.competitors'
@@ -97,6 +99,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const ApiPublicRunCiScansRoute = ApiPublicRunCiScansRouteImport.update({
+  id: '/api/public/run-ci-scans',
+  path: '/api/public/run-ci-scans',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicRefreshCrimeBenchmarksRoute =
   ApiPublicRefreshCrimeBenchmarksRouteImport.update({
     id: '/api/public/refresh-crime-benchmarks',
@@ -137,6 +144,12 @@ const AuthenticatedAppJourneyRoute = AuthenticatedAppJourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppIntelligenceRoute =
+  AuthenticatedAppIntelligenceRouteImport.update({
+    id: '/intelligence',
+    path: '/intelligence',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppGrowRoute = AuthenticatedAppGrowRouteImport.update({
   id: '/grow',
   path: '/grow',
@@ -208,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/app/journey': typeof AuthenticatedAppJourneyRoute
   '/app/learning': typeof AuthenticatedAppLearningRoute
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -215,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -236,6 +251,7 @@ export interface FileRoutesByTo {
   '/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/app/grow': typeof AuthenticatedAppGrowRoute
+  '/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/app/journey': typeof AuthenticatedAppJourneyRoute
   '/app/learning': typeof AuthenticatedAppLearningRoute
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -243,6 +259,7 @@ export interface FileRoutesByTo {
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -267,6 +284,7 @@ export interface FileRoutesById {
   '/_authenticated/app/competitors': typeof AuthenticatedAppCompetitorsRoute
   '/_authenticated/app/dashboard': typeof AuthenticatedAppDashboardRoute
   '/_authenticated/app/grow': typeof AuthenticatedAppGrowRoute
+  '/_authenticated/app/intelligence': typeof AuthenticatedAppIntelligenceRoute
   '/_authenticated/app/journey': typeof AuthenticatedAppJourneyRoute
   '/_authenticated/app/learning': typeof AuthenticatedAppLearningRoute
   '/_authenticated/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
@@ -274,6 +292,7 @@ export interface FileRoutesById {
   '/_authenticated/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
@@ -298,6 +317,7 @@ export interface FileRouteTypes {
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
+    | '/app/intelligence'
     | '/app/journey'
     | '/app/learning'
     | '/app/location-analysis'
@@ -305,6 +325,7 @@ export interface FileRouteTypes {
     | '/app/opportunity-finder'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -326,6 +347,7 @@ export interface FileRouteTypes {
     | '/app/competitors'
     | '/app/dashboard'
     | '/app/grow'
+    | '/app/intelligence'
     | '/app/journey'
     | '/app/learning'
     | '/app/location-analysis'
@@ -333,6 +355,7 @@ export interface FileRouteTypes {
     | '/app/opportunity-finder'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/app'
   id:
     | '__root__'
@@ -356,6 +379,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/competitors'
     | '/_authenticated/app/dashboard'
     | '/_authenticated/app/grow'
+    | '/_authenticated/app/intelligence'
     | '/_authenticated/app/journey'
     | '/_authenticated/app/learning'
     | '/_authenticated/app/location-analysis'
@@ -363,6 +387,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/opportunity-finder'
     | '/_authenticated/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -376,6 +401,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicRefreshCrimeBenchmarksRoute: typeof ApiPublicRefreshCrimeBenchmarksRoute
+  ApiPublicRunCiScansRoute: typeof ApiPublicRunCiScansRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -464,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/api/public/run-ci-scans': {
+      id: '/api/public/run-ci-scans'
+      path: '/api/public/run-ci-scans'
+      fullPath: '/api/public/run-ci-scans'
+      preLoaderRoute: typeof ApiPublicRunCiScansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/refresh-crime-benchmarks': {
       id: '/api/public/refresh-crime-benchmarks'
       path: '/api/public/refresh-crime-benchmarks'
@@ -511,6 +544,13 @@ declare module '@tanstack/react-router' {
       path: '/journey'
       fullPath: '/app/journey'
       preLoaderRoute: typeof AuthenticatedAppJourneyRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/intelligence': {
+      id: '/_authenticated/app/intelligence'
+      path: '/intelligence'
+      fullPath: '/app/intelligence'
+      preLoaderRoute: typeof AuthenticatedAppIntelligenceRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/grow': {
@@ -589,6 +629,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppCompetitorsRoute: typeof AuthenticatedAppCompetitorsRoute
   AuthenticatedAppDashboardRoute: typeof AuthenticatedAppDashboardRoute
   AuthenticatedAppGrowRoute: typeof AuthenticatedAppGrowRoute
+  AuthenticatedAppIntelligenceRoute: typeof AuthenticatedAppIntelligenceRoute
   AuthenticatedAppJourneyRoute: typeof AuthenticatedAppJourneyRoute
   AuthenticatedAppLearningRoute: typeof AuthenticatedAppLearningRoute
   AuthenticatedAppLocationAnalysisRoute: typeof AuthenticatedAppLocationAnalysisRoute
@@ -608,6 +649,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppCompetitorsRoute: AuthenticatedAppCompetitorsRoute,
   AuthenticatedAppDashboardRoute: AuthenticatedAppDashboardRoute,
   AuthenticatedAppGrowRoute: AuthenticatedAppGrowRoute,
+  AuthenticatedAppIntelligenceRoute: AuthenticatedAppIntelligenceRoute,
   AuthenticatedAppJourneyRoute: AuthenticatedAppJourneyRoute,
   AuthenticatedAppLearningRoute: AuthenticatedAppLearningRoute,
   AuthenticatedAppLocationAnalysisRoute: AuthenticatedAppLocationAnalysisRoute,
@@ -646,6 +688,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicRefreshCrimeBenchmarksRoute: ApiPublicRefreshCrimeBenchmarksRoute,
+  ApiPublicRunCiScansRoute: ApiPublicRunCiScansRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
