@@ -19,7 +19,7 @@ export function AuthLayout({
       <div className="mx-auto grid min-h-screen max-w-md place-items-center px-4 py-12">
         <div className="w-full">
           <Link to="/" className="mb-8 flex justify-center">
-            <Logo className="h-12" />
+            <Logo className="h-[60px]" />
           </Link>
 
           <div className="rounded-3xl border border-border bg-card p-8 shadow-soft">
