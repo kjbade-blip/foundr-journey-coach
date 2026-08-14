@@ -21,6 +21,7 @@ import { Route as AuthenticatedVerifyRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as ApiPublicRunCiScansRouteImport } from './routes/api/public/run-ci-scans'
 import { Route as ApiPublicRefreshCrimeBenchmarksRouteImport } from './routes/api/public/refresh-crime-benchmarks'
 import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app.reports'
 import { Route as AuthenticatedAppOpportunityFinderRouteImport } from './routes/_authenticated/app.opportunity-finder'
@@ -97,6 +98,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const ApiPublicRunCiScansRoute = ApiPublicRunCiScansRouteImport.update({
+  id: '/api/public/run-ci-scans',
+  path: '/api/public/run-ci-scans',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicRefreshCrimeBenchmarksRoute =
   ApiPublicRefreshCrimeBenchmarksRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -284,6 +292,7 @@ export interface FileRoutesById {
   '/_authenticated/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
   '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
+  '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
@@ -316,6 +325,7 @@ export interface FileRouteTypes {
     | '/app/opportunity-finder'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/app/opportunity-finder'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/app'
   id:
     | '__root__'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/opportunity-finder'
     | '/_authenticated/app/reports'
     | '/api/public/refresh-crime-benchmarks'
+    | '/api/public/run-ci-scans'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -389,6 +401,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicRefreshCrimeBenchmarksRoute: typeof ApiPublicRefreshCrimeBenchmarksRoute
+  ApiPublicRunCiScansRoute: typeof ApiPublicRunCiScansRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -476,6 +489,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/api/public/run-ci-scans': {
+      id: '/api/public/run-ci-scans'
+      path: '/api/public/run-ci-scans'
+      fullPath: '/api/public/run-ci-scans'
+      preLoaderRoute: typeof ApiPublicRunCiScansRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/refresh-crime-benchmarks': {
       id: '/api/public/refresh-crime-benchmarks'
@@ -668,6 +688,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicRefreshCrimeBenchmarksRoute: ApiPublicRefreshCrimeBenchmarksRoute,
+  ApiPublicRunCiScansRoute: ApiPublicRunCiScansRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
