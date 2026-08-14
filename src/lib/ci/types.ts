@@ -81,7 +81,7 @@ export interface CIChange {
   priority: number;
   title: string;
   detail: string;
-  metrics: Record<string, unknown>;
+  metrics: ChangeMetrics;
   ai: ChangeInterpretation | null;
   createdAt: string;
 }

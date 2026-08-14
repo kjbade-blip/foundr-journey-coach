@@ -33,7 +33,7 @@ export interface DetectedChange {
   priority: number;
   title: string;
   detail: string;
-  metrics: Record<string, unknown>;
+  metrics: ChangeMetrics;
 }
 
 export function distanceMetres(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -127,7 +127,7 @@ export function detectChanges(
   if (!prev) return [];
   const tracked = competitor.status === "tracked" || competitor.status === "user_added";
   const out: DetectedChange[] = [];
-  const push = (kind: ChangeKind, magnitude: number, baseImpact: number, title: string, detail: string, metrics: Record<string, unknown>) => {
+  const push = (kind: ChangeKind, magnitude: number, baseImpact: number, title: string, detail: string, metrics: ChangeMetrics) => {
     const priority = priorityOf({ magnitude, distanceM: competitor.distanceM, tracked, relevance: competitor.relevance, baseImpact });
     out.push({ kind, severity: severityFor(priority, kind), priority, title, detail, metrics });
   };
