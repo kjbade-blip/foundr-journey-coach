@@ -80,6 +80,10 @@ export const BUSINESS_CATEGORY_WEIGHTS: Record<string, CategoryWeights> = {
     demand: 22, competition: 20, demographics: 20, economy: 10,
     marketDynamics: 8, ecosystem: 9, crime: 8, businessFit: 10,
   },
+  book_shop: {
+    demand: 20, competition: 22, demographics: 18, economy: 14,
+    marketDynamics: 9, ecosystem: 10, crime: 7, businessFit: 10,
+  },
   care_service: {
     demand: 14, competition: 18, demographics: 30, economy: 12,
     marketDynamics: 9, ecosystem: 5, crime: 5, businessFit: 10,
