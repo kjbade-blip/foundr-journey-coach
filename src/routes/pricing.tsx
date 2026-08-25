@@ -18,7 +18,8 @@ export const Route = createFileRoute("/pricing")({
 type Tier = {
   name: string;
   tagline: string;
-  price: string;
+  monthlyPrice: string;
+  annualPrice: string;
   priceNote?: string;
   features: string[];
   cta: string;
