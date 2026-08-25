@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/foundr/Logo";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
