@@ -102,6 +102,9 @@ const BUNDLES = [
 ];
 
 function PricingPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+  const isAnnual = billing === "annual";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
