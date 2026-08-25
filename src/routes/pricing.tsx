@@ -212,9 +212,26 @@ function PricingPage() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.tagline}</p>
               </div>
               <div className="flex h-16 items-start gap-1">
-                <span className="text-5xl font-extrabold tracking-tight leading-none">{t.price}</span>
-                {t.priceNote && <span className="self-end pb-1.5 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
+                <span className="text-5xl font-extrabold tracking-tight leading-none">
+                  {isAnnual ? t.annualPrice : t.monthlyPrice}
+                </span>
+                {(() => {
+                  const note = isAnnual ? (t.name === "Free" ? undefined : "/year") : t.priceNote;
+                  return note ? (
+                    <span className="self-end pb-1.5 text-sm font-medium text-muted-foreground">{note}</span>
+                  ) : null;
+                })()}
               </div>
+              {isAnnual && t.name !== "Free" && (
+                <p className="mt-1 text-xs font-semibold text-brand-dark">
+                  Save 2 months — billed annually
+                </p>
+              )}
+              {(!isAnnual || t.name === "Free") && (
+                <p className="invisible mt-1 text-xs font-semibold">
+                  Save 2 months — billed annually
+                </p>
+              )}
               <ul className="mt-5 min-h-[190px] flex-1 space-y-2.5 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
