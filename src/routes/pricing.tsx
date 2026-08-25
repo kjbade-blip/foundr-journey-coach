@@ -146,11 +146,11 @@ function PricingPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((t) => (
             <div
               key={t.name}
-              className={`relative flex flex-col rounded-3xl border p-7 shadow-soft transition ${
+              className={`relative flex h-full flex-col rounded-3xl border p-7 shadow-soft transition ${
                 t.highlight
                   ? "border-brand-dark bg-card ring-2 ring-brand-dark"
                   : "border-border bg-card"
@@ -162,12 +162,12 @@ function PricingPage() {
                 </span>
               )}
               <h3 className="text-2xl font-extrabold tracking-tight">{t.name}</h3>
-              <p className="mt-2 min-h-[48px] text-sm text-muted-foreground">{t.tagline}</p>
-              <div className="mt-6 flex items-end gap-1">
-                <span className="text-5xl font-extrabold tracking-tight">{t.price}</span>
-                {t.priceNote && <span className="pb-2 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
+              <p className="mt-2 min-h-[72px] text-sm leading-relaxed text-muted-foreground">{t.tagline}</p>
+              <div className="mt-5 flex h-16 items-end gap-1">
+                <span className="text-5xl font-extrabold tracking-tight leading-none">{t.price}</span>
+                {t.priceNote && <span className="pb-1.5 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
               </div>
-              <ul className="mt-6 flex-1 space-y-2.5 text-sm">
+              <ul className="mt-5 min-h-[190px] flex-1 space-y-2.5 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-dark" strokeWidth={3} />
@@ -175,7 +175,7 @@ function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <div className="pt-8">
+              <div className="mt-auto pt-8">
                 <Link
                   to="/onboarding"
                   className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-bold transition ${
