@@ -31,7 +31,8 @@ const TIERS: Tier[] = [
   {
     name: "Free",
     tagline: "Scale your idea effortlessly with starter credits and dedicated support.",
-    price: "£0",
+    monthlyPrice: "£0",
+    annualPrice: "£0",
     features: [
       "25 Opportunity searches /pm",
       "Found-r Journey Steps 1–2",
@@ -43,7 +44,8 @@ const TIERS: Tier[] = [
   {
     name: "Startup",
     tagline: "Start your business the right way with location-led opportunities.",
-    price: "£24",
+    monthlyPrice: "£24",
+    annualPrice: "£240",
     priceNote: "/pm*",
     features: [
       "50 Opportunity searches /pm",
@@ -58,7 +60,8 @@ const TIERS: Tier[] = [
   {
     name: "Found-r",
     tagline: "Scale your business, track competitor success & insights.",
-    price: "£49",
+    monthlyPrice: "£49",
+    annualPrice: "£490",
     priceNote: "/pm*",
     highlight: true,
     features: [
@@ -75,7 +78,8 @@ const TIERS: Tier[] = [
   {
     name: "Pro",
     tagline: "Your all-inclusive business coach.",
-    price: "£125",
+    monthlyPrice: "£125",
+    annualPrice: "£1,250",
     priceNote: "/pm*",
     features: [
       "Unlimited Opportunity searches /pm",
