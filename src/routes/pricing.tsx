@@ -161,11 +161,13 @@ function PricingPage() {
                   Most popular
                 </span>
               )}
-              <h3 className="text-2xl font-extrabold tracking-tight">{t.name}</h3>
-              <p className="mt-2 min-h-[72px] text-sm leading-relaxed text-muted-foreground">{t.tagline}</p>
-              <div className="mt-5 flex h-16 items-end gap-1">
+              <div className="h-36">
+                <h3 className="text-2xl font-extrabold tracking-tight">{t.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.tagline}</p>
+              </div>
+              <div className="flex h-16 items-start gap-1">
                 <span className="text-5xl font-extrabold tracking-tight leading-none">{t.price}</span>
-                {t.priceNote && <span className="pb-1.5 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
+                {t.priceNote && <span className="self-end pb-1.5 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
               </div>
               <ul className="mt-5 min-h-[190px] flex-1 space-y-2.5 text-sm">
                 {t.features.map((f) => (
