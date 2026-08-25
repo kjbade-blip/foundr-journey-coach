@@ -193,6 +193,13 @@ export const BUSINESS_TYPES: BusinessTypeDef[] = [
     rationale: "Pharmacy demand rises with population size and the share of older residents.",
   },
   {
+    key: "book_shop",
+    label: "Book Shop",
+    searchTerm: "Book Shop",
+    weights: { population: 3, density: 3, youngAdults: 2, familiesWithChildren: 2, pay: 2, workingAge: 1 },
+    rationale: "Book shops depend on a broad resident catchment, passing footfall and households with readers and students.",
+  },
+  {
     key: "care_service",
     label: "Care / Retirement Services",
     searchTerm: "Care Home",
