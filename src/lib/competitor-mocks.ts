@@ -39,12 +39,7 @@ export const AREAS: Record<string, { lat: number; lng: number; streets: string[]
   Edinburgh: { lat: 55.9533, lng: -3.1883, streets: ["Rose Street", "Leith Walk", "Grassmarket", "Stockbridge"] },
 };
 
-const NAME_PARTS: Record<string, string[][]> = {
-  default: [
-    ["The", "Old", "Little", "Urban", "North", "Crown", "Market", "Union", "Ivy", "Bright"],
-    ["Lane", "House", "Yard", "Quarter", "Street", "Corner", "Works", "Room", "社", "Collective"],
-  ],
-};
+const PREFIX = ["The", "Old", "Little", "Urban", "North", "Crown", "Market", "Union", "Ivy", "Bright"];
 
 const TYPE_WORDS: Record<string, string[]> = {
   "Coffee shops": ["Coffee", "Roast", "Espresso", "Bean", "Brew", "Café"],
@@ -85,7 +80,6 @@ function seeded(seed: string) {
   };
 }
 
-const PREFIX = NAME_PARTS.default[0];
 const SUFFIX = ["Lane", "House", "Yard", "Quarter", "Street", "Corner", "Works", "Room", "Collective", "& Co"];
 
 function notableReason(rating: number | null, reviews: number | null, distance: number, rank: number): string {
