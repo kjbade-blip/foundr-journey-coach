@@ -113,7 +113,7 @@ export function generateCompetitors(area: string, type: string, count = 20): Moc
     const reviews = rating === null ? null : Math.round(20 + rnd() * 520);
     const distanceMiles = Math.round((0.1 + rnd() * 2.6) * 10) / 10;
     list.push({
-      id: `${areaName}-${type}-${list.length}`.toLowerCase().replace(/\s+/g, "-"),
+      id: `${areaName}-${name}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       name,
       category: cats[Math.floor(rnd() * cats.length)],
       area: areaName,
