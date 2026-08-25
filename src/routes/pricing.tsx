@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/foundr/Logo";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
@@ -17,7 +18,8 @@ export const Route = createFileRoute("/pricing")({
 type Tier = {
   name: string;
   tagline: string;
-  price: string;
+  monthlyPrice: string;
+  annualPrice: string;
   priceNote?: string;
   features: string[];
   cta: string;
@@ -29,7 +31,8 @@ const TIERS: Tier[] = [
   {
     name: "Free",
     tagline: "Scale your idea effortlessly with starter credits and dedicated support.",
-    price: "£0",
+    monthlyPrice: "£0",
+    annualPrice: "£0",
     features: [
       "25 Opportunity searches /pm",
       "Found-r Journey Steps 1–2",
@@ -41,7 +44,8 @@ const TIERS: Tier[] = [
   {
     name: "Startup",
     tagline: "Start your business the right way with location-led opportunities.",
-    price: "£24",
+    monthlyPrice: "£24",
+    annualPrice: "£240",
     priceNote: "/pm*",
     features: [
       "50 Opportunity searches /pm",
@@ -56,7 +60,8 @@ const TIERS: Tier[] = [
   {
     name: "Found-r",
     tagline: "Scale your business, track competitor success & insights.",
-    price: "£49",
+    monthlyPrice: "£49",
+    annualPrice: "£490",
     priceNote: "/pm*",
     highlight: true,
     features: [
@@ -73,7 +78,8 @@ const TIERS: Tier[] = [
   {
     name: "Pro",
     tagline: "Your all-inclusive business coach.",
-    price: "£125",
+    monthlyPrice: "£125",
+    annualPrice: "£1,250",
     priceNote: "/pm*",
     features: [
       "Unlimited Opportunity searches /pm",
@@ -96,6 +102,9 @@ const BUNDLES = [
 ];
 
 function PricingPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+  const isAnnual = billing === "annual";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
@@ -135,6 +144,43 @@ function PricingPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6">
+        {/* Billing toggle */}
+        <div className="mb-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div
+            role="tablist"
+            aria-label="Billing cycle"
+            className="inline-flex rounded-full border border-border bg-card p-1 shadow-soft"
+          >
+            <button
+              role="tab"
+              aria-selected={billing === "monthly"}
+              onClick={() => setBilling("monthly")}
+              className={`rounded-full px-5 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-dark focus-visible:ring-offset-2 ${
+                billing === "monthly"
+                  ? "bg-brand-dark text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              role="tab"
+              aria-selected={billing === "annual"}
+              onClick={() => setBilling("annual")}
+              className={`rounded-full px-5 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-dark focus-visible:ring-offset-2 ${
+                billing === "annual"
+                  ? "bg-brand-dark text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Annual
+            </button>
+          </div>
+          {isAnnual && (
+            <span className="text-sm font-bold text-brand-dark">2 months free</span>
+          )}
+        </div>
+
         {/* Audience labels */}
         <div className="mb-6 hidden grid-cols-4 gap-6 lg:grid">
           <div />
@@ -166,9 +212,26 @@ function PricingPage() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.tagline}</p>
               </div>
               <div className="flex h-16 items-start gap-1">
-                <span className="text-5xl font-extrabold tracking-tight leading-none">{t.price}</span>
-                {t.priceNote && <span className="self-end pb-1.5 text-sm font-medium text-muted-foreground">{t.priceNote}</span>}
+                <span className="text-5xl font-extrabold tracking-tight leading-none">
+                  {isAnnual ? t.annualPrice : t.monthlyPrice}
+                </span>
+                {(() => {
+                  const note = isAnnual ? (t.name === "Free" ? undefined : "/year") : t.priceNote;
+                  return note ? (
+                    <span className="self-end pb-1.5 text-sm font-medium text-muted-foreground">{note}</span>
+                  ) : null;
+                })()}
               </div>
+              {isAnnual && t.name !== "Free" && (
+                <p className="mt-1 text-xs font-semibold text-brand-dark">
+                  Save 2 months — billed annually
+                </p>
+              )}
+              {(!isAnnual || t.name === "Free") && (
+                <p className="invisible mt-1 text-xs font-semibold">
+                  Save 2 months — billed annually
+                </p>
+              )}
               <ul className="mt-5 min-h-[190px] flex-1 space-y-2.5 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
