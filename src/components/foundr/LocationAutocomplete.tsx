@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, Search } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { autocompleteLocation } from "@/lib/maps.functions";
 
@@ -9,10 +9,20 @@ type Props = {
   value: string;
   onChange: (v: string) => void;
   onSelect?: (v: string) => void;
+  onSelectItem?: (s: Suggestion) => void;
   placeholder?: string;
+  icon?: "pin" | "search";
 };
 
-export function LocationAutocomplete({ value, onChange, onSelect, placeholder = "Postcode or city" }: Props) {
+export function LocationAutocomplete({
+  value,
+  onChange,
+  onSelect,
+  onSelectItem,
+  placeholder = "Postcode or city",
+  icon = "pin",
+}: Props) {
+  const Icon = icon === "search" ? Search : MapPin;
   const acFn = useServerFn(autocompleteLocation);
   const [items, setItems] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
