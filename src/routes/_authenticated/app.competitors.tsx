@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { geocodeAddress, getPlaceDetails } from "@/lib/maps.functions";
 import { Eye, EyeOff, Globe, Loader2, MapPin, Search, Star, Trash2, Sparkles } from "lucide-react";
 import {
   AREAS,
