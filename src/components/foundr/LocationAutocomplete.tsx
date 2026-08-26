@@ -85,7 +85,7 @@ export function LocationAutocomplete({
 
   return (
     <div ref={boxRef} className="relative">
-      <label className="flex h-11 items-center gap-2 rounded-xl border border-border bg-background px-4">
+      <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
         <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
         <input
           value={value}
