@@ -13,6 +13,9 @@ import {
   searchAllCompetitors,
   type MockCompetitor,
 } from "@/lib/competitor-mocks";
+import { AISearchBar } from "@/components/foundr/AISearchBar";
+import { conceptToMockType, describeSearch, searchByConcepts, type ParsedSearch } from "@/lib/ai-search";
+
 
 export const Route = createFileRoute("/_authenticated/app/competitors")({
   head: () => ({
@@ -168,7 +171,15 @@ function Competitors() {
   const placeDetails = useServerFn(getPlaceDetails);
   const [geoCenter, setGeoCenter] = useState<{ lat: number; lng: number } | null>(null);
 
-  const results = useMemo(() => generateCompetitors(query.area, query.type, 20), [query]);
+  const [ai, setAi] = useState<ParsedSearch | null>(null);
+
+  const results = useMemo(
+    () =>
+      ai
+        ? searchByConcepts(ai.location || query.area, ai.categories, { hybrid: ai.hybrid, limit: 20 })
+        : generateCompetitors(query.area, query.type, 20),
+    [query, ai],
+  );
   const center = useMemo(() => {
     if (geoCenter) return geoCenter;
     const key = Object.keys(AREAS).find((a) => a.toLowerCase() === query.area.trim().toLowerCase());
@@ -183,19 +194,34 @@ function Competitors() {
     [center, results, query.area],
   );
 
-  async function runUpdate(areaOverride?: string) {
-    const area = (areaOverride ?? areaInput).trim() || "Wakefield";
-    setLoading(true);
-    setQuery({ area, type: typeInput });
+  async function geocodeArea(area: string) {
     try {
       const geo = await geocode({ data: { address: `${area}, UK` } });
       setGeoCenter(geo ? { lat: geo.lat, lng: geo.lng } : null);
     } catch {
       setGeoCenter(null);
-    } finally {
-      setLoading(false);
     }
   }
+
+  async function runUpdate(areaOverride?: string) {
+    const area = (areaOverride ?? areaInput).trim() || "Wakefield";
+    setLoading(true);
+    setAi(null);
+    setQuery({ area, type: typeInput });
+    await geocodeArea(area);
+    setLoading(false);
+  }
+
+  async function runAiSearch(p: ParsedSearch) {
+    const area = p.location.trim() || query.area;
+    setLoading(true);
+    setAi(p);
+    setAreaInput(area);
+    setQuery({ area, type: p.categories[0] ? conceptToMockType(p.categories[0]) : query.type });
+    await geocodeArea(area);
+    setLoading(false);
+  }
+
 
   async function pickGooglePlace(placeId: string, fallbackName: string) {
     setGlobalLoading(true);
