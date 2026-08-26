@@ -183,12 +183,47 @@ function Competitors() {
     [center, results, query.area],
   );
 
-  function runUpdate() {
+  async function runUpdate(areaOverride?: string) {
+    const area = (areaOverride ?? areaInput).trim() || "Wakefield";
     setLoading(true);
-    window.setTimeout(() => {
-      setQuery({ area: areaInput.trim() || "Wakefield", type: typeInput });
+    setQuery({ area, type: typeInput });
+    try {
+      const geo = await geocode({ data: { address: `${area}, UK` } });
+      setGeoCenter(geo ? { lat: geo.lat, lng: geo.lng } : null);
+    } catch {
+      setGeoCenter(null);
+    } finally {
       setLoading(false);
-    }, 450);
+    }
+  }
+
+  async function pickGooglePlace(placeId: string, fallbackName: string) {
+    setGlobalLoading(true);
+    try {
+      const p = await placeDetails({ data: { placeId } });
+      setGlobalResults([
+        {
+          id: `g:${p.id}`,
+          name: p.name,
+          category: p.category ?? "Business",
+          area: p.address.split(",").slice(-2).join(",").trim(),
+          address: p.address,
+          distanceMiles: 0,
+          rating: p.rating,
+          reviews: p.reviews,
+          website: p.website,
+          lat: p.lat,
+          lng: p.lng,
+          notable: p.topReviews[0]?.text
+            ? `Recent review: “${p.topReviews[0].text.slice(0, 160)}”`
+            : "Live Google Business Profile data.",
+        },
+      ]);
+    } catch {
+      setGlobalResults(searchAllCompetitors(fallbackName));
+    } finally {
+      setGlobalLoading(false);
+    }
   }
 
   function runGlobalSearch() {
