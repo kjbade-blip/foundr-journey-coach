@@ -13,6 +13,9 @@ import {
   searchAllCompetitors,
   type MockCompetitor,
 } from "@/lib/competitor-mocks";
+import { AISearchBar } from "@/components/foundr/AISearchBar";
+import { conceptToMockType, describeSearch, searchByConcepts, type ParsedSearch } from "@/lib/ai-search";
+
 
 export const Route = createFileRoute("/_authenticated/app/competitors")({
   head: () => ({
