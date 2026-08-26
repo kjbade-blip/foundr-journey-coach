@@ -383,15 +383,13 @@ function Competitors() {
         <p className="mt-1 text-sm text-muted-foreground">Watch competitors outside your area for inspiration.</p>
         <Card className="mt-3">
           <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                aria-label="Add any competitor"
+            <div className="flex-1">
+              <LocationAutocomplete
+                icon="search"
                 value={globalTerm}
-                onChange={(e) => setGlobalTerm(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && runGlobalSearch()}
+                onChange={setGlobalTerm}
+                onSelectItem={(s) => pickGooglePlace(s.id, s.description)}
                 placeholder="Search any business by name, e.g. a Manchester coffee shop"
-                className="h-11 w-full rounded-xl border border-border bg-background pl-9 pr-3 text-sm outline-none focus:border-brand-dark"
               />
             </div>
             <button
