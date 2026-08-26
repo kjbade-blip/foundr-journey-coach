@@ -282,7 +282,7 @@ function Competitors() {
           </div>
           <button
             type="button"
-            onClick={runUpdate}
+            onClick={() => runUpdate()}
             disabled={loading}
             className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-dark px-6 text-sm font-semibold text-white disabled:opacity-60"
           >
