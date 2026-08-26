@@ -164,11 +164,16 @@ function Competitors() {
   const [globalResults, setGlobalResults] = useState<MockCompetitor[] | null>(null);
   const [globalLoading, setGlobalLoading] = useState(false);
 
+  const geocode = useServerFn(geocodeAddress);
+  const placeDetails = useServerFn(getPlaceDetails);
+  const [geoCenter, setGeoCenter] = useState<{ lat: number; lng: number } | null>(null);
+
   const results = useMemo(() => generateCompetitors(query.area, query.type, 20), [query]);
   const center = useMemo(() => {
+    if (geoCenter) return geoCenter;
     const key = Object.keys(AREAS).find((a) => a.toLowerCase() === query.area.trim().toLowerCase());
     return key ? { lat: AREAS[key].lat, lng: AREAS[key].lng } : { lat: results[0]?.lat ?? 53.68, lng: results[0]?.lng ?? -1.49 };
-  }, [query.area, results]);
+  }, [query.area, results, geoCenter]);
 
   const markers: MapMarker[] = useMemo(
     () => [
