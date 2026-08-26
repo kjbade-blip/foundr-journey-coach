@@ -254,20 +254,14 @@ function Competitors() {
             <label htmlFor="area" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Search area
             </label>
-            <input
-              id="area"
-              value={areaInput}
-              onChange={(e) => setAreaInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && runUpdate()}
-              placeholder="e.g. Wakefield"
-              list="foundr-areas"
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-brand-dark"
-            />
-            <datalist id="foundr-areas">
-              {Object.keys(AREAS).map((a) => (
-                <option key={a} value={a} />
-              ))}
-            </datalist>
+            <div className="mt-1.5">
+              <LocationAutocomplete
+                value={areaInput}
+                onChange={setAreaInput}
+                onSelect={(v) => runUpdate(v)}
+                placeholder="e.g. Wakefield"
+              />
+            </div>
           </div>
           <div>
             <label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
