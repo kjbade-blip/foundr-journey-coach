@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, Search } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { autocompleteLocation } from "@/lib/maps.functions";
 
@@ -9,10 +9,20 @@ type Props = {
   value: string;
   onChange: (v: string) => void;
   onSelect?: (v: string) => void;
+  onSelectItem?: (s: Suggestion) => void;
   placeholder?: string;
+  icon?: "pin" | "search";
 };
 
-export function LocationAutocomplete({ value, onChange, onSelect, placeholder = "Postcode or city" }: Props) {
+export function LocationAutocomplete({
+  value,
+  onChange,
+  onSelect,
+  onSelectItem,
+  placeholder = "Postcode or city",
+  icon = "pin",
+}: Props) {
+  const Icon = icon === "search" ? Search : MapPin;
   const acFn = useServerFn(autocompleteLocation);
   const [items, setItems] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -70,12 +80,13 @@ export function LocationAutocomplete({ value, onChange, onSelect, placeholder = 
     setOpen(false);
     setItems([]);
     onSelect?.(s.description);
+    onSelectItem?.(s);
   };
 
   return (
     <div ref={boxRef} className="relative">
       <label className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2.5">
-        <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}

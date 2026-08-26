@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { geocodeAddress, getPlaceDetails } from "@/lib/maps.functions";
 import { Eye, EyeOff, Globe, Loader2, MapPin, Search, Star, Trash2, Sparkles } from "lucide-react";
 import {
   AREAS,
@@ -161,11 +164,16 @@ function Competitors() {
   const [globalResults, setGlobalResults] = useState<MockCompetitor[] | null>(null);
   const [globalLoading, setGlobalLoading] = useState(false);
 
+  const geocode = useServerFn(geocodeAddress);
+  const placeDetails = useServerFn(getPlaceDetails);
+  const [geoCenter, setGeoCenter] = useState<{ lat: number; lng: number } | null>(null);
+
   const results = useMemo(() => generateCompetitors(query.area, query.type, 20), [query]);
   const center = useMemo(() => {
+    if (geoCenter) return geoCenter;
     const key = Object.keys(AREAS).find((a) => a.toLowerCase() === query.area.trim().toLowerCase());
     return key ? { lat: AREAS[key].lat, lng: AREAS[key].lng } : { lat: results[0]?.lat ?? 53.68, lng: results[0]?.lng ?? -1.49 };
-  }, [query.area, results]);
+  }, [query.area, results, geoCenter]);
 
   const markers: MapMarker[] = useMemo(
     () => [
@@ -175,12 +183,47 @@ function Competitors() {
     [center, results, query.area],
   );
 
-  function runUpdate() {
+  async function runUpdate(areaOverride?: string) {
+    const area = (areaOverride ?? areaInput).trim() || "Wakefield";
     setLoading(true);
-    window.setTimeout(() => {
-      setQuery({ area: areaInput.trim() || "Wakefield", type: typeInput });
+    setQuery({ area, type: typeInput });
+    try {
+      const geo = await geocode({ data: { address: `${area}, UK` } });
+      setGeoCenter(geo ? { lat: geo.lat, lng: geo.lng } : null);
+    } catch {
+      setGeoCenter(null);
+    } finally {
       setLoading(false);
-    }, 450);
+    }
+  }
+
+  async function pickGooglePlace(placeId: string, fallbackName: string) {
+    setGlobalLoading(true);
+    try {
+      const p = await placeDetails({ data: { placeId } });
+      setGlobalResults([
+        {
+          id: `g:${p.id}`,
+          name: p.name,
+          category: p.category ?? "Business",
+          area: p.address.split(",").slice(-2).join(",").trim(),
+          address: p.address,
+          distanceMiles: 0,
+          rating: p.rating,
+          reviews: p.reviews,
+          website: p.website,
+          lat: p.lat,
+          lng: p.lng,
+          notable: p.topReviews[0]?.text
+            ? `Recent review: “${p.topReviews[0].text.slice(0, 160)}”`
+            : "Live Google Business Profile data.",
+        },
+      ]);
+    } catch {
+      setGlobalResults(searchAllCompetitors(fallbackName));
+    } finally {
+      setGlobalLoading(false);
+    }
   }
 
   function runGlobalSearch() {
@@ -211,20 +254,14 @@ function Competitors() {
             <label htmlFor="area" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Search area
             </label>
-            <input
-              id="area"
-              value={areaInput}
-              onChange={(e) => setAreaInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && runUpdate()}
-              placeholder="e.g. Wakefield"
-              list="foundr-areas"
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-brand-dark"
-            />
-            <datalist id="foundr-areas">
-              {Object.keys(AREAS).map((a) => (
-                <option key={a} value={a} />
-              ))}
-            </datalist>
+            <div className="mt-1.5">
+              <LocationAutocomplete
+                value={areaInput}
+                onChange={setAreaInput}
+                onSelect={(v) => runUpdate(v)}
+                placeholder="e.g. Wakefield"
+              />
+            </div>
           </div>
           <div>
             <label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -245,7 +282,7 @@ function Competitors() {
           </div>
           <button
             type="button"
-            onClick={runUpdate}
+            onClick={() => runUpdate()}
             disabled={loading}
             className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-dark px-6 text-sm font-semibold text-white disabled:opacity-60"
           >
@@ -346,15 +383,13 @@ function Competitors() {
         <p className="mt-1 text-sm text-muted-foreground">Watch competitors outside your area for inspiration.</p>
         <Card className="mt-3">
           <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                aria-label="Add any competitor"
+            <div className="flex-1">
+              <LocationAutocomplete
+                icon="search"
                 value={globalTerm}
-                onChange={(e) => setGlobalTerm(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && runGlobalSearch()}
+                onChange={setGlobalTerm}
+                onSelectItem={(s) => pickGooglePlace(s.id, s.description)}
                 placeholder="Search any business by name, e.g. a Manchester coffee shop"
-                className="h-11 w-full rounded-xl border border-border bg-background pl-9 pr-3 text-sm outline-none focus:border-brand-dark"
               />
             </div>
             <button
