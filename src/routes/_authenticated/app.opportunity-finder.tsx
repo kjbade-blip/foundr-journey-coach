@@ -116,7 +116,6 @@ function Finder() {
       )}
 
       {/* Stepper */}
-
       <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold">
         {["What are you opening?", "Where?", "Your analysis"].map((label, i) => (
           <div key={label} className="flex items-center gap-2">
