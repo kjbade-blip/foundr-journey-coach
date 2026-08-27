@@ -8,11 +8,14 @@ import { analyseOpportunity } from "@/lib/opportunity.functions";
 import { BUSINESS_TYPES } from "@/lib/ons/business-relevance";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { AISearchBar } from "@/components/foundr/AISearchBar";
+import { conceptToTypeKey, describeSearch } from "@/lib/ai-search";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { LocationProfileCard } from "@/components/foundr/ons/LocationProfileCard";
 import { CrimeRiskCard } from "@/components/foundr/crime/CrimeRiskCard";
 import { OpportunityReport } from "@/components/foundr/opportunity/OpportunityReport";
 import { AnalysisProgress, ANALYSIS_STEPS } from "@/components/foundr/opportunity/AnalysisProgress";
+
 
 export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
   head: () => ({
