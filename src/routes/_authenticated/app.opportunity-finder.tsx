@@ -37,6 +37,7 @@ function Finder() {
   const [postcode, setPostcode] = useState("SW11");
   const [radius, setRadius] = useState(1);
   const [tick, setTick] = useState(0);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
 
   const analyseFn = useServerFn(analyseOpportunity);
   const analyse = useMutation({
@@ -51,6 +52,15 @@ function Finder() {
       }),
     onSuccess: () => setStep(2),
   });
+
+  function runAiSearch(p: import("@/lib/ai-search").ParsedSearch) {
+    const key = p.categories[0] ? conceptToTypeKey(p.categories[0]) : null;
+    if (key && BUSINESS_TYPES.some((t) => t.key === key)) setTypeKey(key);
+    if (p.location.trim()) setPostcode(p.location);
+    setAiSummary(describeSearch(p));
+    analyse.mutate();
+  }
+
 
   // Drives the live checklist while the engine works. Purely presentational.
   useEffect(() => {
