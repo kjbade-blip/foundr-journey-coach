@@ -53,6 +53,8 @@ function Finder() {
     onSuccess: () => setStep(2),
   });
 
+  const resultsRef = useRef<HTMLDivElement>(null);
+
   function runAiSearch(p: import("@/lib/ai-search").ParsedSearch) {
     const key = p.categories.map(conceptToTypeKey).find((k) => k && BUSINESS_TYPES.some((t) => t.key === k)) ?? typeKey;
     const where = p.location.trim() || postcode;
@@ -62,7 +64,9 @@ function Finder() {
     // Show the live progress panel while the engine works.
     setStep(1);
     analyse.mutate({ query: where, businessType: key, radiusMiles: radius });
+    requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
+
 
 
 
