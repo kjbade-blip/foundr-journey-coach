@@ -41,12 +41,12 @@ function Finder() {
 
   const analyseFn = useServerFn(analyseOpportunity);
   const analyse = useMutation({
-    mutationFn: () =>
+    mutationFn: (vars?: { query?: string; businessType?: string; radiusMiles?: number }) =>
       analyseFn({
         data: {
-          query: postcode,
-          businessType: typeKey,
-          radiusMiles: radius,
+          query: vars?.query ?? postcode,
+          businessType: vars?.businessType ?? typeKey,
+          radiusMiles: vars?.radiusMiles ?? radius,
           includeAlternatives: true,
         },
       }),
@@ -54,12 +54,16 @@ function Finder() {
   });
 
   function runAiSearch(p: import("@/lib/ai-search").ParsedSearch) {
-    const key = p.categories[0] ? conceptToTypeKey(p.categories[0]) : null;
-    if (key && BUSINESS_TYPES.some((t) => t.key === key)) setTypeKey(key);
-    if (p.location.trim()) setPostcode(p.location);
+    const key = p.categories.map(conceptToTypeKey).find((k) => k && BUSINESS_TYPES.some((t) => t.key === k)) ?? typeKey;
+    const where = p.location.trim() || postcode;
+    setTypeKey(key);
+    setPostcode(where);
     setAiSummary(describeSearch(p));
-    analyse.mutate();
+    // Show the live progress panel while the engine works.
+    setStep(1);
+    analyse.mutate({ query: where, businessType: key, radiusMiles: radius });
   }
+
 
 
   // Drives the live checklist while the engine works. Purely presentational.
