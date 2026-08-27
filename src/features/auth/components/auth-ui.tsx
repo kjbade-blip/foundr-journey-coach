@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Logo } from "@/components/foundr/Logo";
 
 export function AuthLayout({
@@ -56,22 +56,38 @@ export function TextField({
   required?: boolean;
   minLength?: number;
 }) {
+  const isPassword = type === "password";
+  const [revealed, setRevealed] = useState(false);
+
   return (
     <div>
       <label htmlFor={id} className="text-sm font-semibold">
         {label}
       </label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        required={required}
-        minLength={minLength}
-        className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand"
-      />
+      <div className="relative">
+        <input
+          id={id}
+          type={isPassword && revealed ? "text" : type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          required={required}
+          minLength={minLength}
+          className={`mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand ${isPassword ? "pr-11" : ""}`}
+        />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setRevealed((v) => !v)}
+            aria-label={revealed ? "Hide password" : "Show password"}
+            aria-pressed={revealed}
+            className="absolute right-1 top-1.5 flex h-[42px] w-10 items-center justify-center rounded-lg text-muted-foreground transition hover:text-foreground"
+          >
+            {revealed ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
