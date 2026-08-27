@@ -273,8 +273,18 @@ function Competitors() {
         subtitle="Choose your area and business type to rank local competitors — then watch any business, anywhere, for inspiration."
       />
 
+      <AISearchBar
+        onRun={runAiSearch}
+        examples={[
+          "Are there any bookshops that also trade as wine bars in Wakefield?",
+          "Best independent coffee shops in Manchester for inspiration",
+          "Which pubs have the highest review volume near Leeds?",
+        ]}
+        runLabel="Run search"
+      />
+
       {/* Search controls */}
-      <Card>
+      <Card className="mt-6">
         <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
           <div>
             <label htmlFor="area" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
