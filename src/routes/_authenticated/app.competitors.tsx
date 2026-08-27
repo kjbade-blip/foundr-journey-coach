@@ -326,10 +326,14 @@ function Competitors() {
             Update results
           </button>
         </div>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Showing <span className="font-semibold text-foreground">{query.type}</span> in{" "}
-          <span className="font-semibold text-foreground">{query.area}</span>. Prototype data — live sources coming next.
-        </p>
+        {ai ? (
+          <p className="mt-3 text-sm font-semibold text-brand-dark">{describeSearch(ai)}</p>
+        ) : (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Showing <span className="font-semibold text-foreground">{query.type}</span> in{" "}
+            <span className="font-semibold text-foreground">{query.area}</span>. Prototype data — live sources coming next.
+          </p>
+        )}
       </Card>
 
       <Card className="mt-6 overflow-hidden p-0">
