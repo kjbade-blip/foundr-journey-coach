@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Filter, Download, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { analyseOpportunity } from "@/lib/opportunity.functions";
@@ -53,6 +53,8 @@ function Finder() {
     onSuccess: () => setStep(2),
   });
 
+  const resultsRef = useRef<HTMLDivElement>(null);
+
   function runAiSearch(p: import("@/lib/ai-search").ParsedSearch) {
     const key = p.categories.map(conceptToTypeKey).find((k) => k && BUSINESS_TYPES.some((t) => t.key === k)) ?? typeKey;
     const where = p.location.trim() || postcode;
@@ -62,7 +64,9 @@ function Finder() {
     // Show the live progress panel while the engine works.
     setStep(1);
     analyse.mutate({ query: where, businessType: key, radiusMiles: radius });
+    requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
+
 
 
 
@@ -120,7 +124,7 @@ function Finder() {
       )}
 
       {/* Stepper */}
-      <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold">
+      <div ref={resultsRef} className="mb-6 flex scroll-mt-24 flex-wrap items-center gap-2 text-xs font-semibold">
         {["What are you opening?", "Where?", "Your analysis"].map((label, i) => (
           <div key={label} className="flex items-center gap-2">
             <span
