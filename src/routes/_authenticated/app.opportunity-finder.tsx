@@ -98,7 +98,25 @@ function Finder() {
         }
       />
 
+      <AISearchBar
+        onRun={runAiSearch}
+        examples={[
+          "Are there any bookshops that also trade as wine bars in Wakefield?",
+          "Open a speciality coffee shop in Manchester",
+          "Best location for a bakery in Leeds",
+        ]}
+        runLabel="Run analysis"
+      />
+
+      {aiSummary && (
+        <Card className="mt-4">
+          <p className="text-sm font-semibold text-brand-dark">{aiSummary}</p>
+          <p className="mt-1 text-xs text-muted-foreground">You can still edit the type, location and radius below.</p>
+        </Card>
+      )}
+
       {/* Stepper */}
+
       <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold">
         {["What are you opening?", "Where?", "Your analysis"].map((label, i) => (
           <div key={label} className="flex items-center gap-2">
