@@ -8,11 +8,14 @@ import { analyseOpportunity } from "@/lib/opportunity.functions";
 import { BUSINESS_TYPES } from "@/lib/ons/business-relevance";
 import { GoogleMap, type MapMarker } from "@/components/foundr/GoogleMap";
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { AISearchBar } from "@/components/foundr/AISearchBar";
+import { conceptToTypeKey, describeSearch } from "@/lib/ai-search";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { LocationProfileCard } from "@/components/foundr/ons/LocationProfileCard";
 import { CrimeRiskCard } from "@/components/foundr/crime/CrimeRiskCard";
 import { OpportunityReport } from "@/components/foundr/opportunity/OpportunityReport";
 import { AnalysisProgress, ANALYSIS_STEPS } from "@/components/foundr/opportunity/AnalysisProgress";
+
 
 export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
   head: () => ({
@@ -34,6 +37,7 @@ function Finder() {
   const [postcode, setPostcode] = useState("SW11");
   const [radius, setRadius] = useState(1);
   const [tick, setTick] = useState(0);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
 
   const analyseFn = useServerFn(analyseOpportunity);
   const analyse = useMutation({
@@ -48,6 +52,15 @@ function Finder() {
       }),
     onSuccess: () => setStep(2),
   });
+
+  function runAiSearch(p: import("@/lib/ai-search").ParsedSearch) {
+    const key = p.categories[0] ? conceptToTypeKey(p.categories[0]) : null;
+    if (key && BUSINESS_TYPES.some((t) => t.key === key)) setTypeKey(key);
+    if (p.location.trim()) setPostcode(p.location);
+    setAiSummary(describeSearch(p));
+    analyse.mutate();
+  }
+
 
   // Drives the live checklist while the engine works. Purely presentational.
   useEffect(() => {
@@ -84,6 +97,23 @@ function Finder() {
           ) : undefined
         }
       />
+
+      <AISearchBar
+        onRun={runAiSearch}
+        examples={[
+          "Are there any bookshops that also trade as wine bars in Wakefield?",
+          "Open a speciality coffee shop in Manchester",
+          "Best location for a bakery in Leeds",
+        ]}
+        runLabel="Run analysis"
+      />
+
+      {aiSummary && (
+        <Card className="mt-4">
+          <p className="text-sm font-semibold text-brand-dark">{aiSummary}</p>
+          <p className="mt-1 text-xs text-muted-foreground">You can still edit the type, location and radius below.</p>
+        </Card>
+      )}
 
       {/* Stepper */}
       <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold">

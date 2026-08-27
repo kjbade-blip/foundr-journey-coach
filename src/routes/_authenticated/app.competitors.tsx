@@ -273,8 +273,18 @@ function Competitors() {
         subtitle="Choose your area and business type to rank local competitors — then watch any business, anywhere, for inspiration."
       />
 
+      <AISearchBar
+        onRun={runAiSearch}
+        examples={[
+          "Are there any bookshops that also trade as wine bars in Wakefield?",
+          "Best independent coffee shops in Manchester for inspiration",
+          "Which pubs have the highest review volume near Leeds?",
+        ]}
+        runLabel="Run search"
+      />
+
       {/* Search controls */}
-      <Card>
+      <Card className="mt-6">
         <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
           <div>
             <label htmlFor="area" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -316,10 +326,14 @@ function Competitors() {
             Update results
           </button>
         </div>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Showing <span className="font-semibold text-foreground">{query.type}</span> in{" "}
-          <span className="font-semibold text-foreground">{query.area}</span>. Prototype data — live sources coming next.
-        </p>
+        {ai ? (
+          <p className="mt-3 text-sm font-semibold text-brand-dark">{describeSearch(ai)}</p>
+        ) : (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Showing <span className="font-semibold text-foreground">{query.type}</span> in{" "}
+            <span className="font-semibold text-foreground">{query.area}</span>. Prototype data — live sources coming next.
+          </p>
+        )}
       </Card>
 
       <Card className="mt-6 overflow-hidden p-0">
