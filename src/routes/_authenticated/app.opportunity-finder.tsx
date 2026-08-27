@@ -186,7 +186,7 @@ function Finder() {
               </select>
             </label>
             <button
-              onClick={() => analyse.mutate()}
+              onClick={() => analyse.mutate(undefined)}
               disabled={analyse.isPending || postcode.trim().length === 0}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-dark px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
             >
