@@ -1093,28 +1093,132 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_business_id: string | null
           avatar_url: string | null
           created_at: string
           email: string | null
+          first_name: string | null
           full_name: string | null
           id: string
+          instagram_url: string | null
+          last_name: string | null
+          linkedin_url: string | null
+          location: string | null
+          onboarding_completed_at: string | null
+          onboarding_path: string | null
+          other_url: string | null
+          phone: string | null
+          postcode: string | null
+          role_title: string | null
           updated_at: string
+          website_url: string | null
+          x_url: string | null
         }
         Insert: {
+          active_business_id?: string | null
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id: string
+          instagram_url?: string | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          onboarding_completed_at?: string | null
+          onboarding_path?: string | null
+          other_url?: string | null
+          phone?: string | null
+          postcode?: string | null
+          role_title?: string | null
           updated_at?: string
+          website_url?: string | null
+          x_url?: string | null
         }
         Update: {
+          active_business_id?: string | null
           avatar_url?: string | null
           created_at?: string
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          instagram_url?: string | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          onboarding_completed_at?: string | null
+          onboarding_path?: string | null
+          other_url?: string | null
+          phone?: string | null
+          postcode?: string | null
+          role_title?: string | null
           updated_at?: string
+          website_url?: string | null
+          x_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_active_business_id_fkey"
+            columns: ["active_business_id"]
+            isOneToOne: false
+            referencedRelation: "user_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_businesses: {
+        Row: {
+          address: string | null
+          company_number: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          place_id: string | null
+          postcode: string | null
+          source: string
+          status: string | null
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          company_number?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          place_id?: string | null
+          postcode?: string | null
+          source?: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          company_number?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          place_id?: string | null
+          postcode?: string | null
+          source?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
         }
         Relationships: []
       }
