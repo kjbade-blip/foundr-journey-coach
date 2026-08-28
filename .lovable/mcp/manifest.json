@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "sdk_version": "0.28.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://kpjrlwtlibnvdjoefgsa.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "found-r",
+      "version": "0.1.0",
+      "title": "Found-r"
+    },
+    "tools": [
+      {
+        "name": "list_opportunity_analyses",
+        "title": "List opportunity analyses",
+        "description": "List the signed-in user's saved Found-r location opportunity analyses (location, business type, score, confidence, verdict).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "How many analyses to return (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_opportunity_analysis",
+        "title": "Get opportunity analysis",
+        "description": "Fetch one saved Found-r opportunity analysis in full: category scores, evidence, sources, confidence, verdict and interpretation.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The analysis id from list_opportunity_analyses."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_journey_progress",
+        "title": "Get business journey progress",
+        "description": "Read the signed-in user's progress through the Found-r 11-stage business journey.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_competitor_changes",
+        "title": "List competitor changes",
+        "description": "List recent detected competitor changes from Found-r's continuous competitive intelligence for the signed-in user's monitored businesses.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "How many changes to return (default 25).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

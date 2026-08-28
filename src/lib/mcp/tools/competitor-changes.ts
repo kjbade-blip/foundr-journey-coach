@@ -14,7 +14,7 @@ export default defineTool({
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase
       .from("ci_changes")
-      .select("id, business_id, competitor_id, kind, summary, priority, created_at")
+      .select("id, business_id, competitor_id, kind, title, detail, severity, priority, created_at")
       .eq("dismissed", false)
       .order("created_at", { ascending: false })
       .limit(limit ?? 25);
