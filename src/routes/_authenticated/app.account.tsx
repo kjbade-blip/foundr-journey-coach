@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/features/auth/auth-context";
 import { initialsFor } from "@/features/auth/profile";
-import { Loader2, Check } from "lucide-react";
+import { useActiveBusiness } from "@/lib/active-business";
+import { Loader2, Check, Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/app/account")({
   head: () => ({

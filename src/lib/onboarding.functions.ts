@@ -126,7 +126,7 @@ export const saveOnboardingProfile = createServerFn({ method: "POST" })
     if (data.complete) patch["onboarding_completed_at"] = new Date().toISOString();
     for (const key of Object.keys(patch)) if (patch[key] === undefined) delete patch[key];
 
-    const { error } = await context.supabase.from("profiles").update(patch).eq("id", context.userId);
+    const { error } = await context.supabase.from("profiles").update(patch as never).eq("id", context.userId);
     if (error) throw new Error(error.message);
 
     return getOnboardingState();
