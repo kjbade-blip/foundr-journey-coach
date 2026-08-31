@@ -16,10 +16,12 @@ function mapsHeaders() {
 }
 
 const FIELD_MASK =
-  "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.businessStatus,places.primaryTypeDisplayName,places.websiteUri,places.priceLevel,places.regularOpeningHours.weekdayDescriptions";
+  "places.id,places.primaryType,places.types,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.businessStatus,places.primaryTypeDisplayName,places.websiteUri,places.priceLevel,places.regularOpeningHours.weekdayDescriptions";
 
 type RawPlace = {
   id?: string;
+  primaryType?: string;
+  types?: string[];
   displayName?: { text: string };
   formattedAddress?: string;
   location?: { latitude: number; longitude: number };
@@ -44,6 +46,8 @@ function toObservation(p: RawPlace): PlaceObservation | null {
     reviews: p.userRatingCount ?? null,
     businessStatus: p.businessStatus ?? null,
     category: p.primaryTypeDisplayName?.text ?? null,
+    primaryType: p.primaryType ?? null,
+    types: p.types ?? [],
     website: p.websiteUri ?? null,
     priceLevel: p.priceLevel ?? null,
     openingHours: p.regularOpeningHours?.weekdayDescriptions ?? [],

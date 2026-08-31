@@ -82,7 +82,7 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
         ...authHeaders(),
         "Content-Type": "application/json",
         "X-Goog-FieldMask":
-          "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount",
+          "places.id,places.primaryType,places.types,places.primaryTypeDisplayName,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount",
       },
       body: JSON.stringify({
         textQuery: data.query,
@@ -96,6 +96,9 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
     const json = (await res.json()) as {
       places?: Array<{
         id: string;
+        primaryType?: string;
+        types?: string[];
+        primaryTypeDisplayName?: { text: string };
         displayName?: { text: string };
         formattedAddress?: string;
         location?: { latitude: number; longitude: number };
@@ -111,6 +114,9 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
       lng: p.location?.longitude ?? 0,
       rating: p.rating ?? null,
       reviews: p.userRatingCount ?? null,
+      primaryType: p.primaryType ?? null,
+      types: p.types ?? [],
+      category: p.primaryTypeDisplayName?.text ?? null,
     }));
   });
 
@@ -123,13 +129,15 @@ export const getPlaceDetails = createServerFn({ method: "POST" })
         headers: {
           ...authHeaders(),
           "X-Goog-FieldMask":
-            "id,displayName,formattedAddress,location,rating,userRatingCount,priceLevel,businessStatus,primaryTypeDisplayName,websiteUri,nationalPhoneNumber,googleMapsUri,regularOpeningHours.weekdayDescriptions,reviews.text,reviews.rating,reviews.relativePublishTimeDescription,reviews.authorAttribution.displayName",
+            "id,primaryType,types,displayName,formattedAddress,location,rating,userRatingCount,priceLevel,businessStatus,primaryTypeDisplayName,websiteUri,nationalPhoneNumber,googleMapsUri,regularOpeningHours.weekdayDescriptions,reviews.text,reviews.rating,reviews.relativePublishTimeDescription,reviews.authorAttribution.displayName",
         },
       },
     );
     if (!res.ok) throw new Error(`Place details failed: ${res.status}`);
     const p = (await res.json()) as {
       id: string;
+      primaryType?: string;
+      types?: string[];
       displayName?: { text: string };
       formattedAddress?: string;
       location?: { latitude: number; longitude: number };
@@ -160,6 +168,8 @@ export const getPlaceDetails = createServerFn({ method: "POST" })
       priceLevel: p.priceLevel ?? null,
       businessStatus: p.businessStatus ?? null,
       category: p.primaryTypeDisplayName?.text ?? null,
+      primaryType: p.primaryType ?? null,
+      types: p.types ?? [],
       website: p.websiteUri ?? null,
       phone: p.nationalPhoneNumber ?? null,
       mapsUri: p.googleMapsUri ?? null,

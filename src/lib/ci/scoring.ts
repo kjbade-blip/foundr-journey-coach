@@ -13,6 +13,8 @@ export interface PlaceObservation {
   reviews: number | null;
   businessStatus: string | null;
   category: string | null;
+  primaryType: string | null;
+  types: string[];
   website: string | null;
   priceLevel: string | null;
   openingHours: string[];
