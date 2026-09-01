@@ -59,7 +59,7 @@ const PROFILES: TypeProfile[] = [
     directTypes: ["coffee_shop"],
     directCategory: /\b(coffee shop|coffee house|espresso bar|speciality coffee|specialty coffee|coffee roaster|coffee (&|and) brunch)\b/i,
     conditionalTypes: ["cafe", "tea_house"],
-    keywords: /\b(coffee|espresso|barista|roast(er|ery|ed)?|brew bar|flat white|caff?[eè])\b/i,
+    keywords: /\b(coffee|espresso|barista|roast(er|ery|ed)?|brew bar|flat white)\b/i,
     relatedTypes: ["bakery", "restaurant", "brunch_restaurant", "breakfast_restaurant", "sandwich_shop", "juice_shop", "tea_house", "bar", "bagel_shop", "donut_shop", "ice_cream_shop"],
   },
   {
@@ -230,7 +230,8 @@ export function classifyCandidate(searchedType: string | null | undefined, c: Ca
   const primary = norm(c.primaryType).replace(/ /g, "_");
   const all = (c.types ?? []).map((t) => norm(t).replace(/ /g, "_"));
   const category = c.category ?? null;
-  const corroboration = `${c.name ?? ""} ${category ?? ""} ${c.website ?? ""}`;
+  // Generic family words ("cafe") must never corroborate themselves.
+  const corroboration = `${c.name ?? ""} ${category ?? ""} ${c.website ?? ""}`.replace(/caff?[eè]s?/gi, " ");
 
   const isDirectType = (t: string) => profile.directTypes.includes(t);
   const isConditional = (t: string) => (profile.conditionalTypes ?? []).includes(t);
