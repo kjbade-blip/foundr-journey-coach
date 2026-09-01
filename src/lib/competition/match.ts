@@ -57,7 +57,7 @@ const PROFILES: TypeProfile[] = [
     label: "Coffee shop",
     aliases: ["coffee shop", "coffee shops", "coffee", "cafe", "café", "cafes", "espresso bar", "coffee house", "coffeehouse"],
     directTypes: ["coffee_shop"],
-    directCategory: /\b(coffee shop|coffee house|espresso bar|speciality coffee|specialty coffee|coffee roaster)\b/i,
+    directCategory: /\b(coffee shop|coffee house|espresso bar|speciality coffee|specialty coffee|coffee roaster|coffee (&|and) brunch)\b/i,
     conditionalTypes: ["cafe", "tea_house"],
     keywords: /\b(coffee|espresso|barista|roast(er|ery|ed)?|brew bar|flat white|caff?[eè])\b/i,
     relatedTypes: ["bakery", "restaurant", "brunch_restaurant", "breakfast_restaurant", "sandwich_shop", "juice_shop", "tea_house", "bar", "bagel_shop", "donut_shop", "ice_cream_shop"],
@@ -73,7 +73,7 @@ const PROFILES: TypeProfile[] = [
       "vegetarian_restaurant", "vegan_restaurant", "american_restaurant", "mediterranean_restaurant",
       "middle_eastern_restaurant", "pizza_restaurant", "sushi_restaurant", "ramen_restaurant", "brunch_restaurant",
     ],
-    directCategory: /\b(restaurant|bistro|steakhouse|trattoria|brasserie|eatery)\b/i,
+    directCategory: /\b(restaurant|bistro|steakhouse|trattoria|brasserie|eatery|casual dining)\b/i,
     relatedTypes: ["cafe", "coffee_shop", "bar", "pub", "fast_food_restaurant", "meal_takeaway", "bakery", "night_club"],
   },
   {
@@ -121,7 +121,7 @@ const PROFILES: TypeProfile[] = [
     label: "Gym",
     aliases: ["gym", "gyms", "fitness", "fitness studio", "health club", "strength & conditioning"],
     directTypes: ["gym", "fitness_center"],
-    directCategory: /\b(gym|fitness (centre|center|studio)|health club|crossfit)\b/i,
+    directCategory: /\b(gym|fitness (centre|center|studio)|health club|crossfit|strength (&|and) conditioning)\b/i,
     relatedTypes: ["yoga_studio", "spa", "sports_complex", "physiotherapist", "swimming_pool"],
   },
   {
