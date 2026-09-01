@@ -232,7 +232,7 @@ function Finder() {
                   </div>
                   <h3 className="mt-1 text-xl font-bold">
                     {a.evidence.competition
-                      ? `${a.evidence.competition.count} comparable businesses · ${a.evidence.competition.strongCount} highly rated`
+                      ? `${a.evidence.competition.count} direct competitors · ${a.evidence.competition.strongCount} highly rated`
                       : "Competitor scan unavailable for this area"}
                   </h3>
                 </div>
@@ -249,22 +249,32 @@ function Finder() {
             </Card>
 
             <Card>
-              <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Competitors found</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Direct competitors found</div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Only businesses confirmed to trade primarily as the same business type are counted.
+              </p>
               {a.evidence.competition && a.evidence.competition.examples.length > 0 ? (
                 <ul className="mt-3 divide-y divide-border">
                   {a.evidence.competition.examples.map((p) => (
-                    <li key={p.name} className="flex items-center justify-between gap-3 py-2.5 text-sm">
-                      <span className="font-medium">{p.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {p.rating ? `★ ${p.rating}` : "No rating"}
-                        {p.reviews ? ` · ${p.reviews} reviews` : ""}
-                      </span>
+                    <li key={p.name} className="py-2.5 text-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="font-medium">{p.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {p.rating ? `★ ${p.rating}` : "No rating"}
+                          {p.reviews ? ` · ${p.reviews} reviews` : ""}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        <span className="font-semibold text-foreground">Why this is a competitor: </span>
+                        {p.matchReason}
+                      </p>
                     </li>
                   ))}
                 </ul>
               ) : (
                 <p className="mt-3 text-sm text-muted-foreground">
-                  No comparable listings were returned for this radius. Found-r has not substituted an estimate.
+                  No high-confidence direct competitors found nearby. Loosely related businesses are deliberately excluded, and
+                  Found-r has not substituted an estimate.
                 </p>
               )}
               <p className="mt-3 text-xs text-muted-foreground">Source: Google Places, live listing data.</p>
