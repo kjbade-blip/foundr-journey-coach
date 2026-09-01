@@ -2,6 +2,8 @@
 // ONS does not publish competitor-level business data, and the UI must never
 // attribute these figures to ONS.
 
+import { classifyCandidate } from "@/lib/competition/match";
+
 const GATEWAY = "https://connector-gateway.lovable.dev/google_maps";
 
 function mapsHeaders() {
@@ -15,7 +17,9 @@ export interface CompetitorScan {
   count: number;
   strongCount: number;
   radiusMiles: number;
-  examples: Array<{ name: string; rating: number | null; reviews: number | null }>;
+  /** Candidates returned by the source but rejected by the strict type match. */
+  excludedCount: number;
+  examples: Array<{ name: string; rating: number | null; reviews: number | null; matchReason: string }>;
 }
 
 export async function scanCompetitors(
@@ -30,7 +34,8 @@ export async function scanCompetitors(
       headers: {
         ...mapsHeaders(),
         "Content-Type": "application/json",
-        "X-Goog-FieldMask": "places.displayName,places.rating,places.userRatingCount",
+        "X-Goog-FieldMask":
+          "places.displayName,places.rating,places.userRatingCount,places.primaryType,places.types,places.primaryTypeDisplayName,places.websiteUri",
       },
       body: JSON.stringify({
         textQuery: term,
@@ -42,17 +47,41 @@ export async function scanCompetitors(
     });
     if (!res.ok) return null;
     const json = (await res.json()) as {
-      places?: Array<{ displayName?: { text: string }; rating?: number; userRatingCount?: number }>;
+      places?: Array<{
+        displayName?: { text: string };
+        rating?: number;
+        userRatingCount?: number;
+        primaryType?: string;
+        types?: string[];
+        primaryTypeDisplayName?: { text: string };
+        websiteUri?: string;
+      }>;
     };
-    const places = json.places ?? [];
+    const raw = json.places ?? [];
+    // Only high-confidence same-type businesses count as competition.
+    const matched = raw
+      .map((p) => ({
+        p,
+        match: classifyCandidate(term, {
+          primaryType: p.primaryType ?? null,
+          types: p.types ?? [],
+          category: p.primaryTypeDisplayName?.text ?? null,
+          name: p.displayName?.text ?? null,
+          website: p.websiteUri ?? null,
+        }),
+      }))
+      .filter((x) => x.match.verdict === "direct");
+
     return {
-      count: places.length,
-      strongCount: places.filter((p) => (p.rating ?? 0) >= 4.3).length,
+      count: matched.length,
+      strongCount: matched.filter((x) => (x.p.rating ?? 0) >= 4.3).length,
       radiusMiles,
-      examples: places.slice(0, 5).map((p) => ({
+      excludedCount: raw.length - matched.length,
+      examples: matched.slice(0, 5).map(({ p, match }) => ({
         name: p.displayName?.text ?? "Unknown",
         rating: p.rating ?? null,
         reviews: p.userRatingCount ?? null,
+        matchReason: match.reason,
       })),
     };
   } catch (error) {

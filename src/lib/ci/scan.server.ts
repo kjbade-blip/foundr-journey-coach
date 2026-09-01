@@ -20,6 +20,7 @@ import {
   type PlaceObservation,
 } from "./scoring";
 import { interpretChange } from "./interpret.server";
+import { classifyCandidate } from "@/lib/competition/match";
 import { metresToMiles, type ChangeMetrics, type CICompetitor, type CompetitorStatus } from "./types";
 
 type DB = SupabaseClient<Database>;
@@ -120,8 +121,24 @@ export async function runScan(supabase: DB, userId: string, business: ScanBusine
 
   let newCount = 0;
 
+  let excludedByType = 0;
   for (const o of observed) {
     if (business.placeId && o.placeId === business.placeId) continue;
+
+    // Strict type gate: only businesses Found-r is confident share the same
+    // core customer-facing type are ever tracked as competitors.
+    const match = classifyCandidate(business.businessType, {
+      primaryType: o.primaryType,
+      types: o.types,
+      category: o.category,
+      name: o.name,
+      website: o.website,
+    });
+    if (match.verdict !== "direct") {
+      excludedByType += 1;
+      continue;
+    }
+
     seen.add(o.placeId);
     const dist = o.lat !== null && o.lng !== null ? distanceMetres(origin, { lat: o.lat, lng: o.lng }) : null;
     const relevance = relevanceScore(o, dist, business.radiusMiles);
