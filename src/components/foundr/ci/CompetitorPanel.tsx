@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { addCompetitorByPlace, getCompetitorHistory, setCompetitorStatus } from "@/lib/ci.functions";
 import { searchPlacesNearby } from "@/lib/maps.functions";
 import { metresToMiles, STATUS_LABEL, type CIBusiness, type CICompetitor, type CompetitorStatus } from "@/lib/ci/types";
+import { classifyCandidate } from "@/lib/competition/match";
 
 const STATUS_TONE: Record<CompetitorStatus, "good" | "brand" | "neutral" | "warn"> = {
   tracked: "brand",
@@ -31,7 +32,7 @@ function Sparkline({ values }: { values: number[] }) {
   );
 }
 
-function CompetitorDetail({ competitor }: { competitor: CICompetitor }) {
+function CompetitorDetail({ competitor, businessType }: { competitor: CICompetitor; businessType: string }) {
   const historyFn = useServerFn(getCompetitorHistory);
   const { data, isPending } = useQuery({
     queryKey: ["ci-history", competitor.id],
@@ -59,6 +60,11 @@ function CompetitorDetail({ competitor }: { competitor: CICompetitor }) {
         )}
         {competitor.category && <span className="rounded-full bg-muted px-3 py-1 font-semibold">{competitor.category}</span>}
       </div>
+
+      <p className="rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">
+        <span className="font-semibold text-foreground">Why this is a competitor: </span>
+        {classifyCandidate(businessType, { category: competitor.category, name: competitor.name }).reason}
+      </p>
 
       {competitor.address && (
         <div className="flex items-start gap-2 text-sm">
@@ -213,6 +219,16 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
         </button>
       </div>
 
+      {visible.length === 0 && (
+        <Card>
+          <p className="text-sm font-semibold">No high-confidence direct competitors found nearby</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Found-r only tracks businesses confirmed to trade primarily as the same business type. Loosely related businesses
+            are deliberately excluded.
+          </p>
+        </Card>
+      )}
+
       <div className="grid gap-3 sm:grid-cols-2">
         {visible.map((c) => (
           <Card key={c.id}>
@@ -235,6 +251,10 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
             <div className="mt-3 text-xs text-muted-foreground">
               Competitor score {c.competitorScore ?? "—"} · relevance {c.relevance}
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              <span className="font-semibold text-foreground">Why this is a competitor: </span>
+              {classifyCandidate(business.businessType, { category: c.category, name: c.name }).reason}
+            </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {c.status !== "tracked" && c.status !== "user_added" && (
                 <button
@@ -282,7 +302,7 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
             <DialogTitle>{selected?.name}</DialogTitle>
             <DialogDescription>Observed history and recorded changes</DialogDescription>
           </DialogHeader>
-          {selected && <CompetitorDetail competitor={selected} />}
+          {selected && <CompetitorDetail competitor={selected} businessType={business.businessType} />}
         </DialogContent>
       </Dialog>
     </div>
