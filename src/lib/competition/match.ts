@@ -283,7 +283,7 @@ export function classifyCandidate(searchedType: string | null | undefined, c: Ca
     return {
       verdict: "related",
       confidence: 40,
-      reason: `Classified as "${category ?? primary.replace(/_/g, " ") || "a nearby business"}" — an adjacent business type, not a direct ${profile.label.toLowerCase()} competitor.`,
+      reason: `Classified as "${category ?? (primary.replace(/_/g, " ") || "a nearby business")}" — an adjacent business type, not a direct ${profile.label.toLowerCase()} competitor.`,
       matchedType: primary || null,
     };
   }
