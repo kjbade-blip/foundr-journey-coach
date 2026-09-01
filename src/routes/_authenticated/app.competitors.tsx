@@ -15,6 +15,7 @@ import {
 } from "@/lib/competitor-mocks";
 import { AISearchBar } from "@/components/foundr/AISearchBar";
 import { conceptToMockType, describeSearch, searchByConcepts, type ParsedSearch } from "@/lib/ai-search";
+import { NO_DIRECT_COMPETITORS_MESSAGE, businessTypeLabel, partitionCandidates } from "@/lib/competition/match";
 
 
 export const Route = createFileRoute("/_authenticated/app/competitors")({
@@ -100,11 +101,13 @@ function CompetitorRow({
   rank,
   watched,
   onToggle,
+  why,
 }: {
   c: MockCompetitor;
   rank?: number;
   watched: boolean;
   onToggle: () => void;
+  why?: string;
 }) {
   return (
     <li
@@ -146,6 +149,12 @@ function CompetitorRow({
             <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-dark" />
             {c.notable}
           </p>
+          {why && (
+            <p className="mt-2 rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">
+              <span className="font-semibold text-foreground">Why this is a competitor: </span>
+              {why}
+            </p>
+          )}
         </div>
         <div className="w-full sm:w-auto">
           <WatchButton watched={watched} onClick={onToggle} />
@@ -180,6 +189,18 @@ function Competitors() {
         : generateCompetitors(query.area, query.type, 20),
     [query, ai],
   );
+  const matched = useMemo(
+    () =>
+      partitionCandidates(query.type, results, (c) => ({
+        category: c.category,
+        name: c.name,
+        website: c.website,
+      })),
+    [results, query.type],
+  );
+  const directResults = useMemo(() => matched.direct.slice(0, 20), [matched]);
+  const relatedResults = useMemo(() => matched.related.slice(0, 8), [matched]);
+
   const center = useMemo(() => {
     if (geoCenter) return geoCenter;
     const key = Object.keys(AREAS).find((a) => a.toLowerCase() === query.area.trim().toLowerCase());
@@ -189,9 +210,9 @@ function Competitors() {
   const markers: MapMarker[] = useMemo(
     () => [
       { ...center, primary: true, label: "You", title: `Your area · ${query.area}` },
-      ...results.slice(0, 8).map((c, i) => ({ lat: c.lat, lng: c.lng, label: String(i + 1), title: `${c.name} · ${c.category}` })),
+      ...directResults.slice(0, 8).map((c, i) => ({ lat: c.lat, lng: c.lng, label: String(i + 1), title: `${c.name} · ${c.category}` })),
     ],
-    [center, results, query.area],
+    [center, directResults, query.area],
   );
 
   async function geocodeArea(area: string) {
@@ -394,8 +415,10 @@ function Competitors() {
       {/* Top 20 */}
       <section className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-2">
-          <h2 className="text-xl font-bold">Top 20 competitors</h2>
-          <span className="text-xs text-muted-foreground">Ranked by rating, review volume and proximity</span>
+          <h2 className="text-xl font-bold">Direct competitors</h2>
+          <span className="text-xs text-muted-foreground">
+            High-confidence {businessTypeLabel(query.type).toLowerCase()} matches only
+          </span>
         </div>
 
         {loading ? (
@@ -404,18 +427,49 @@ function Competitors() {
               <li key={i} className="h-28 animate-pulse rounded-2xl border border-border bg-muted/50" />
             ))}
           </ul>
-        ) : results.length === 0 ? (
+        ) : directResults.length === 0 ? (
           <Card className="mt-3 text-center text-sm text-muted-foreground">
-            No competitors found for {query.type} in {query.area}. Try a different area or business type.
+            <p className="font-semibold text-foreground">{NO_DIRECT_COMPETITORS_MESSAGE}</p>
+            <p className="mt-1">
+              Found-r only lists businesses confirmed to trade primarily as {businessTypeLabel(query.type).toLowerCase()}s in{" "}
+              {query.area}. {matched.related.length + matched.excluded} loosely related businesses were excluded.
+            </p>
           </Card>
         ) : (
-          <ul className="mt-3 grid gap-3">
-            {results.map((c, i) => (
-              <CompetitorRow key={c.id} c={c} rank={i + 1} watched={ids.has(c.id)} onToggle={() => toggle(c)} />
-            ))}
-          </ul>
+          <>
+            <ul className="mt-3 grid gap-3">
+              {directResults.map((c, i) => (
+                <CompetitorRow
+                  key={c.id}
+                  c={c}
+                  rank={i + 1}
+                  watched={ids.has(c.id)}
+                  onToggle={() => toggle(c)}
+                  why={c.match.reason}
+                />
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-muted-foreground">
+              {matched.excluded + matched.related.length} nearby businesses were excluded because Found-r could not confirm
+              they share the same core business type.
+            </p>
+          </>
         )}
       </section>
+
+      {relatedResults.length > 0 && (
+        <section className="mt-8">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <h2 className="text-xl font-bold">Related businesses (not competitors)</h2>
+            <span className="text-xs text-muted-foreground">Adjacent or complementary — excluded from competitor analysis</span>
+          </div>
+          <ul className="mt-3 grid gap-3 opacity-90">
+            {relatedResults.map((c) => (
+              <CompetitorRow key={c.id} c={c} watched={ids.has(c.id)} onToggle={() => toggle(c)} why={c.match.reason} />
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Global search */}
       <section className="mt-10">

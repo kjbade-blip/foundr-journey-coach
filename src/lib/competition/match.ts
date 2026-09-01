@@ -57,9 +57,9 @@ const PROFILES: TypeProfile[] = [
     label: "Coffee shop",
     aliases: ["coffee shop", "coffee shops", "coffee", "cafe", "café", "cafes", "espresso bar", "coffee house", "coffeehouse"],
     directTypes: ["coffee_shop"],
-    directCategory: /\b(coffee shop|coffee house|espresso bar|speciality coffee|specialty coffee|coffee roaster)\b/i,
+    directCategory: /\b(coffee shop|coffee house|espresso bar|speciality coffee|specialty coffee|coffee roaster|coffee (&|and) brunch)\b/i,
     conditionalTypes: ["cafe", "tea_house"],
-    keywords: /\b(coffee|espresso|barista|roast(er|ery|ed)?|brew bar|flat white|caff?[eè])\b/i,
+    keywords: /\b(coffee|espresso|barista|roast(er|ery|ed)?|brew bar|flat white)\b/i,
     relatedTypes: ["bakery", "restaurant", "brunch_restaurant", "breakfast_restaurant", "sandwich_shop", "juice_shop", "tea_house", "bar", "bagel_shop", "donut_shop", "ice_cream_shop"],
   },
   {
@@ -73,7 +73,7 @@ const PROFILES: TypeProfile[] = [
       "vegetarian_restaurant", "vegan_restaurant", "american_restaurant", "mediterranean_restaurant",
       "middle_eastern_restaurant", "pizza_restaurant", "sushi_restaurant", "ramen_restaurant", "brunch_restaurant",
     ],
-    directCategory: /\b(restaurant|bistro|steakhouse|trattoria|brasserie|eatery)\b/i,
+    directCategory: /\b(restaurant|bistro|steakhouse|trattoria|brasserie|eatery|casual dining)\b/i,
     relatedTypes: ["cafe", "coffee_shop", "bar", "pub", "fast_food_restaurant", "meal_takeaway", "bakery", "night_club"],
   },
   {
@@ -121,7 +121,7 @@ const PROFILES: TypeProfile[] = [
     label: "Gym",
     aliases: ["gym", "gyms", "fitness", "fitness studio", "health club", "strength & conditioning"],
     directTypes: ["gym", "fitness_center"],
-    directCategory: /\b(gym|fitness (centre|center|studio)|health club|crossfit)\b/i,
+    directCategory: /\b(gym|fitness (centre|center|studio)|health club|crossfit|strength (&|and) conditioning)\b/i,
     relatedTypes: ["yoga_studio", "spa", "sports_complex", "physiotherapist", "swimming_pool"],
   },
   {
@@ -230,7 +230,8 @@ export function classifyCandidate(searchedType: string | null | undefined, c: Ca
   const primary = norm(c.primaryType).replace(/ /g, "_");
   const all = (c.types ?? []).map((t) => norm(t).replace(/ /g, "_"));
   const category = c.category ?? null;
-  const corroboration = `${c.name ?? ""} ${category ?? ""} ${c.website ?? ""}`;
+  // Generic family words ("cafe") must never corroborate themselves.
+  const corroboration = `${c.name ?? ""} ${category ?? ""} ${c.website ?? ""}`.replace(/caff?[eè]s?/gi, " ");
 
   const isDirectType = (t: string) => profile.directTypes.includes(t);
   const isConditional = (t: string) => (profile.conditionalTypes ?? []).includes(t);
@@ -283,7 +284,7 @@ export function classifyCandidate(searchedType: string | null | undefined, c: Ca
     return {
       verdict: "related",
       confidence: 40,
-      reason: `Classified as "${category ?? primary.replace(/_/g, " ") || "a nearby business"}" — an adjacent business type, not a direct ${profile.label.toLowerCase()} competitor.`,
+      reason: `Classified as "${category ?? (primary.replace(/_/g, " ") || "a nearby business")}" — an adjacent business type, not a direct ${profile.label.toLowerCase()} competitor.`,
       matchedType: primary || null,
     };
   }
