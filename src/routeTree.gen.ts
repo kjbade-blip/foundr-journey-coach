@@ -24,6 +24,7 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as ApiPublicRunCiScansRouteImport } from './routes/api/public/run-ci-scans'
 import { Route as ApiPublicRefreshCrimeBenchmarksRouteImport } from './routes/api/public/refresh-crime-benchmarks'
 import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app.reports'
+import { Route as AuthenticatedAppPremisesRouteImport } from './routes/_authenticated/app.premises'
 import { Route as AuthenticatedAppOpportunityFinderRouteImport } from './routes/_authenticated/app.opportunity-finder'
 import { Route as AuthenticatedAppMarketplaceRouteImport } from './routes/_authenticated/app.marketplace'
 import { Route as AuthenticatedAppLocationAnalysisRouteImport } from './routes/_authenticated/app.location-analysis'
@@ -115,6 +116,12 @@ const AuthenticatedAppReportsRoute = AuthenticatedAppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppPremisesRoute =
+  AuthenticatedAppPremisesRouteImport.update({
+    id: '/premises',
+    path: '/premises',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppOpportunityFinderRoute =
   AuthenticatedAppOpportunityFinderRouteImport.update({
     id: '/opportunity-finder',
@@ -227,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
   '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/app/premises': typeof AuthenticatedAppPremisesRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
@@ -257,6 +265,7 @@ export interface FileRoutesByTo {
   '/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
   '/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/app/premises': typeof AuthenticatedAppPremisesRoute
   '/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
@@ -290,6 +299,7 @@ export interface FileRoutesById {
   '/_authenticated/app/location-analysis': typeof AuthenticatedAppLocationAnalysisRoute
   '/_authenticated/app/marketplace': typeof AuthenticatedAppMarketplaceRoute
   '/_authenticated/app/opportunity-finder': typeof AuthenticatedAppOpportunityFinderRoute
+  '/_authenticated/app/premises': typeof AuthenticatedAppPremisesRoute
   '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/app/location-analysis'
     | '/app/marketplace'
     | '/app/opportunity-finder'
+    | '/app/premises'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/app/location-analysis'
     | '/app/marketplace'
     | '/app/opportunity-finder'
+    | '/app/premises'
     | '/app/reports'
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
@@ -385,6 +397,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/location-analysis'
     | '/_authenticated/app/marketplace'
     | '/_authenticated/app/opportunity-finder'
+    | '/_authenticated/app/premises'
     | '/_authenticated/app/reports'
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
@@ -511,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppReportsRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/premises': {
+      id: '/_authenticated/app/premises'
+      path: '/premises'
+      fullPath: '/app/premises'
+      preLoaderRoute: typeof AuthenticatedAppPremisesRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/opportunity-finder': {
       id: '/_authenticated/app/opportunity-finder'
       path: '/opportunity-finder'
@@ -635,6 +655,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppLocationAnalysisRoute: typeof AuthenticatedAppLocationAnalysisRoute
   AuthenticatedAppMarketplaceRoute: typeof AuthenticatedAppMarketplaceRoute
   AuthenticatedAppOpportunityFinderRoute: typeof AuthenticatedAppOpportunityFinderRoute
+  AuthenticatedAppPremisesRoute: typeof AuthenticatedAppPremisesRoute
   AuthenticatedAppReportsRoute: typeof AuthenticatedAppReportsRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
@@ -656,6 +677,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppMarketplaceRoute: AuthenticatedAppMarketplaceRoute,
   AuthenticatedAppOpportunityFinderRoute:
     AuthenticatedAppOpportunityFinderRoute,
+  AuthenticatedAppPremisesRoute: AuthenticatedAppPremisesRoute,
   AuthenticatedAppReportsRoute: AuthenticatedAppReportsRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }

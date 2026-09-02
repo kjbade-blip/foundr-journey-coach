@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
-import { Filter, Download, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
+import { Filter, Download, ArrowRight, ArrowLeft, Loader2, Building2 } from "lucide-react";
+import { profileForBusinessType, recommendedAreaRange } from "@/lib/premises/profiles";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
@@ -18,6 +19,10 @@ import { AnalysisProgress, ANALYSIS_STEPS } from "@/components/foundr/opportunit
 
 
 export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
+  validateSearch: (s: Record<string, unknown>): { type?: string; location?: string } => ({
+    ...(typeof s.type === "string" ? { type: s.type } : {}),
+    ...(typeof s.location === "string" ? { location: s.location } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Opportunity Finder · Found-r" },
@@ -32,9 +37,12 @@ export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
 });
 
 function Finder() {
+  const search = Route.useSearch();
   const [step, setStep] = useState<0 | 1 | 2>(0);
-  const [typeKey, setTypeKey] = useState(BUSINESS_TYPES[0]!.key);
-  const [postcode, setPostcode] = useState("SW11");
+  const [typeKey, setTypeKey] = useState(
+    search.type && BUSINESS_TYPES.some((t) => t.key === search.type) ? search.type : BUSINESS_TYPES[0]!.key,
+  );
+  const [postcode, setPostcode] = useState(search.location ?? "SW11");
   const [radius, setRadius] = useState(1);
   const [tick, setTick] = useState(0);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
@@ -283,6 +291,9 @@ function Finder() {
 
           <OpportunityReport analysis={a} />
 
+          <PremisesStep typeKey={typeKey} location={a.location.displayName} radiusMiles={a.location.radiusMiles} />
+
+
           {a.evidence.crime && (
             <CrimeRiskCard
               profile={a.evidence.crime.profile}
@@ -303,5 +314,81 @@ function Finder() {
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Optional bridge from an opportunity into the premises search. The search is
+ * pre-filled from the opportunity context and the user can refine it first.
+ */
+function PremisesStep({ typeKey, location, radiusMiles }: { typeKey: string; location: string; radiusMiles: number }) {
+  const navigate = useNavigate();
+  const profile = profileForBusinessType(typeKey);
+  const [capacity, setCapacity] = useState<string>("");
+  const [staff, setStaff] = useState<string>("");
+  const [budget, setBudget] = useState<string>("");
+  const area = recommendedAreaRange(profile, {
+    customerCapacity: capacity ? Number(capacity) : null,
+    staffCount: staff ? Number(staff) : null,
+  });
+
+  return (
+    <Card>
+      <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Optional next step</div>
+      <h3 className="mt-1 text-xl font-bold">Find suitable premises for this opportunity</h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Found-r will carry this analysis into the premises search: {profile.label.toLowerCase()} in {location}, within{" "}
+        {radiusMiles} miles, sized at {area.min.toLocaleString()}–{area.max.toLocaleString()} sq ft. Refine anything below
+        before you search.
+      </p>
+      <div className="mt-4 grid gap-2 sm:grid-cols-4">
+        <input
+          value={capacity}
+          onChange={(e) => setCapacity(e.target.value)}
+          inputMode="numeric"
+          placeholder="Peak customers"
+          aria-label="Expected customers at peak"
+          className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+        />
+        <input
+          value={staff}
+          onChange={(e) => setStaff(e.target.value)}
+          inputMode="numeric"
+          placeholder="Staff on site"
+          aria-label="Staff on site"
+          className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+        />
+        <input
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+          inputMode="numeric"
+          placeholder="Rent budget £/month"
+          aria-label="Rent budget per month"
+          className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+        />
+        <button
+          onClick={() =>
+            navigate({
+              to: "/app/premises",
+              search: {
+                type: profile.key,
+                location,
+                radius: Math.max(radiusMiles, 3),
+                capacity: capacity ? Number(capacity) : undefined,
+                staff: staff ? Number(staff) : undefined,
+                budget: budget ? Number(budget) : undefined,
+              },
+            })
+          }
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white"
+        >
+          <Building2 className="h-4 w-4" /> Find premises
+        </button>
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">
+        Premises results are checked against operational fit — ceiling height, extraction, toilets, access and size — not
+        just rent and postcode.
+      </p>
+    </Card>
   );
 }
