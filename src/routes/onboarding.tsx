@@ -2,9 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, ArrowRight, Building2, Check, Loader2, Rocket, Search, TrendingUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2, Check, Loader2, Rocket, Search, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 
 import { Logo } from "@/components/foundr/Logo";
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
+import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
 import { setMode } from "@/lib/mode";
 import { useAuth } from "@/features/auth/auth-context";
 import {
