@@ -363,7 +363,6 @@ function BusinessStep({
     mutationFn: async (q: string) => find({ data: { query: q } }),
     onSuccess: (r) => {
       setResults(r);
-      setManual(r.length === 0);
     },
     onError: () => setError("Search failed — try a different term or enter your details manually."),
   });
@@ -482,6 +481,9 @@ function BusinessStep({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g. Kristian's Coffee, 09876543, SW11 3AB"
+          autoComplete="organization"
+          name="organization"
+          aria-label="Business name, company number or postcode"
           className="w-full bg-transparent text-sm outline-none"
         />
         <button
