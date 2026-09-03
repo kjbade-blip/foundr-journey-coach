@@ -286,7 +286,69 @@ function Onboarding() {
             error={error}
           />
         )}
+
+        <ToolsPanel email={user?.email ?? null} business={business} />
       </div>
+    </div>
+  );
+}
+
+/** Quick links to AI Discovery, ownership claiming and (for the demo owner) the demo reset. */
+function ToolsPanel({ email, business }: { email: string | null; business: ActiveBusiness | null }) {
+  const navigate = useNavigate();
+  const isDemoOwner = (email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
+
+  return (
+    <div className="mt-12 rounded-3xl border border-border bg-card p-5 shadow-soft sm:p-6">
+      <h2 className="text-lg">Business tools</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Build your intelligence profile automatically, or prove you're authorised to manage
+        {business ? ` ${business.name}` : " your business"}.
+      </p>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => void navigate({ to: "/discover" })}
+          className="flex items-start gap-3 rounded-2xl border border-border bg-background p-4 text-left transition hover:border-brand-dark/40 hover:bg-muted/40"
+        >
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand text-brand-foreground">
+            <Sparkles className="h-5 w-5" />
+          </span>
+          <span className="min-w-0">
+            <span className="block font-semibold">AI Discovery</span>
+            <span className="block text-sm text-muted-foreground">
+              Find your business and let Found-r build the full profile for you.
+            </span>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => void navigate({ to: "/verify" })}
+          className="flex items-start gap-3 rounded-2xl border border-border bg-background p-4 text-left transition hover:border-brand-dark/40 hover:bg-muted/40"
+        >
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand text-brand-foreground">
+            <ShieldCheck className="h-5 w-5" />
+          </span>
+          <span className="min-w-0">
+            <span className="block font-semibold">Claim this business</span>
+            <span className="block text-sm text-muted-foreground">
+              Verify ownership by Google Business Profile, business email or phone.
+            </span>
+          </span>
+        </button>
+      </div>
+
+      {isDemoOwner && (
+        <div className="mt-5 border-t border-border pt-5">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Demo controls</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Reset the synthetic demo listing so the claim flow can be tested from a clean slate.
+          </p>
+          <ResetDemoButton className="mt-3" to="/discover" />
+        </div>
+      )}
     </div>
   );
 }
