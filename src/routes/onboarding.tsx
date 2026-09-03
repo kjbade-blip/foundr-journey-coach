@@ -431,6 +431,21 @@ function BusinessStep({
 
   const busy = search.isPending || choose.isPending || saveManual.isPending;
 
+  // Autofill: suggest matches as the user types (debounced).
+  const lastQueried = useRef("");
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3) return;
+    const t = setTimeout(() => {
+      if (lastQueried.current === q || search.isPending) return;
+      lastQueried.current = q;
+      setError(null);
+      search.mutate(q);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
   return (
     <div className="mt-10">
       <h1 className="text-balance text-3xl tracking-tight sm:text-4xl">Find your business</h1>
