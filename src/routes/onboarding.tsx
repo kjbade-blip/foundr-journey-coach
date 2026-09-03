@@ -363,7 +363,6 @@ function BusinessStep({
     mutationFn: async (q: string) => find({ data: { query: q } }),
     onSuccess: (r) => {
       setResults(r);
-      setManual(r.length === 0);
     },
     onError: () => setError("Search failed — try a different term or enter your details manually."),
   });
@@ -431,6 +430,21 @@ function BusinessStep({
 
   const busy = search.isPending || choose.isPending || saveManual.isPending;
 
+  // Autofill: suggest matches as the user types (debounced).
+  const lastQueried = useRef("");
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3) return;
+    const t = setTimeout(() => {
+      if (lastQueried.current === q || search.isPending) return;
+      lastQueried.current = q;
+      setError(null);
+      search.mutate(q);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
   return (
     <div className="mt-10">
       <h1 className="text-balance text-3xl tracking-tight sm:text-4xl">Find your business</h1>
@@ -467,6 +481,9 @@ function BusinessStep({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g. Kristian's Coffee, 09876543, SW11 3AB"
+          autoComplete="organization"
+          name="organization"
+          aria-label="Business name, company number or postcode"
           className="w-full bg-transparent text-sm outline-none"
         />
         <button
