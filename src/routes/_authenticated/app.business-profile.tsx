@@ -383,7 +383,7 @@ function Info({ icon: Icon, label, value }: { icon: typeof MapPin; label: string
       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-dark" />
       <div className="min-w-0">
         <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className="break-words text-sm">{value}</div>
+        <div className="break-words text-sm"><Linkify>{value}</Linkify></div>
       </div>
     </div>
   );
@@ -393,7 +393,7 @@ function Summary({ label, text }: { label: string; text: string }) {
   return (
     <div className="rounded-xl border border-border bg-background p-4">
       <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</div>
-      <p className="mt-1 text-sm">{text}</p>
+      <p className="mt-1 text-sm"><Linkify>{text}</Linkify></p>
     </div>
   );
 }

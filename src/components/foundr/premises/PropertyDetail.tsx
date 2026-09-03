@@ -1,4 +1,5 @@
 import { ExternalLink, X } from "lucide-react";
+import { Linkify } from "@/components/foundr/Linkify";
 import { FitBadge } from "./FitBadge";
 import { GoogleMap } from "@/components/foundr/GoogleMap";
 import { monthlyRent, sqFtToSqM } from "@/lib/premises/suitability";
@@ -66,7 +67,9 @@ export function PropertyDetail({
               <Row label="Agent" value={l.agentName} />
               <Row label="Agent contact" value={l.agentContact} />
             </dl>
-            {l.description && <p className="mt-3 whitespace-pre-line text-sm text-muted-foreground">{l.description}</p>}
+            {l.description && (
+              <p className="mt-3 whitespace-pre-line text-sm text-muted-foreground"><Linkify>{l.description}</Linkify></p>
+            )}
             <p className="mt-3 rounded-xl bg-muted p-3 text-xs text-muted-foreground">{COST_WARNING}</p>
           </section>
 
@@ -162,7 +165,9 @@ function Row({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
       <dt className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</dt>
-      <dd className={value ? "font-medium" : "italic text-muted-foreground"}>{value ?? "Not stated"}</dd>
+      <dd className={value ? "break-words font-medium" : "italic text-muted-foreground"}>
+        {value ? <Linkify>{value}</Linkify> : "Not stated"}
+      </dd>
     </div>
   );
 }

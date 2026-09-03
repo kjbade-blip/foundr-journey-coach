@@ -1,5 +1,6 @@
 import { Sparkles, Pencil, Check, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { Linkify } from "@/components/foundr/Linkify";
 
 export function AIBadge({ label = "AI inferred" }: { label?: string }) {
   return (
@@ -82,7 +83,7 @@ export function EditableField({
           </div>
         </div>
       ) : (
-        <p className="mt-1.5 whitespace-pre-line text-sm text-foreground">{value || "—"}</p>
+        <p className="mt-1.5 whitespace-pre-line text-sm text-foreground"><Linkify>{value || "—"}</Linkify></p>
       )}
     </div>
   );

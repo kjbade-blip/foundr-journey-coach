@@ -1,4 +1,5 @@
 import { Card } from "@/components/foundr/ui";
+import { Linkify } from "@/components/foundr/Linkify";
 import { GEOGRAPHY_LABELS, type EvidenceItem } from "@/lib/ons/types";
 import { BookOpen } from "lucide-react";
 
@@ -37,7 +38,7 @@ export function EvidencePanel({
           <div key={s.label} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2.5">
             <div>
               <div className="text-sm font-semibold">{s.label}</div>
-              <div className="text-xs text-muted-foreground">{s.detail}</div>
+              <div className="text-xs text-muted-foreground"><Linkify>{s.detail}</Linkify></div>
             </div>
             <div className="text-right text-xs text-muted-foreground">{s.source}</div>
           </div>
