@@ -5,6 +5,7 @@ import {
   Building2, MapPin, Star, Globe, Phone, Clock, Loader2, RefreshCw, Sparkles, Users, Target, ShieldAlert, Lock,
 } from "lucide-react";
 import { PageHeader, Card, Stat } from "@/components/foundr/ui";
+import { Linkify } from "@/components/foundr/Linkify";
 import { HealthScore } from "@/components/foundr/discovery/HealthScore";
 import { AIBadge, VerifiedBadge, EditableField, Section, Chips, BulletList } from "@/components/foundr/discovery/ProfileBits";
 import { discoverDeep } from "@/lib/business-discovery.functions";
