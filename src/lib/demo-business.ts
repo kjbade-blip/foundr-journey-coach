@@ -30,7 +30,7 @@ export const DEMO_PLACE: PlaceDetails = {
   reviews: 186,
   lat: 53.6604,
   lng: -1.5589,
-  website: null,
+  website: "https://kristians-coffee-ritual.base44.app",
   phone: DEMO_PHONE,
   openingHours: [
     "Monday: 7:30 AM – 4:00 PM",
