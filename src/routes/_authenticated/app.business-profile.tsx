@@ -5,6 +5,7 @@ import {
   Building2, MapPin, Star, Globe, Phone, Clock, Loader2, RefreshCw, Sparkles, Users, Target, ShieldAlert, Lock,
 } from "lucide-react";
 import { PageHeader, Card, Stat } from "@/components/foundr/ui";
+import { Linkify } from "@/components/foundr/Linkify";
 import { HealthScore } from "@/components/foundr/discovery/HealthScore";
 import { AIBadge, VerifiedBadge, EditableField, Section, Chips, BulletList } from "@/components/foundr/discovery/ProfileBits";
 import { discoverDeep } from "@/lib/business-discovery.functions";
@@ -383,7 +384,7 @@ function Info({ icon: Icon, label, value }: { icon: typeof MapPin; label: string
       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-dark" />
       <div className="min-w-0">
         <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className="break-words text-sm">{value}</div>
+        <div className="break-words text-sm"><Linkify>{value}</Linkify></div>
       </div>
     </div>
   );
@@ -393,7 +394,7 @@ function Summary({ label, text }: { label: string; text: string }) {
   return (
     <div className="rounded-xl border border-border bg-background p-4">
       <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</div>
-      <p className="mt-1 text-sm">{text}</p>
+      <p className="mt-1 text-sm"><Linkify>{text}</Linkify></p>
     </div>
   );
 }
