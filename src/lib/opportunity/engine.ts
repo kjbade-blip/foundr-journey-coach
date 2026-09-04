@@ -13,6 +13,7 @@ import type {
   CategoryDataPoint,
   CategoryKey,
   CategoryScore,
+  DemandAssessment,
   EvidenceSource,
   OpportunityEvidence,
   Reading,
@@ -37,7 +38,12 @@ interface Built {
   sources: EvidenceSource[];
 }
 
-export function buildScores(evidence: OpportunityEvidence, type: BusinessTypeDef, radiusMiles: number): Built {
+export function buildScores(
+  evidence: OpportunityEvidence,
+  type: BusinessTypeDef,
+  radiusMiles: number,
+  demand?: DemandAssessment | null,
+): Built {
   const weights = weightsFor(type.key);
   const gaps: string[] = [];
   const raw: Array<Omit<CategoryScore, "weight"> & { rawWeight: number }> = [];
@@ -151,19 +157,35 @@ export function buildScores(evidence: OpportunityEvidence, type: BusinessTypeDef
   const comp = evidence.competition;
   if (comp) {
     const perMile = comp.count / Math.max(0.5, comp.radiusMiles);
-    const score = clamp(100 - perMile * 9 - comp.strongCount * 4);
+    const rawHeadroom = clamp(100 - perMile * 9 - comp.strongCount * 4);
+    // Headroom is a supply reading. Crowding alone is not saturation: where
+    // perceived demand is strong, the crowded market is re-read as competitive
+    // rather than closed. Demand is never derived from competitor count.
+    const demandScore = demand?.demandScore ?? null;
+    const relieved =
+      demandScore !== null && demandScore >= 60 && rawHeadroom < 60
+        ? Math.min(72, Math.round(rawHeadroom * 0.45 + demandScore * 0.55))
+        : rawHeadroom;
+    const score = Math.max(rawHeadroom, relieved);
+    const demandNote =
+      score > rawHeadroom
+        ? ` Competitor density alone scores ${rawHeadroom}/100 for headroom, but perceived demand is ${demandScore}/100, so Found-r does not read this market as saturated — it reads as competitive with possible unmet demand.`
+        : "";
     push(
       "competition",
       score,
-      ["Google Places"],
+      ["Google Places", ...(score > rawHeadroom ? ["Found-r Perceived Demand model"] : [])],
       [
         { label: "Comparable businesses nearby", value: `${comp.count} within ${comp.radiusMiles} miles`, source: "Google Places" },
         { label: "Highly rated (4.3+)", value: `${comp.strongCount}`, source: "Google Places" },
+        ...(demandScore !== null
+          ? [{ label: "Perceived demand (separate variable)", value: `${demandScore}/100`, source: "Found-r model (estimate)" }]
+          : []),
       ],
       comp.count === 0
         ? "No comparable businesses were found nearby. That can mean open headroom, or that the location does not support this type of business — worth checking on the ground."
-        : `${comp.count} comparable businesses trade within ${comp.radiusMiles} miles, ${comp.strongCount} of them highly rated. Some competition signals real demand; density reduces headroom.`,
-      "Google Places lists businesses that maintain a listing. Very new or listing-less businesses may be missing.",
+        : `${comp.count} comparable businesses trade within ${comp.radiusMiles} miles, ${comp.strongCount} of them highly rated. Competitor count measures supply, not demand.${demandNote}`,
+      "Google Places lists businesses that maintain a listing. Very new or listing-less businesses may be missing. Competitor count is not a measure of how many customers those businesses can serve.",
     );
   } else {
     gaps.push("The competitor scan did not return results, so competitive density is not scored.");

@@ -16,6 +16,7 @@ import { assessCrimeRisk } from "../crime/model";
 import { collectBDI } from "../bdi.server";
 import { BUSINESS_TYPES, matchBusinessType, type BusinessTypeDef } from "../ons/business-relevance";
 import { buildScores } from "./engine";
+import { buildDemandAssessment } from "./demand";
 import { assessConfidence } from "./confidence";
 import { deriveVerdict } from "./verdict";
 import { interpretAnalysis } from "./interpret.server";
@@ -122,7 +123,8 @@ export async function buildOpportunityAnalysis(input: AnalyseInput): Promise<Opp
     accessibility: null,
   };
 
-  const { categories, overallScore, evidenceGaps, sources } = buildScores(evidence, type, radiusMiles);
+  const demand = buildDemandAssessment(evidence, type, radiusMiles);
+  const { categories, overallScore, evidenceGaps, sources } = buildScores(evidence, type, radiusMiles, demand);
   const confidence = assessConfidence(sources, categories, evidence);
   const verdict = deriveVerdict(overallScore, confidence, categories);
 
@@ -144,6 +146,7 @@ export async function buildOpportunityAnalysis(input: AnalyseInput): Promise<Opp
     sources,
     categories,
     overallScore,
+    demand,
     confidence,
     verdict,
     evidenceGaps,

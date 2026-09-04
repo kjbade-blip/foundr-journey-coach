@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Card, Pill } from "@/components/foundr/ui";
 import type { OpportunityAnalysis, CategoryScore, EvidenceSource } from "@/lib/opportunity/types";
+import { DemandIntelligence, DemandSummaryStrip } from "./DemandIntelligence";
 import {
   ShieldAlert,
   Info,
@@ -152,6 +153,19 @@ export function OpportunityReport({ analysis }: { analysis: OpportunityAnalysis 
           <Dial score={a.confidence.score} label={`Confidence · ${a.confidence.level}`} />
         </div>
 
+        {/* Analyses saved before the demand model exists have no demand block. */}
+        {a.demand && (
+          <div className="mt-5">
+            <DemandSummaryStrip
+              demand={a.demand}
+              overallScore={a.overallScore}
+              verdictLabel={a.verdict.label}
+              verdictTone={a.verdict.tone}
+            />
+            <p className="mt-2 text-xs text-muted-foreground">{a.demand.interpretation}</p>
+          </div>
+        )}
+
         <div className="mt-5 rounded-xl bg-accent p-4">
           <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Why this verdict</div>
           <p className="mt-1.5 text-sm">{a.interpretation.verdictRationale}</p>
@@ -168,6 +182,8 @@ export function OpportunityReport({ analysis }: { analysis: OpportunityAnalysis 
           <strong>Confidence is not the score.</strong> {a.interpretation.confidenceExplanation}
         </p>
       </Card>
+
+      {a.demand && <DemandIntelligence demand={a.demand} />}
 
       {/* Category breakdown */}
       <Card>
