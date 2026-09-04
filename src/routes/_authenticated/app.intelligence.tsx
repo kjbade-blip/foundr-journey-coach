@@ -57,21 +57,39 @@ function SetupCard() {
   const createFn = useServerFn(createCIBusiness);
   const geocodeFn = useServerFn(geocodeAddress);
   const qc = useQueryClient();
+  const { business: active, isLoading: activeLoading } = useActiveBusiness();
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [location, setLocation] = useState("");
+  const prefilled = useRef(false);
+
+  useEffect(() => {
+    if (prefilled.current || !active) return;
+    prefilled.current = true;
+    setName(active.name ?? "");
+    setType(active.industry ?? "");
+    setLocation(businessLocationQuery(active));
+  }, [active]);
 
   const setup = useMutation({
     mutationFn: async () => {
-      const geo = await geocodeFn({ data: { address: location } });
-      if (!geo) throw new Error("Found-r could not locate that address.");
+      let lat = active?.latitude ?? null;
+      let lng = active?.longitude ?? null;
+      let address = active?.address ?? location;
+      if (lat == null || lng == null || location !== businessLocationQuery(active)) {
+        const geo = await geocodeFn({ data: { address: location } });
+        if (!geo) throw new Error("Found-r could not locate that address.");
+        lat = geo.lat;
+        lng = geo.lng;
+        address = geo.address;
+      }
       return createFn({
         data: {
           name,
-          placeId: null,
-          address: geo.address,
-          lat: geo.lat,
-          lng: geo.lng,
+          placeId: active?.placeId ?? null,
+          address,
+          lat,
+          lng,
           businessType: type,
           searchTerm: type,
           radiusMiles: 1,
@@ -86,10 +104,20 @@ function SetupCard() {
       <PageHeader
         eyebrow="Competitor Intelligence"
         title="Let Found-r keep an eye on your market."
-        subtitle="Tell Found-r what you run and where. It will identify who you're competing with and report what changes."
+        subtitle={
+          active
+            ? "We've filled this in from your business profile. Check it looks right, then start monitoring."
+            : "Tell Found-r what you run and where. It will identify who you're competing with and report what changes."
+        }
       />
       <Card className="max-w-xl">
+        {activeLoading && !active ? (
+          <div className="flex items-center gap-2 py-6 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" /> Loading your business details…
+          </div>
+        ) : (
         <div className="space-y-4">
+
           <label className="block">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Your business name</span>
             <input
