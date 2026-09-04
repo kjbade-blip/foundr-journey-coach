@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Eye, EyeOff, Loader2, MapPin, Plus, Search, Star } from "lucide-react";
+import { Eye, EyeOff, Loader2, MapPin, Star } from "lucide-react";
 import { Card, Pill } from "@/components/foundr/ui";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { addCompetitorByPlace, getCompetitorHistory, setCompetitorStatus } from "@/lib/ci.functions";
-import { searchPlacesNearby } from "@/lib/maps.functions";
+import { getCompetitorHistory, setCompetitorStatus } from "@/lib/ci.functions";
 import { metresToMiles, STATUS_LABEL, type CIBusiness, type CICompetitor, type CompetitorStatus } from "@/lib/ci/types";
 import { classifyCandidate } from "@/lib/competition/match";
+import { CompetitorSearch } from "@/components/foundr/ci/CompetitorSearch";
 
 const STATUS_TONE: Record<CompetitorStatus, "good" | "brand" | "neutral" | "warn"> = {
   tracked: "brand",
@@ -118,76 +118,6 @@ function CompetitorDetail({ competitor, businessType }: { competitor: CICompetit
   );
 }
 
-function AddCompetitor({ business }: { business: CIBusiness }) {
-  const searchFn = useServerFn(searchPlacesNearby);
-  const addFn = useServerFn(addCompetitorByPlace);
-  const qc = useQueryClient();
-  const [term, setTerm] = useState("");
-  const [results, setResults] = useState<Array<{ id: string; name: string; address: string }>>([]);
-
-  const search = useMutation({
-    mutationFn: () =>
-      searchFn({ data: { query: term, lat: business.lat, lng: business.lng, radius: 5000 } }),
-    onSuccess: (r) => setResults(r.map((p) => ({ id: p.id, name: p.name, address: p.address }))),
-  });
-  const add = useMutation({
-    mutationFn: (placeId: string) => addFn({ data: { businessId: business.id, placeId } }),
-    onSuccess: () => {
-      setResults([]);
-      setTerm("");
-      void qc.invalidateQueries({ queryKey: ["ci-intelligence", business.id] });
-    },
-  });
-
-  return (
-    <Card>
-      <h3 className="text-base font-bold">Add a competitor Found-r missed</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Search by name and add it to your tracked list.</p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (term.trim().length > 1) search.mutate();
-        }}
-        className="mt-3 flex gap-2"
-      >
-        <input
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="Business name"
-          className="w-full rounded-full border border-border bg-background px-4 py-2 text-sm outline-none"
-        />
-        <button
-          type="submit"
-          disabled={search.isPending}
-          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-dark px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-        >
-          {search.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} Search
-        </button>
-      </form>
-      {results.length > 0 && (
-        <ul className="mt-3 space-y-2">
-          {results.slice(0, 8).map((r) => (
-            <li key={r.id} className="flex items-center justify-between gap-3 rounded-xl border border-border p-3">
-              <div className="min-w-0">
-                <div className="truncate text-sm font-semibold">{r.name}</div>
-                <div className="truncate text-xs text-muted-foreground">{r.address}</div>
-              </div>
-              <button
-                type="button"
-                onClick={() => add.mutate(r.id)}
-                disabled={add.isPending}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted disabled:opacity-60"
-              >
-                <Plus className="h-3.5 w-3.5" /> Track
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
-  );
-}
-
 export function CompetitorPanel({ business, competitors }: { business: CIBusiness; competitors: CICompetitor[] }) {
   const statusFn = useServerFn(setCompetitorStatus);
   const qc = useQueryClient();
@@ -204,6 +134,8 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
 
   return (
     <div className="space-y-4">
+      <CompetitorSearch business={business} competitors={competitors} />
+
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           {competitors.filter((c) => c.status === "tracked" || c.status === "user_added").length} tracked ·{" "}
@@ -293,8 +225,6 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
           </Card>
         ))}
       </div>
-
-      <AddCompetitor business={business} />
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
