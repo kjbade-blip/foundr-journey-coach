@@ -154,7 +154,9 @@ function SetupCard() {
             <p className="text-sm text-destructive">{(setup.error as Error).message}</p>
           )}
         </div>
+        )}
       </Card>
+
     </div>
   );
 }
