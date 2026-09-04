@@ -175,11 +175,12 @@ export function buildDemandAssessment(
     source: string,
     note: string,
   ) => {
+    const safe = finiteOrNull(score);
     signals.push({
       key,
       label,
-      available: score !== null,
-      score,
+      available: safe !== null,
+      score: safe,
       weight: SIGNAL_WEIGHTS[key],
       value,
       source,
