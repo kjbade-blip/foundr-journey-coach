@@ -37,6 +37,13 @@ function summarise(a: OpportunityAnalysis): string {
   lines.push(`Confidence: ${a.confidence.score}/100 (${a.confidence.level}) — ${a.confidence.reason}`);
   lines.push(`Verdict (already decided): ${a.verdict.label} — ${a.verdict.reason}`);
   lines.push("");
+  lines.push("DEMAND INTELLIGENCE (demand and competition are SEPARATE variables — never treat a high competitor count as proof of saturation):");
+  lines.push(`- Perceived Demand (ESTIMATE, proxy signals): ${a.demand.demandScore}/100 (${a.demand.demandBand.label})`);
+  lines.push(`- Demand confidence: ${a.demand.confidence.level} — ${a.demand.confidence.reason}`);
+  lines.push(`- Competition pressure: ${a.demand.competitionScore ?? "not scored"}/100 (${a.demand.competitionLevel ?? "unknown"}). ${a.demand.competitionDetail}`);
+  lines.push(`- Market Gap: ${a.demand.marketGapScore ?? "not scored"}/100 — ${a.demand.marketGapLabel}. ${a.demand.capacityNote}`);
+  for (const s of a.demand.signals) lines.push(`    SIGNAL ${s.label}: ${s.value} [${s.source}]`);
+  lines.push("");
   lines.push("CATEGORY SCORES (Found-r model, deterministic):");
   for (const c of a.categories) {
     lines.push(`- ${c.label}: ${c.score}/100, weight ${c.weight}%. ${c.interpretation}`);
