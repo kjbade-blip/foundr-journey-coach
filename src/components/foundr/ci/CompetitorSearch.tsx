@@ -97,15 +97,22 @@ export function CompetitorSearch({
           }}
           className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end"
         >
-          <label className="block">
+          <div>
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Business name</span>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Any business name"
-              className="mt-1.5 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-brand-dark"
-            />
-          </label>
+            <div className="mt-1.5">
+              <LocationAutocomplete
+                value={name}
+                onChange={setName}
+                icon="search"
+                placeholder="Start typing any business name"
+                onSelectItem={(s) => {
+                  setName(s.main || s.description);
+                  setWatchedName(null);
+                  watch.mutate(s.id, { onSuccess: () => setWatchedName(s.main || s.description) });
+                }}
+              />
+            </div>
+          </div>
           <label className="block">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Business type</span>
             <input
