@@ -151,6 +151,62 @@ export interface AlternativeLocation {
   basedOn: string[];
 }
 
+// --- Perceived Demand ------------------------------------------------------
+// Demand and competition are separate variables. A high competitor count is
+// never evidence of demand, and never on its own evidence of saturation.
+
+export type DemandBandKey = "very_high" | "high" | "moderate" | "low" | "very_low";
+
+export interface DemandBand {
+  key: DemandBandKey;
+  label: string;
+  tone: "good" | "warn" | "bad";
+}
+
+export interface DemandSignal {
+  key: string;
+  label: string;
+  available: boolean;
+  /** 0-100, or null when the signal could not be observed. */
+  score: number | null;
+  weight: number;
+  /** Plain-English value or "Not available". Never an invented figure. */
+  value: string;
+  source: string;
+  note: string;
+}
+
+export type MarketGapKey =
+  | "strong"
+  | "potential"
+  | "competitive"
+  | "saturation_risk"
+  | "weak"
+  | "unknown";
+
+export interface DemandAssessment {
+  scoreVersion: number;
+  calculatedAt: string;
+  demandScore: number;
+  demandBand: DemandBand;
+  /** Always true today: this is a proxy-based estimate, not measured demand. */
+  isEstimate: boolean;
+  confidence: { level: ConfidenceLevel; reason: string; signalCoverage: number };
+  signals: DemandSignal[];
+  /** Competitive PRESSURE, higher = more competition. Null when unscanned. */
+  competitionScore: number | null;
+  competitionLevel: "High" | "Moderate" | "Low" | null;
+  competitionDetail: string;
+  /** Nullable until a verified capacity source is connected. */
+  capacityScore: number | null;
+  capacityNote: string;
+  marketGapScore: number | null;
+  marketGapKey: MarketGapKey;
+  marketGapLabel: string;
+  interpretation: string;
+  methodology: string;
+}
+
 export interface OpportunityInterpretation {
   verdictRationale: string;
   strengths: string[];
