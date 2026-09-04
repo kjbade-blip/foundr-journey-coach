@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,6 +9,7 @@ import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { ChangeFeed } from "@/components/foundr/ci/ChangeFeed";
 import { CompetitorPanel } from "@/components/foundr/ci/CompetitorPanel";
 import { OpportunityFeed } from "@/components/foundr/ci/OpportunityFeed";
+import { CompetitorSearch } from "@/components/foundr/ci/CompetitorSearch";
 import {
   createCIBusiness,
   getIntelligence,
@@ -22,14 +23,18 @@ import type { CIAlertSettings, CIIntelligence } from "@/lib/ci/types";
 export const Route = createFileRoute("/_authenticated/app/intelligence")({
   head: () => ({
     meta: [
-      { title: "Competitive Intelligence · Found-r" },
-      { name: "description", content: "Found-r watches your local market and tells you what changed, why it matters and what to consider next." },
+      { title: "Competitor Intelligence · Found-r" },
+      { name: "description", content: "Search competitors by name, area or type, watch the ones that matter, and see what changed around you each day." },
+      { property: "og:title", content: "Competitor Intelligence · Found-r" },
+      { property: "og:description", content: "Search, watch and monitor your local competitors in one place." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: IntelligencePage,
 });
 
-const TABS = ["What changed", "Competitors", "Opportunities", "Alerts"] as const;
+const TABS = ["What changed", "Competitors", "Find & watch", "Opportunities", "Alerts"] as const;
 
 function IntelligencePage() {
   const listFn = useServerFn(listCIBusinesses);
@@ -79,7 +84,7 @@ function SetupCard() {
   return (
     <div>
       <PageHeader
-        eyebrow="Competitive Intelligence"
+        eyebrow="Competitor Intelligence"
         title="Let Found-r keep an eye on your market."
         subtitle="Tell Found-r what you run and where. It will identify who you're competing with and report what changes."
       />
@@ -142,6 +147,32 @@ function Intelligence({ businessId }: { businessId: string }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["ci-intelligence", businessId] }),
   });
 
+  // Once a day, on the first visit after signing in, Found-r refreshes the
+  // competitor landscape automatically. Guarded per business per calendar day.
+  const autoScanned = useRef(false);
+  const lastRanAt = data?.landscape.ranAt ?? null;
+  useEffect(() => {
+    if (autoScanned.current || !data || scan.isPending) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `foundr.ci.daily-scan.${businessId}`;
+    let done: string | null = null;
+    try {
+      done = window.localStorage.getItem(key);
+    } catch {
+      /* storage unavailable */
+    }
+    const staleData = !lastRanAt || Date.now() - new Date(lastRanAt).getTime() > 24 * 60 * 60 * 1000;
+    if (done === today || !staleData) return;
+    autoScanned.current = true;
+    try {
+      window.localStorage.setItem(key, today);
+    } catch {
+      /* storage unavailable */
+    }
+    scan.mutate();
+  }, [businessId, data, lastRanAt, scan]);
+
+
   if (isPending || !data) {
     return (
       <div className="flex items-center gap-2 py-16 text-sm text-muted-foreground">
@@ -168,7 +199,7 @@ function Intelligence({ businessId }: { businessId: string }) {
   return (
     <div>
       <PageHeader
-        eyebrow="Competitive Intelligence"
+        eyebrow="Competitor Intelligence"
         title="Here's what changed around you."
         subtitle={`${business.name} · ${business.businessType} · ${business.radiusMiles} mile watch area`}
         actions={
@@ -232,6 +263,7 @@ function Intelligence({ businessId }: { businessId: string }) {
       <div className="mt-4">
         {tab === "What changed" && <ChangeFeed changes={changes} />}
         {tab === "Competitors" && <CompetitorPanel business={business} competitors={competitors} />}
+        {tab === "Find & watch" && <CompetitorSearch business={business} competitors={competitors} />}
         {tab === "Opportunities" && <OpportunityFeed opportunities={opportunities} />}
         {tab === "Alerts" && <AlertsPanel businessId={businessId} settings={data.settings} />}
       </div>
