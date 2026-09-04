@@ -80,10 +80,16 @@ export function CompetitorSearch({
   return (
     <div className="space-y-4">
       <Card>
-        <h3 className="text-base font-bold">Search for a competitor</h3>
+        <h3 className="text-base font-bold">Search businesses to watch</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Search by business name, type or area, then watch the ones you want Found-r to monitor.
+          Start typing a business name for instant suggestions, or search by type and area, then watch the ones you want
+          Found-r to monitor.
         </p>
+        {watchedName && (
+          <p className="mt-2 rounded-xl bg-muted px-3 py-2 text-sm font-semibold">
+            {watchedName} added to your watchlist.
+          </p>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
