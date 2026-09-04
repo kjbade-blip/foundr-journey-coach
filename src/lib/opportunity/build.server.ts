@@ -146,6 +146,7 @@ export async function buildOpportunityAnalysis(input: AnalyseInput): Promise<Opp
     sources,
     categories,
     overallScore,
+    demand,
     confidence,
     verdict,
     evidenceGaps,
