@@ -77,12 +77,12 @@ function weightedIndicators(
   for (const key of keys) {
     const w = type.weights[key];
     if (!w) continue;
-    const value = INDICATOR_BY_KEY[key].read(profile);
+    const value = finiteOrNull(INDICATOR_BY_KEY[key].read(profile));
     if (value === null) continue;
     total += indicatorScore(key, value) * w;
     weightSum += w;
   }
-  return weightSum > 0 ? Math.round(total / weightSum) : null;
+  return weightSum > 0 ? finiteOrNull(Math.round(total / weightSum)) : null;
 }
 
 /**
