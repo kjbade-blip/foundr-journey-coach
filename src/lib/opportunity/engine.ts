@@ -37,7 +37,12 @@ interface Built {
   sources: EvidenceSource[];
 }
 
-export function buildScores(evidence: OpportunityEvidence, type: BusinessTypeDef, radiusMiles: number): Built {
+export function buildScores(
+  evidence: OpportunityEvidence,
+  type: BusinessTypeDef,
+  radiusMiles: number,
+  demand?: DemandAssessment | null,
+): Built {
   const weights = weightsFor(type.key);
   const gaps: string[] = [];
   const raw: Array<Omit<CategoryScore, "weight"> & { rawWeight: number }> = [];
