@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Eye, EyeOff, MapPin, Star } from "lucide-react";
+import { Eye, EyeOff, Loader2, MapPin, Star } from "lucide-react";
 import { Card, Pill } from "@/components/foundr/ui";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getCompetitorHistory, setCompetitorStatus } from "@/lib/ci.functions";
