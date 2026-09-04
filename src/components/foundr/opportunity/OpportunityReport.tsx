@@ -153,15 +153,18 @@ export function OpportunityReport({ analysis }: { analysis: OpportunityAnalysis 
           <Dial score={a.confidence.score} label={`Confidence · ${a.confidence.level}`} />
         </div>
 
-        <div className="mt-5">
-          <DemandSummaryStrip
-            demand={a.demand}
-            overallScore={a.overallScore}
-            verdictLabel={a.verdict.label}
-            verdictTone={a.verdict.tone}
-          />
-          <p className="mt-2 text-xs text-muted-foreground">{a.demand.interpretation}</p>
-        </div>
+        {/* Analyses saved before the demand model exists have no demand block. */}
+        {a.demand && (
+          <div className="mt-5">
+            <DemandSummaryStrip
+              demand={a.demand}
+              overallScore={a.overallScore}
+              verdictLabel={a.verdict.label}
+              verdictTone={a.verdict.tone}
+            />
+            <p className="mt-2 text-xs text-muted-foreground">{a.demand.interpretation}</p>
+          </div>
+        )}
 
         <div className="mt-5 rounded-xl bg-accent p-4">
           <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Why this verdict</div>
