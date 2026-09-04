@@ -263,6 +263,7 @@ function Intelligence({ businessId }: { businessId: string }) {
       <div className="mt-4">
         {tab === "What changed" && <ChangeFeed changes={changes} />}
         {tab === "Competitors" && <CompetitorPanel business={business} competitors={competitors} />}
+        {tab === "Find & watch" && <CompetitorSearch business={business} competitors={competitors} />}
         {tab === "Opportunities" && <OpportunityFeed opportunities={opportunities} />}
         {tab === "Alerts" && <AlertsPanel businessId={businessId} settings={data.settings} />}
       </div>
