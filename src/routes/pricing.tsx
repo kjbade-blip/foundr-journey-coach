@@ -165,17 +165,17 @@ function PricingPage() {
         </div>
 
         {/* Audience labels */}
-        <div className="mb-6 hidden grid-cols-4 gap-6 lg:grid">
+        <div className="mb-6 hidden grid-cols-3 gap-6 lg:grid">
           <div />
           <div className="col-span-1 border-b-2 border-dashed border-border pb-2 text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
             For new business owners
           </div>
-          <div className="col-span-2 border-b-2 border-dashed border-border pb-2 text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+          <div className="col-span-1 border-b-2 border-dashed border-border pb-2 text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
             For existing business owners
           </div>
         </div>
 
-        <div className="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TIERS.map((t) => (
             <div
               key={t.name}
