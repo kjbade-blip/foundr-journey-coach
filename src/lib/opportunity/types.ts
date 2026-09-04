@@ -238,6 +238,8 @@ export interface OpportunityAnalysis {
   sources: EvidenceSource[];
   categories: CategoryScore[];
   overallScore: number | null;
+  /** Perceived Demand, competition pressure and market gap. */
+  demand: DemandAssessment;
   confidence: ConfidenceAssessment;
   verdict: Verdict;
   evidenceGaps: string[];
