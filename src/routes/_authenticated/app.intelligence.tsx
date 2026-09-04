@@ -9,7 +9,6 @@ import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { ChangeFeed } from "@/components/foundr/ci/ChangeFeed";
 import { CompetitorPanel } from "@/components/foundr/ci/CompetitorPanel";
 import { OpportunityFeed } from "@/components/foundr/ci/OpportunityFeed";
-import { CompetitorSearch } from "@/components/foundr/ci/CompetitorSearch";
 import {
   createCIBusiness,
   getIntelligence,
@@ -36,7 +35,7 @@ export const Route = createFileRoute("/_authenticated/app/intelligence")({
   component: IntelligencePage,
 });
 
-const TABS = ["What changed", "Competitors", "Find & watch", "Opportunities", "Alerts"] as const;
+const TABS = ["What changed", "Competitors", "Opportunities", "Alerts"] as const;
 
 function IntelligencePage() {
   const listFn = useServerFn(listCIBusinesses);
@@ -295,7 +294,6 @@ function Intelligence({ businessId }: { businessId: string }) {
       <div className="mt-4">
         {tab === "What changed" && <ChangeFeed changes={changes} />}
         {tab === "Competitors" && <CompetitorPanel business={business} competitors={competitors} />}
-        {tab === "Find & watch" && <CompetitorSearch business={business} competitors={competitors} />}
         {tab === "Opportunities" && <OpportunityFeed opportunities={opportunities} />}
         {tab === "Alerts" && <AlertsPanel businessId={businessId} settings={data.settings} />}
       </div>
