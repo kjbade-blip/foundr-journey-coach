@@ -59,7 +59,7 @@ function Grow() {
         <Card>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-dark"><Radar className="h-4 w-4" /> Competitor activity</div>
-            <Link to="/app/competitors" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:underline">View all <ArrowRight className="h-3 w-3" /></Link>
+            <Link to="/app/intelligence" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:underline">View all <ArrowRight className="h-3 w-3" /></Link>
           </div>
           <ul className="mt-3 divide-y divide-border">
             {[
