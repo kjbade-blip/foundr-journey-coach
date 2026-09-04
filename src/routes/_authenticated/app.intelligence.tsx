@@ -18,6 +18,8 @@ import {
   saveAlertSettings,
 } from "@/lib/ci.functions";
 import { geocodeAddress } from "@/lib/maps.functions";
+import { businessLocationQuery, useActiveBusiness } from "@/lib/active-business";
+
 import type { CIAlertSettings, CIIntelligence } from "@/lib/ci/types";
 
 export const Route = createFileRoute("/_authenticated/app/intelligence")({
