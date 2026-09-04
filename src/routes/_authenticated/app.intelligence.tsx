@@ -9,6 +9,7 @@ import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { ChangeFeed } from "@/components/foundr/ci/ChangeFeed";
 import { CompetitorPanel } from "@/components/foundr/ci/CompetitorPanel";
 import { OpportunityFeed } from "@/components/foundr/ci/OpportunityFeed";
+import { CompetitorSearch } from "@/components/foundr/ci/CompetitorSearch";
 import {
   createCIBusiness,
   getIntelligence,
