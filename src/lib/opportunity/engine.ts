@@ -13,6 +13,7 @@ import type {
   CategoryDataPoint,
   CategoryKey,
   CategoryScore,
+  DemandAssessment,
   EvidenceSource,
   OpportunityEvidence,
   Reading,
