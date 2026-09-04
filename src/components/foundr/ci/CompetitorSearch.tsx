@@ -56,9 +56,9 @@ export function CompetitorSearch({
         id: p.id,
         name: p.name,
         address: p.address,
-        category: (p as { category?: string | null }).category ?? null,
-        rating: p.rating ?? null,
-        reviews: p.reviews ?? null,
+        category: p.category,
+        rating: p.rating,
+        reviews: p.reviews,
       })) as Found[];
     },
     onSuccess: (r) => setResults(r),
