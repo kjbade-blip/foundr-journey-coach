@@ -75,23 +75,6 @@ const TIERS: Tier[] = [
     cta: "Choose Found-r",
     audience: "existing",
   },
-  {
-    name: "Pro",
-    tagline: "Your all-inclusive business coach.",
-    monthlyPrice: "£125",
-    annualPrice: "£1,250",
-    priceNote: "/pm*",
-    features: [
-      "Unlimited Opportunity searches /pm",
-      "Found-r Journey Steps 3–11",
-      "Unlimited Found-r Coach Messages /pm",
-      "Marketplace",
-      "Community forum",
-      "Competitor Intelligence",
-    ],
-    cta: "Choose Pro",
-    audience: "existing",
-  },
 ];
 
 const BUNDLES = [
