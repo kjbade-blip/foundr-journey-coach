@@ -122,7 +122,8 @@ export async function buildOpportunityAnalysis(input: AnalyseInput): Promise<Opp
     accessibility: null,
   };
 
-  const { categories, overallScore, evidenceGaps, sources } = buildScores(evidence, type, radiusMiles);
+  const demand = buildDemandAssessment(evidence, type, radiusMiles);
+  const { categories, overallScore, evidenceGaps, sources } = buildScores(evidence, type, radiusMiles, demand);
   const confidence = assessConfidence(sources, categories, evidence);
   const verdict = deriveVerdict(overallScore, confidence, categories);
 
