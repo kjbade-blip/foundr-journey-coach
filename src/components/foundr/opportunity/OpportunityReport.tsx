@@ -179,6 +179,8 @@ export function OpportunityReport({ analysis }: { analysis: OpportunityAnalysis 
         </p>
       </Card>
 
+      <DemandIntelligence demand={a.demand} />
+
       {/* Category breakdown */}
       <Card>
         <div className="flex items-center justify-between">
