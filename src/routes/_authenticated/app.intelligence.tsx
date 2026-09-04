@@ -84,7 +84,7 @@ function SetupCard() {
   return (
     <div>
       <PageHeader
-        eyebrow="Competitive Intelligence"
+        eyebrow="Competitor Intelligence"
         title="Let Found-r keep an eye on your market."
         subtitle="Tell Found-r what you run and where. It will identify who you're competing with and report what changes."
       />
@@ -199,7 +199,7 @@ function Intelligence({ businessId }: { businessId: string }) {
   return (
     <div>
       <PageHeader
-        eyebrow="Competitive Intelligence"
+        eyebrow="Competitor Intelligence"
         title="Here's what changed around you."
         subtitle={`${business.name} · ${business.businessType} · ${business.radiusMiles} mile watch area`}
         actions={

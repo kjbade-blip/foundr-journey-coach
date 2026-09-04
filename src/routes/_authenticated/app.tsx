@@ -31,8 +31,7 @@ const START_NAV = [
 const GROW_NAV = [
   { to: "/app/grow",             label: "Growth Dashboard",        icon: TrendingUp },
   { to: "/app/business-profile", label: "Business Profile",        icon: Building2 },
-  { to: "/app/intelligence",  label: "Competitive Intelligence", icon: Radar },
-  { to: "/app/competitors",  label: "Competitor Watchlist", icon: Radar },
+  { to: "/app/intelligence",  label: "Competitor Intelligence", icon: Radar },
   { to: "/app/premises",     label: "Find Premises",         icon: Building2 },
   { to: "/app/location-analysis", label: "Location Analysis",  icon: BarChart3 },
 
