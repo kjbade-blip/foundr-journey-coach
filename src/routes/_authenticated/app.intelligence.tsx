@@ -147,6 +147,32 @@ function Intelligence({ businessId }: { businessId: string }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["ci-intelligence", businessId] }),
   });
 
+  // Once a day, on the first visit after signing in, Found-r refreshes the
+  // competitor landscape automatically. Guarded per business per calendar day.
+  const autoScanned = useRef(false);
+  const lastRanAt = data?.landscape.ranAt ?? null;
+  useEffect(() => {
+    if (autoScanned.current || !data || scan.isPending) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `foundr.ci.daily-scan.${businessId}`;
+    let done: string | null = null;
+    try {
+      done = window.localStorage.getItem(key);
+    } catch {
+      /* storage unavailable */
+    }
+    const staleData = !lastRanAt || Date.now() - new Date(lastRanAt).getTime() > 24 * 60 * 60 * 1000;
+    if (done === today || !staleData) return;
+    autoScanned.current = true;
+    try {
+      window.localStorage.setItem(key, today);
+    } catch {
+      /* storage unavailable */
+    }
+    scan.mutate();
+  }, [businessId, data, lastRanAt, scan]);
+
+
   if (isPending || !data) {
     return (
       <div className="flex items-center gap-2 py-16 text-sm text-muted-foreground">
