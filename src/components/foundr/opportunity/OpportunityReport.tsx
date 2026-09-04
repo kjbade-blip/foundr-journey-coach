@@ -183,7 +183,7 @@ export function OpportunityReport({ analysis }: { analysis: OpportunityAnalysis 
         </p>
       </Card>
 
-      <DemandIntelligence demand={a.demand} />
+      {a.demand && <DemandIntelligence demand={a.demand} />}
 
       {/* Category breakdown */}
       <Card>
