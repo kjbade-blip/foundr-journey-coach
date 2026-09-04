@@ -23,14 +23,18 @@ import type { CIAlertSettings, CIIntelligence } from "@/lib/ci/types";
 export const Route = createFileRoute("/_authenticated/app/intelligence")({
   head: () => ({
     meta: [
-      { title: "Competitive Intelligence · Found-r" },
-      { name: "description", content: "Found-r watches your local market and tells you what changed, why it matters and what to consider next." },
+      { title: "Competitor Intelligence · Found-r" },
+      { name: "description", content: "Search competitors by name, area or type, watch the ones that matter, and see what changed around you each day." },
+      { property: "og:title", content: "Competitor Intelligence · Found-r" },
+      { property: "og:description", content: "Search, watch and monitor your local competitors in one place." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: IntelligencePage,
 });
 
-const TABS = ["What changed", "Competitors", "Opportunities", "Alerts"] as const;
+const TABS = ["What changed", "Competitors", "Find & watch", "Opportunities", "Alerts"] as const;
 
 function IntelligencePage() {
   const listFn = useServerFn(listCIBusinesses);
