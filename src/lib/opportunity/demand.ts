@@ -54,8 +54,15 @@ const SIGNAL_WEIGHTS = {
 
 type SignalKey = keyof typeof SIGNAL_WEIGHTS;
 
+/** Guards against any non-numeric read: a bad signal is dropped, never guessed. */
+function finiteOrNull(value: number | null | undefined): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 function indicatorScore(key: IndicatorKey, value: number): number {
-  return clamp((value / INDICATOR_BY_KEY[key].strongAt) * 100);
+  const strongAt = INDICATOR_BY_KEY[key].strongAt;
+  if (!strongAt || !Number.isFinite(strongAt)) return clamp(value);
+  return clamp((value / strongAt) * 100);
 }
 
 function weightedIndicators(
