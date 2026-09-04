@@ -16,6 +16,7 @@ import { assessCrimeRisk } from "../crime/model";
 import { collectBDI } from "../bdi.server";
 import { BUSINESS_TYPES, matchBusinessType, type BusinessTypeDef } from "../ons/business-relevance";
 import { buildScores } from "./engine";
+import { buildDemandAssessment } from "./demand";
 import { assessConfidence } from "./confidence";
 import { deriveVerdict } from "./verdict";
 import { interpretAnalysis } from "./interpret.server";
