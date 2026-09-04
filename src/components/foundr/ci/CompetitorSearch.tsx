@@ -34,6 +34,7 @@ export function CompetitorSearch({
   const [type, setType] = useState(business.businessType);
   const [area, setArea] = useState("");
   const [results, setResults] = useState<Found[] | null>(null);
+  const [watchedName, setWatchedName] = useState<string | null>(null);
 
   const watched = new Map(
     competitors
