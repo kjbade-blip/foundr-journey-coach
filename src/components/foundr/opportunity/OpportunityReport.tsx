@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Card, Pill } from "@/components/foundr/ui";
 import type { OpportunityAnalysis, CategoryScore, EvidenceSource } from "@/lib/opportunity/types";
+import { DemandIntelligence, DemandSummaryStrip } from "./DemandIntelligence";
 import {
   ShieldAlert,
   Info,
