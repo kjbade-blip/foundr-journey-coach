@@ -111,6 +111,10 @@ function BusinessProfilePage() {
         </div>
       )}
 
+      <div className="mb-6">
+        <MyBusinesses />
+      </div>
+
       {/* Hero: health + snapshot */}
       <div className="grid gap-6 lg:grid-cols-[auto_1fr]">
         <Card className="flex flex-col items-center justify-center">
