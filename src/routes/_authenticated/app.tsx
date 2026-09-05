@@ -8,7 +8,7 @@ import {
   TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3, Building2,
   Settings, LogOut
 } from "lucide-react";
-import { FoundrAI } from "@/components/foundr/FoundrAI";
+
 import { useAuth } from "@/features/auth/auth-context";
 import { initialsFor } from "@/features/auth/profile";
 
@@ -105,7 +105,6 @@ function AppShell() {
         </main>
       </div>
 
-      <FoundrAI />
     </div>
   );
 }
