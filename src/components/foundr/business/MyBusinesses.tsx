@@ -55,20 +55,18 @@ export function MyBusinesses() {
     };
   }, [query, adding, search]);
 
-  function addMatch(m: BusinessMatch) {
+  function addMatch(m: PlaceSummary) {
+    const postcode = m.address.toUpperCase().match(/\b[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}\b/)?.[0] ?? null;
     add.mutate(
       {
         name: m.name,
-        companyNumber: m.companyNumber,
         address: m.address,
-        postcode: m.postcode,
-        status: m.status,
-        industry: m.industry,
-        website: m.website,
-        placeId: m.placeId,
-        latitude: m.latitude,
-        longitude: m.longitude,
-        source: m.source,
+        postcode,
+        industry: m.category || null,
+        placeId: m.id,
+        latitude: m.lat,
+        longitude: m.lng,
+        source: "places",
         makeActive: businesses.length === 0,
       },
       {
