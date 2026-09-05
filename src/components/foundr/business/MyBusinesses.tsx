@@ -231,6 +231,20 @@ export function MyBusinesses() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {b.placeId && (
+                      <button
+                        onClick={() => void claimAndVerify(b.placeId!)}
+                        disabled={claiming !== null}
+                        className="inline-flex items-center gap-1 rounded-full bg-brand-dark px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                      >
+                        {claiming === b.placeId ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                        )}
+                        Claim &amp; verify
+                      </button>
+                    )}
                     {isDemoOwner && (
                       <ResetDemoButton
                         label="Reset listing"
