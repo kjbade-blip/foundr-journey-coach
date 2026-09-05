@@ -82,6 +82,7 @@ function AppShell() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            {mode === "grow" && <BusinessSelector />}
             <ModeSwitcher mode={mode} onChange={(m) => { setMode(m); setLocalMode(m); navigate({ to: m === "start" ? "/app/dashboard" : "/app/grow" }); }} />
             <UserMenu />
           </div>
