@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Building2, Check, Loader2, Plus, Search, Star, Trash2 } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Building2, Check, Loader2, Plus, Search, ShieldCheck, Star, Trash2 } from "lucide-react";
 
 import { Card, Pill } from "@/components/foundr/ui";
-import { searchBusiness } from "@/lib/business-discovery.functions";
+import { discoverCore, searchBusiness } from "@/lib/business-discovery.functions";
 import { useBusinessMutations, useBusinessSelection, useMyBusinesses } from "@/lib/businesses";
-import type { PlaceSummary } from "@/lib/business-profile";
+import { saveProfile, type PlaceSummary } from "@/lib/business-profile";
+import { setMode } from "@/lib/mode";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
 import { useAuth } from "@/features/auth/auth-context";
