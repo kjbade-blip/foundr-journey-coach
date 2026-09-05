@@ -39,6 +39,52 @@ const addInput = z.object({
   makeActive: z.boolean().optional(),
 });
 
+/**
+ * Adds any businesses with a verified ownership claim to the user's
+ * user_businesses list (idempotent per place_id). Keeps the Grow "My
+ * businesses" selector in sync with what the user has claimed.
+ */
+async function backfillVerifiedClaims(userId: string): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { fetchPlaceDetails } = await import("./business-discovery.server");
+
+    const { data: claims } = await supabaseAdmin
+      .from("business_claims")
+      .select("business_id,business_name")
+      .eq("user_id", userId)
+      .eq("status", "verified");
+    if (!claims?.length) return;
+
+    const placeIds = claims.map((c) => c.business_id as string);
+    const { data: existing } = await supabaseAdmin
+      .from("user_businesses")
+      .select("place_id")
+      .eq("user_id", userId)
+      .in("place_id", placeIds);
+    const have = new Set((existing ?? []).map((r) => r.place_id as string));
+
+    for (const claim of claims) {
+      const placeId = claim.business_id as string;
+      if (have.has(placeId)) continue;
+      const place = await fetchPlaceDetails(placeId).catch(() => null);
+      await supabaseAdmin.from("user_businesses").insert({
+        user_id: userId,
+        name: place?.name ?? (claim.business_name as string | null) ?? "My business",
+        address: place?.address ?? null,
+        industry: place?.category ?? null,
+        website: place?.website ?? null,
+        place_id: placeId,
+        latitude: place?.lat ?? null,
+        longitude: place?.lng ?? null,
+        source: "places",
+      });
+    }
+  } catch {
+    // Backfill is best-effort; never block the listing.
+  }
+}
+
 export interface MyBusinessesResult {
   businesses: ActiveBusiness[];
   activeBusinessId: string | null;
@@ -47,6 +93,10 @@ export interface MyBusinessesResult {
 export const listMyBusinesses = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<MyBusinessesResult> => {
+    // Backfill: a business the user has claimed & verified belongs in their
+    // profile list even if it was never added through the "add" flow.
+    await backfillVerifiedClaims(context.userId);
+
     const { data, error } = await context.supabase
       .from("user_businesses")
       .select("*")

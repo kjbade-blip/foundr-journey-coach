@@ -3,9 +3,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { Building2, Check, Loader2, Plus, Search, Star, Trash2 } from "lucide-react";
 
 import { Card, Pill } from "@/components/foundr/ui";
-import { findBusinessMatches } from "@/lib/onboarding.functions";
+import { searchBusiness } from "@/lib/business-discovery.functions";
 import { useBusinessMutations, useBusinessSelection, useMyBusinesses } from "@/lib/businesses";
-import type { BusinessMatch } from "@/lib/onboarding/types";
+import type { PlaceSummary } from "@/lib/business-profile";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
 import { useAuth } from "@/features/auth/auth-context";
@@ -23,9 +23,9 @@ export function MyBusinesses() {
   const { user } = useAuth();
   const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
-  const search = useServerFn(findBusinessMatches);
+  const search = useServerFn(searchBusiness);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<BusinessMatch[]>([]);
+  const [results, setResults] = useState<PlaceSummary[]>([]);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
 
@@ -55,20 +55,18 @@ export function MyBusinesses() {
     };
   }, [query, adding, search]);
 
-  function addMatch(m: BusinessMatch) {
+  function addMatch(m: PlaceSummary) {
+    const postcode = m.address.toUpperCase().match(/\b[A-Z]{1,2}\d{1,2}[A-Z]?\s*\d[A-Z]{2}\b/)?.[0] ?? null;
     add.mutate(
       {
         name: m.name,
-        companyNumber: m.companyNumber,
         address: m.address,
-        postcode: m.postcode,
-        status: m.status,
-        industry: m.industry,
-        website: m.website,
-        placeId: m.placeId,
-        latitude: m.latitude,
-        longitude: m.longitude,
-        source: m.source,
+        postcode,
+        industry: m.category || null,
+        placeId: m.id,
+        latitude: m.lat,
+        longitude: m.lng,
+        source: "places",
         makeActive: businesses.length === 0,
       },
       {
@@ -114,7 +112,7 @@ export function MyBusinesses() {
       {adding && (
         <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-4">
           <label htmlFor="add-business" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Search by business name, company number or postcode
+            Search by business name or area — the same search as “Discover my business”
           </label>
           <div className="relative mt-2">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -133,7 +131,7 @@ export function MyBusinesses() {
           {results.length > 0 && (
             <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {results.map((m) => (
-                <li key={m.key}>
+                <li key={m.id}>
                   <button
                     onClick={() => addMatch(m)}
                     className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-muted"
@@ -141,7 +139,7 @@ export function MyBusinesses() {
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-semibold">{m.name}</span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {m.address || m.postcode || m.companyNumber || "No address listed"}
+                        {[m.address, m.category].filter(Boolean).join(" · ") || "No address listed"}
                       </span>
                     </span>
                     <Plus className="h-4 w-4 shrink-0 text-brand-dark" />
