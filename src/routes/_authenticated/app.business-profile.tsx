@@ -15,6 +15,7 @@ import {
 } from "@/lib/business-profile";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { isDemoPlace } from "@/lib/demo-business";
+import { MyBusinesses } from "@/components/foundr/business/MyBusinesses";
 
 export const Route = createFileRoute("/_authenticated/app/business-profile")({
   head: () => ({
