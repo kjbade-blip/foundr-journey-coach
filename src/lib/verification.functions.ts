@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { VerificationMethod, VerificationRecord } from "./verification";
-import { DEMO_CODE, DEMO_OWNER_EMAIL, DEMO_PHONE, isDemoPlace } from "./demo-business";
+import { DEMO_CODE, DEMO_OWNER_EMAIL, demoContacts, isDemoPlace } from "./demo-business";
 
 type Ctx = { placeId: string; businessName?: string; website?: string | null; phone?: string | null; email?: string | null };
 
@@ -37,7 +37,7 @@ export const getVerificationMethods = createServerFn({ method: "POST" })
     if (isDemoPlace(data.placeId)) {
       const methods = buildMethods({
         emails: toEmailTargets([{ email: DEMO_OWNER_EMAIL, source: "Business profile" }]),
-        phones: phoneTarget(DEMO_PHONE),
+        phones: phoneTarget(demoContacts(data.placeId).phone),
         googleAvailable: true,
         websiteDomain: null,
       });
@@ -213,9 +213,9 @@ export const requestVerificationCode = createServerFn({ method: "POST" })
       const targets =
         data.method === "email"
           ? server.toEmailTargets([{ email: DEMO_OWNER_EMAIL, source: "Business profile" }])
-          : server.phoneTarget(DEMO_PHONE);
+          : server.phoneTarget(demoContacts(data.placeId).phone);
       const t = targets.find((x) => x.id === data.targetId);
-      destination = t ? (data.method === "email" ? DEMO_OWNER_EMAIL : DEMO_PHONE) : null;
+      destination = t ? (data.method === "email" ? DEMO_OWNER_EMAIL : demoContacts(data.placeId).phone) : null;
       masked = t?.masked ?? "";
     } else if (data.method === "email") {
       const emails = await server.discoverEmails(data.website ?? null, data.email ?? null);
