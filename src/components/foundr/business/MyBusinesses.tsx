@@ -6,6 +6,9 @@ import { Card, Pill } from "@/components/foundr/ui";
 import { findBusinessMatches } from "@/lib/onboarding.functions";
 import { useBusinessMutations, useBusinessSelection, useMyBusinesses } from "@/lib/businesses";
 import type { BusinessMatch } from "@/lib/onboarding/types";
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
+import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
+import { useAuth } from "@/features/auth/auth-context";
 
 /**
  * "My businesses" management panel: add, remove, set the primary business and
@@ -17,6 +20,8 @@ export function MyBusinesses() {
   const activeId = data?.activeBusinessId ?? null;
   const { add, remove, activate } = useBusinessMutations();
   const { selectedIds, toggle } = useBusinessSelection(businesses);
+  const { user } = useAuth();
+  const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
   const search = useServerFn(findBusinessMatches);
   const [query, setQuery] = useState("");
@@ -192,6 +197,15 @@ export function MyBusinesses() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {isDemoOwner && (
+                      <ResetDemoButton
+                        label="Reset listing"
+                        placeId={b.placeId ?? b.id}
+                        to="/app/business-profile"
+                        className="!px-3 !py-1.5 !text-xs"
+                      />
+                    )}
+
                     {b.id !== activeId && (
                       <button
                         onClick={() => activate.mutate(b.id)}

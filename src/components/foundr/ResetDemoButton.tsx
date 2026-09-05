@@ -14,10 +14,12 @@ export function ResetDemoButton({
   className = "",
   label = "Reset demo listing",
   to = "/discover",
+  placeId,
 }: {
   className?: string;
   label?: string;
   to?: string;
+  placeId?: string | null;
 }) {
   const navigate = useNavigate();
   const reset = useServerFn(resetDemoBusiness);
@@ -27,7 +29,7 @@ export function ResetDemoButton({
     if (busy) return;
     setBusy(true);
     try {
-      await reset({ data: {} });
+      await reset({ data: { placeId: placeId ?? null } });
     } catch {
       /* still clear local state so the flow can be retried */
     }

@@ -520,7 +520,7 @@ function VerifyPage() {
               <Link to="/app/business-profile" className="inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
                 Go to my business profile
               </Link>
-              {isDemoPlace(place.id) && <ResetDemoButton label="Reset & claim again" />}
+              {isDemoPlace(place.id) && <ResetDemoButton label="Reset & claim again" placeId={place.id} />}
             </div>
           </div>
         )}

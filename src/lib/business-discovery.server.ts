@@ -5,7 +5,7 @@ import type {
   PlaceSummary,
   Competitor,
 } from "./business-profile";
-import { DEMO_PLACE, isDemoPlace, matchesDemoQuery } from "./demo-business";
+import { getDemoPlace, isDemoPlace, matchingDemoPlaces } from "./demo-business";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/google_maps";
 
@@ -53,13 +53,13 @@ export function prettyType(t: string) {
   return t ? t.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "Business";
 }
 
-function demoSummary(): PlaceSummary {
-  const { website, phone, openingHours, categories, status, photos, editorial, reviewSnippets, ...summary } = DEMO_PLACE;
+function demoSummary(place: PlaceDetails): PlaceSummary {
+  const { website, phone, openingHours, categories, status, photos, editorial, reviewSnippets, ...summary } = place;
   return summary;
 }
 
 export async function searchBusinesses(query: string): Promise<PlaceSummary[]> {
-  const demo = matchesDemoQuery(query) ? [demoSummary()] : [];
+  const demo = matchingDemoPlaces(query).map(demoSummary);
   const res = await fetch(`${GATEWAY}/places/v1/places:searchText`, {
     method: "POST",
     headers: {
@@ -76,7 +76,7 @@ export async function searchBusinesses(query: string): Promise<PlaceSummary[]> {
 }
 
 export async function fetchPlaceDetails(placeId: string): Promise<PlaceDetails | null> {
-  if (isDemoPlace(placeId)) return DEMO_PLACE;
+  if (isDemoPlace(placeId)) return getDemoPlace(placeId);
   const fields = [
     "id","displayName","formattedAddress","primaryTypeDisplayName","primaryType","types",
     "rating","userRatingCount","location","websiteUri","nationalPhoneNumber",

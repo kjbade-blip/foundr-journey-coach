@@ -14,7 +14,8 @@ import {
   loadProfile, saveProfile, scoreColor, scoreTone, type BusinessProfile,
 } from "@/lib/business-profile";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
-import { isDemoPlace } from "@/lib/demo-business";
+import { DEMO_OWNER_EMAIL, isDemoPlace } from "@/lib/demo-business";
+import { useAuth } from "@/features/auth/auth-context";
 import { MyBusinesses } from "@/components/foundr/business/MyBusinesses";
 
 export const Route = createFileRoute("/_authenticated/app/business-profile")({
@@ -36,6 +37,8 @@ function BusinessProfilePage() {
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [enriching, setEnriching] = useState(false);
   const [verification, setVerification] = useState<VerificationRecord | null>(null);
+  const { user } = useAuth();
+  const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
   useEffect(() => {
     const p = loadProfile();
@@ -96,7 +99,9 @@ function BusinessProfilePage() {
         subtitle={place.address}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            {isDemoPlace(place.id) && <ResetDemoButton label="Reset demo listing" />}
+            {(isDemoPlace(place.id) || isDemoOwner) && (
+              <ResetDemoButton label="Reset demo listing" placeId={place.id} />
+            )}
             <Link to="/discover" className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold">
               <RefreshCw className="h-4 w-4" /> Re-discover
             </Link>
