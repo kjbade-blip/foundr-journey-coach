@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { VerificationMethod, VerificationRecord } from "./verification";
-import { DEMO_CODE, DEMO_OWNER_EMAIL, demoContacts, isDemoPlace } from "./demo-business";
+import { DEMO_CODE, DEMO_OWNER_EMAIL, DEMO_PLACE_ID, demoContacts, isDemoPlace } from "./demo-business";
 
 type Ctx = { placeId: string; businessName?: string; website?: string | null; phone?: string | null; email?: string | null };
 
@@ -383,16 +383,24 @@ export const confirmVerificationCode = createServerFn({ method: "POST" })
  */
 export const resetDemoBusiness = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: Record<string, never>) => d)
-  .handler(async ({ context }) => {
-    const { DEMO_PLACE_ID } = await import("./demo-business");
+  .inputValidator((d: { placeId?: string | null }) => d ?? {})
+  .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    for (const table of ["business_verifications", "verification_requests", "verification_audit_log"] as const) {
-      await supabaseAdmin.from(table).delete().eq("user_id", context.userId).eq("place_id", DEMO_PLACE_ID);
-    }
-    // Claim rows (and their append-only attempt history, via cascade) for the demo listing.
-    await supabaseAdmin.from("business_claims").delete().eq("user_id", context.userId).eq("business_id", DEMO_PLACE_ID);
-    return { ok: true as const, placeId: DEMO_PLACE_ID };
+    const { data: authData } = await context.supabase.auth.getUser();
+    const email = (authData?.user?.email ?? "").trim().toLowerCase();
+    const isDemoOwner = email === DEMO_OWNER_EMAIL;
 
+    const placeId = data?.placeId?.trim() || DEMO_PLACE_ID;
+    // Non-demo listings can only be reset by the demo owner account.
+    if (!isDemoPlace(placeId) && !isDemoOwner) {
+      return { ok: false as const, placeId, error: "This listing can't be reset from here." };
+    }
+
+    for (const table of ["business_verifications", "verification_requests", "verification_audit_log"] as const) {
+      await supabaseAdmin.from(table).delete().eq("user_id", context.userId).eq("place_id", placeId);
+    }
+    // Claim rows (and their append-only attempt history, via cascade) for the listing.
+    await supabaseAdmin.from("business_claims").delete().eq("user_id", context.userId).eq("business_id", placeId);
+    return { ok: true as const, placeId, error: null };
   });
