@@ -192,6 +192,15 @@ export function MyBusinesses() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {isDemoOwner && (
+                      <ResetDemoButton
+                        label="Reset listing"
+                        placeId={b.placeId ?? b.id}
+                        to="/app/business-profile"
+                        className="!px-3 !py-1.5 !text-xs"
+                      />
+                    )}
+
                     {b.id !== activeId && (
                       <button
                         onClick={() => activate.mutate(b.id)}
