@@ -23,9 +23,9 @@ export function MyBusinesses() {
   const { user } = useAuth();
   const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
-  const search = useServerFn(findBusinessMatches);
+  const search = useServerFn(searchBusiness);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<BusinessMatch[]>([]);
+  const [results, setResults] = useState<PlaceSummary[]>([]);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
 
