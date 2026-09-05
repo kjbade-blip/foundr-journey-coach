@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { BusinessSelector } from "@/components/foundr/business/BusinessSelector";
 import { useAuth } from "@/features/auth/auth-context";
 import { initialsFor } from "@/features/auth/profile";
 
