@@ -243,6 +243,55 @@ function PricingPage() {
         </div>
       </section>
 
+      {/* Add-ons */}
+      <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6">
+        <div className="rounded-3xl border border-border bg-card p-8 shadow-soft sm:p-10">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="max-w-xl">
+              <span className="text-xs font-bold uppercase tracking-widest text-brand-dark">Add-on</span>
+              <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Additional businesses</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Run more than one business? Add as many as you need. Every extra business gets its own profile,
+                intelligence and alerts, and you choose which ones to view from any Grow My Business screen.
+              </p>
+              <ul className="mt-4 space-y-2 text-sm">
+                {[
+                  "Your first business is included in every plan",
+                  "Add or remove businesses any time in Business Profile",
+                  "Switch between one, several or all of your businesses",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-dark" strokeWidth={3} />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-brand-dark bg-background p-6 text-center">
+              <div className="flex items-end justify-center gap-1">
+                <span className="text-5xl font-extrabold tracking-tight leading-none">
+                  {isAnnual ? "£150" : "£15"}
+                </span>
+                <span className="pb-1.5 text-sm font-medium text-muted-foreground">
+                  {isAnnual ? "/year*" : "/pm*"}
+                </span>
+              </div>
+              <p className="mt-2 text-xs font-semibold text-brand-dark">Per additional business</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {isAnnual ? "Save 2 months — billed annually" : "£150/year when billed annually"}
+              </p>
+              <Link
+                to="/app/business-profile"
+                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-brand-dark px-5 py-3 text-sm font-bold text-white hover:opacity-90"
+              >
+                Add a business <ArrowRight className="h-4 w-4" />
+              </Link>
+              <div className="mt-3 text-[11px] text-muted-foreground">*Plus VAT</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Bundles */}
       <section className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6">
         <div className="rounded-3xl border border-border bg-card p-8 shadow-soft sm:p-10">
