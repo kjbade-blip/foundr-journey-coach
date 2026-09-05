@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Building2, Check, Loader2, Plus, Search, Star, Trash2 } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Building2, Check, Loader2, Plus, Search, ShieldCheck, Star, Trash2 } from "lucide-react";
 
 import { Card, Pill } from "@/components/foundr/ui";
-import { searchBusiness } from "@/lib/business-discovery.functions";
+import { discoverCore, searchBusiness } from "@/lib/business-discovery.functions";
 import { useBusinessMutations, useBusinessSelection, useMyBusinesses } from "@/lib/businesses";
-import type { PlaceSummary } from "@/lib/business-profile";
+import { saveProfile, type PlaceSummary } from "@/lib/business-profile";
+import { setMode } from "@/lib/mode";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
 import { useAuth } from "@/features/auth/auth-context";
@@ -24,10 +26,30 @@ export function MyBusinesses() {
   const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
   const search = useServerFn(searchBusiness);
+  const discover = useServerFn(discoverCore);
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<PlaceSummary[]>([]);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [claiming, setClaiming] = useState<string | null>(null);
+  const [claimError, setClaimError] = useState<string | null>(null);
+
+  // Discover + claim & verify — the same flow as the "Discover my business" page.
+  async function claimAndVerify(placeId: string) {
+    setClaiming(placeId);
+    setClaimError(null);
+    try {
+      const out = await discover({ data: { placeId } });
+      if (!out) throw new Error("no details");
+      saveProfile({ ...out, deep: null, edits: {}, updatedAt: new Date().toISOString() });
+      setMode("grow");
+      navigate({ to: "/verify" });
+    } catch {
+      setClaimError("We couldn't reach the business data service. Please try again.");
+      setClaiming(null);
+    }
+  }
 
   useEffect(() => {
     const q = query.trim();
@@ -131,23 +153,37 @@ export function MyBusinesses() {
           {results.length > 0 && (
             <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {results.map((m) => (
-                <li key={m.id}>
+                <li key={m.id} className="flex flex-wrap items-center gap-2 px-4 py-2.5">
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold">{m.name}</span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      {[m.address, m.category].filter(Boolean).join(" · ") || "No address listed"}
+                    </span>
+                  </span>
                   <button
                     onClick={() => addMatch(m)}
-                    className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-muted"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted"
                   >
-                    <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold">{m.name}</span>
-                      <span className="block truncate text-xs text-muted-foreground">
-                        {[m.address, m.category].filter(Boolean).join(" · ") || "No address listed"}
-                      </span>
-                    </span>
-                    <Plus className="h-4 w-4 shrink-0 text-brand-dark" />
+                    <Plus className="h-3.5 w-3.5" /> Add
+                  </button>
+                  <button
+                    onClick={() => void claimAndVerify(m.id)}
+                    disabled={claiming !== null}
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-dark px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                  >
+                    {claiming === m.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                    )}
+                    Claim &amp; verify
                   </button>
                 </li>
               ))}
             </ul>
           )}
+
+          {claimError && <p className="mt-3 text-sm text-[color:var(--destructive,#b91c1c)]">{claimError}</p>}
 
           {query.trim().length >= 3 && !searching && results.length === 0 && (
             <button onClick={addManual} className="mt-3 text-sm font-semibold text-brand-dark hover:underline">
@@ -195,6 +231,20 @@ export function MyBusinesses() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {b.placeId && (
+                      <button
+                        onClick={() => void claimAndVerify(b.placeId!)}
+                        disabled={claiming !== null}
+                        className="inline-flex items-center gap-1 rounded-full bg-brand-dark px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                      >
+                        {claiming === b.placeId ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                        )}
+                        Claim &amp; verify
+                      </button>
+                    )}
                     {isDemoOwner && (
                       <ResetDemoButton
                         label="Reset listing"
