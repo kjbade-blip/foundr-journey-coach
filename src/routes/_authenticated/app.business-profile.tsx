@@ -71,12 +71,15 @@ function BusinessProfilePage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-2xl py-16 text-center">
-        <h1 className="text-2xl font-extrabold">No business profile yet</h1>
-        <p className="mt-2 text-muted-foreground">Search for your business and let the Found-r AI Discovery Engine build your profile.</p>
-        <Link to="/discover" className="mt-6 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
-          Discover my business
-        </Link>
+      <div>
+        <div className="mx-auto max-w-2xl py-12 text-center">
+          <h1 className="text-2xl font-extrabold">No business profile yet</h1>
+          <p className="mt-2 text-muted-foreground">Search for your business and let the Found-r AI Discovery Engine build your profile.</p>
+          <Link to="/discover" className="mt-6 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
+            Discover my business
+          </Link>
+        </div>
+        <MyBusinesses />
       </div>
     );
   }
