@@ -13,6 +13,21 @@ import {
 import { ONBOARDING_STATE_KEY } from "./active-business";
 import type { ActiveBusiness } from "./onboarding/types";
 
+export interface AddBusinessInput {
+  name: string;
+  companyNumber?: string | null;
+  address?: string | null;
+  postcode?: string | null;
+  status?: string | null;
+  industry?: string | null;
+  website?: string | null;
+  placeId?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  source?: "companies_house" | "places" | "manual";
+  makeActive?: boolean;
+}
+
 export const MY_BUSINESSES_KEY = ["my-businesses"] as const;
 
 export function useMyBusinesses() {
@@ -37,7 +52,7 @@ export function useBusinessMutations() {
 
   return {
     add: useMutation({
-      mutationFn: (data: Parameters<typeof add>[0]["data"]) => add({ data }),
+      mutationFn: (data: AddBusinessInput) => add({ data }),
       onSuccess: invalidate,
     }),
     remove: useMutation({
