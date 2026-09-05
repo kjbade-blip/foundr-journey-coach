@@ -71,6 +71,7 @@ async function companiesHouse(query: string): Promise<BusinessMatch[]> {
     return [];
   }
 }
+import { matchingDemoPlaces } from "../demo-business";
 
 async function places(query: string): Promise<BusinessMatch[]> {
   try {
@@ -95,9 +96,26 @@ async function places(query: string): Promise<BusinessMatch[]> {
   }
 }
 
+function demoMatches(query: string): BusinessMatch[] {
+  return matchingDemoPlaces(query).map((p) => ({
+    key: `place:${p.id}`,
+    name: p.name,
+    address: p.address,
+    postcode: postcodeFrom(p.address),
+    companyNumber: null,
+    status: p.status ?? null,
+    industry: p.category || null,
+    website: p.website ?? null,
+    placeId: p.id,
+    latitude: p.lat,
+    longitude: p.lng,
+    source: "places" as const,
+  }));
+}
+
 export async function findBusinesses(query: string): Promise<BusinessMatch[]> {
   const [ch, gp] = await Promise.all([companiesHouse(query), places(query)]);
-  return [...ch, ...gp];
+  return [...demoMatches(query), ...ch, ...gp];
 }
 
 /** Enrich a Places match with the website and status before it is saved. */
