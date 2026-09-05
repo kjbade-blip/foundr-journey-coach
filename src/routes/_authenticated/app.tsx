@@ -5,10 +5,11 @@ import { Logo } from "@/components/foundr/Logo";
 import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
   LayoutDashboard, Compass, Map, FileText, Store, GraduationCap,
-  TrendingUp, Radar, Bell, Sparkles, Users, Search, Menu, X, ChevronDown, Bot, BarChart3, Building2,
+  TrendingUp, Radar, Bell, Sparkles, Users, Menu, X, ChevronDown, Bot, BarChart3, Building2,
   Settings, LogOut
 } from "lucide-react";
 
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 import { useAuth } from "@/features/auth/auth-context";
 import { initialsFor } from "@/features/auth/profile";
 
@@ -46,6 +47,7 @@ function AppShell() {
   const navigate = useNavigate();
   const [mode, setLocalMode] = useState<Mode>("start");
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
 
   useEffect(() => {
     const m = getMode();
