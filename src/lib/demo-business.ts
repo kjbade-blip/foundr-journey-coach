@@ -1,25 +1,17 @@
-// Demo / test business used to showcase the "claim my business" flow.
-// It is a synthetic listing (not a real Google Place) so ownership verification
+// Demo / test businesses used to showcase the "claim my business" flow.
+// These are synthetic listings (not real Google Places) so ownership verification
 // can be demonstrated end-to-end without touching a real business profile.
 import type { PlaceDetails } from "./business-profile";
 
-export const DEMO_PLACE_ID = "demo-kristians-coffee-horbury";
 export const DEMO_OWNER_EMAIL = "kj.bade@gmail.com";
-export const DEMO_PHONE = "+44 1924 264821";
-/** Fixed one-time code for the demo listing (no real email/SMS is sent). */
+/** Fixed one-time code for demo listings (no real email/SMS is sent). */
 export const DEMO_CODE = "123456";
 
-export function isDemoPlace(placeId: string | null | undefined) {
-  return placeId === DEMO_PLACE_ID;
-}
+export const DEMO_PLACE_ID = "demo-kristians-coffee-horbury";
+export const DEMO_PHONE = "+44 1924 264821";
 
-export function matchesDemoQuery(query: string) {
-  const q = query.toLowerCase();
-  return (
-    q.includes("kristian") ||
-    (q.includes("horbury") && (q.includes("coffee") || q.includes("cafe") || q.includes("café")))
-  );
-}
+export const SOFIAS_PLACE_ID = "demo-sofias-dog-grooming-horbury";
+export const SOFIAS_PHONE = "+44 1924 264822";
 
 export const DEMO_PLACE: PlaceDetails = {
   id: DEMO_PLACE_ID,
@@ -53,3 +45,74 @@ export const DEMO_PLACE: PlaceDetails = {
     "Great spot to work from, plenty of plugs and fast wifi.",
   ],
 };
+
+export const SOFIAS_PLACE: PlaceDetails = {
+  id: SOFIAS_PLACE_ID,
+  name: "Sofia's Dog Grooming",
+  address: "41 High Street, Horbury, Wakefield WF4 5AB, UK",
+  category: "Pet Groomer",
+  rating: 4.9,
+  reviews: 94,
+  lat: 53.6607,
+  lng: -1.5596,
+  website: "https://sofia-gentle-groom.base44.app",
+  phone: SOFIAS_PHONE,
+  openingHours: [
+    "Monday: Closed",
+    "Tuesday: 8:30 AM – 5:00 PM",
+    "Wednesday: 8:30 AM – 5:00 PM",
+    "Thursday: 8:30 AM – 5:00 PM",
+    "Friday: 8:30 AM – 5:00 PM",
+    "Saturday: 9:00 AM – 3:00 PM",
+    "Sunday: Closed",
+  ],
+  categories: ["Pet Groomer", "Dog Grooming", "Pet Care Service"],
+  status: "OPERATIONAL",
+  photos: [],
+  editorial:
+    "Independent dog grooming salon on Horbury high street offering gentle, low-stress grooming, hand-stripping, puppy introductions and de-shedding treatments.",
+  reviewSnippets: [
+    "Sofia is so calm with anxious dogs — our rescue actually enjoys going now.",
+    "Best groom our cockapoo has ever had, and she smells amazing.",
+    "Easy to book and always finishes on time.",
+    "Lovely small salon, one dog at a time so it's never noisy.",
+  ],
+};
+
+export const DEMO_PLACES: PlaceDetails[] = [DEMO_PLACE, SOFIAS_PLACE];
+
+export function isDemoPlace(placeId: string | null | undefined) {
+  return DEMO_PLACES.some((p) => p.id === placeId);
+}
+
+export function getDemoPlace(placeId: string | null | undefined): PlaceDetails | null {
+  return DEMO_PLACES.find((p) => p.id === placeId) ?? null;
+}
+
+/** Contact channels used by the fixed-code demo verification flow. */
+export function demoContacts(placeId: string) {
+  const place = getDemoPlace(placeId);
+  return { email: DEMO_OWNER_EMAIL, phone: place?.phone ?? DEMO_PHONE };
+}
+
+export function matchesDemoQuery(query: string) {
+  return matchingDemoPlaces(query).length > 0;
+}
+
+/** Demo listings that should surface for a free-text business search. */
+export function matchingDemoPlaces(query: string): PlaceDetails[] {
+  const q = query.toLowerCase();
+  const horbury = q.includes("horbury");
+  const out: PlaceDetails[] = [];
+
+  if (q.includes("kristian") || (horbury && (q.includes("coffee") || q.includes("cafe") || q.includes("café")))) {
+    out.push(DEMO_PLACE);
+  }
+  if (
+    q.includes("sofia") ||
+    (horbury && (q.includes("groom") || q.includes("dog") || q.includes("pet")))
+  ) {
+    out.push(SOFIAS_PLACE);
+  }
+  return out;
+}
