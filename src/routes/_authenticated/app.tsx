@@ -69,13 +69,16 @@ function AppShell() {
           <Link to="/" className="flex items-center gap-2">
             <Logo className="h-[38px]" />
           </Link>
-          <div className="ml-4 hidden flex-1 max-w-xl md:flex">
-            <div className="flex w-full items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm text-muted-foreground">
-              <Search className="h-4 w-4" />
-              <input className="w-full bg-transparent outline-none placeholder:text-muted-foreground" placeholder="Search businesses, postcodes, suppliers…" />
-              <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-semibold">⌘K</kbd>
-            </div>
+          <div className="ml-4 hidden flex-1 max-w-xl md:block">
+            <LocationAutocomplete
+              value={q}
+              onChange={setQ}
+              onSelect={(v) => navigate({ to: "/app/location-analysis", search: { q: v } })}
+              placeholder="Search businesses, postcodes, places…"
+              icon="search"
+            />
           </div>
+
           <div className="ml-auto flex items-center gap-2">
             <ModeSwitcher mode={mode} onChange={(m) => { setMode(m); setLocalMode(m); navigate({ to: m === "start" ? "/app/dashboard" : "/app/grow" }); }} />
             <UserMenu />
