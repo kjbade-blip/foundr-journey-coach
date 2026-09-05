@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
+import { BusinessSelector } from "@/components/foundr/business/BusinessSelector";
 import { useAuth } from "@/features/auth/auth-context";
 import { initialsFor } from "@/features/auth/profile";
 
@@ -82,6 +83,7 @@ function AppShell() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            {mode === "grow" && <BusinessSelector />}
             <ModeSwitcher mode={mode} onChange={(m) => { setMode(m); setLocalMode(m); navigate({ to: m === "start" ? "/app/dashboard" : "/app/grow" }); }} />
             <UserMenu />
           </div>

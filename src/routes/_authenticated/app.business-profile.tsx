@@ -15,6 +15,7 @@ import {
 } from "@/lib/business-profile";
 import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
 import { isDemoPlace } from "@/lib/demo-business";
+import { MyBusinesses } from "@/components/foundr/business/MyBusinesses";
 
 export const Route = createFileRoute("/_authenticated/app/business-profile")({
   head: () => ({
@@ -71,12 +72,15 @@ function BusinessProfilePage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-2xl py-16 text-center">
-        <h1 className="text-2xl font-extrabold">No business profile yet</h1>
-        <p className="mt-2 text-muted-foreground">Search for your business and let the Found-r AI Discovery Engine build your profile.</p>
-        <Link to="/discover" className="mt-6 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
-          Discover my business
-        </Link>
+      <div>
+        <div className="mx-auto max-w-2xl py-12 text-center">
+          <h1 className="text-2xl font-extrabold">No business profile yet</h1>
+          <p className="mt-2 text-muted-foreground">Search for your business and let the Found-r AI Discovery Engine build your profile.</p>
+          <Link to="/discover" className="mt-6 inline-flex rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
+            Discover my business
+          </Link>
+        </div>
+        <MyBusinesses />
       </div>
     );
   }
@@ -106,6 +110,10 @@ function BusinessProfilePage() {
           Found-r AI is still researching in the background — deeper intelligence is being added to this profile.
         </div>
       )}
+
+      <div className="mb-6">
+        <MyBusinesses />
+      </div>
 
       {/* Hero: health + snapshot */}
       <div className="grid gap-6 lg:grid-cols-[auto_1fr]">
