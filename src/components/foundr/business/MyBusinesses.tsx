@@ -20,6 +20,8 @@ export function MyBusinesses() {
   const activeId = data?.activeBusinessId ?? null;
   const { add, remove, activate } = useBusinessMutations();
   const { selectedIds, toggle } = useBusinessSelection(businesses);
+  const { user } = useAuth();
+  const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
   const search = useServerFn(findBusinessMatches);
   const [query, setQuery] = useState("");
