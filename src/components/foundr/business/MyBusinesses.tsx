@@ -6,6 +6,9 @@ import { Card, Pill } from "@/components/foundr/ui";
 import { findBusinessMatches } from "@/lib/onboarding.functions";
 import { useBusinessMutations, useBusinessSelection, useMyBusinesses } from "@/lib/businesses";
 import type { BusinessMatch } from "@/lib/onboarding/types";
+import { ResetDemoButton } from "@/components/foundr/ResetDemoButton";
+import { DEMO_OWNER_EMAIL } from "@/lib/demo-business";
+import { useAuth } from "@/features/auth/auth-context";
 
 /**
  * "My businesses" management panel: add, remove, set the primary business and
