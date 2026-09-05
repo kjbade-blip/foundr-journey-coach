@@ -112,7 +112,7 @@ export function MyBusinesses() {
       {adding && (
         <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-4">
           <label htmlFor="add-business" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Search by business name, company number or postcode
+            Search by business name or area — the same search as “Discover my business”
           </label>
           <div className="relative mt-2">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -131,7 +131,7 @@ export function MyBusinesses() {
           {results.length > 0 && (
             <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {results.map((m) => (
-                <li key={m.key}>
+                <li key={m.id}>
                   <button
                     onClick={() => addMatch(m)}
                     className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-muted"
@@ -139,7 +139,7 @@ export function MyBusinesses() {
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-semibold">{m.name}</span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {m.address || m.postcode || m.companyNumber || "No address listed"}
+                        {[m.address, m.category].filter(Boolean).join(" · ") || "No address listed"}
                       </span>
                     </span>
                     <Plus className="h-4 w-4 shrink-0 text-brand-dark" />
