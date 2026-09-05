@@ -26,10 +26,30 @@ export function MyBusinesses() {
   const isDemoOwner = (user?.email ?? "").trim().toLowerCase() === DEMO_OWNER_EMAIL;
 
   const search = useServerFn(searchBusiness);
+  const discover = useServerFn(discoverCore);
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<PlaceSummary[]>([]);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [claiming, setClaiming] = useState<string | null>(null);
+  const [claimError, setClaimError] = useState<string | null>(null);
+
+  // Discover + claim & verify — the same flow as the "Discover my business" page.
+  async function claimAndVerify(placeId: string) {
+    setClaiming(placeId);
+    setClaimError(null);
+    try {
+      const out = await discover({ data: { placeId } });
+      if (!out) throw new Error("no details");
+      saveProfile({ ...out, deep: null, edits: {}, updatedAt: new Date().toISOString() });
+      setMode("grow");
+      navigate({ to: "/verify" });
+    } catch {
+      setClaimError("We couldn't reach the business data service. Please try again.");
+      setClaiming(null);
+    }
+  }
 
   useEffect(() => {
     const q = query.trim();
