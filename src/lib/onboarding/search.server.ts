@@ -6,6 +6,7 @@
 
 import { searchBusinesses as searchPlaces, fetchPlaceDetails } from "../business-discovery.server";
 import type { BusinessMatch } from "./types";
+import { matchingDemoPlaces } from "../demo-business";
 
 const CH_BASE = "https://api.company-information.service.gov.uk";
 
@@ -71,7 +72,6 @@ async function companiesHouse(query: string): Promise<BusinessMatch[]> {
     return [];
   }
 }
-import { matchingDemoPlaces } from "../demo-business";
 
 async function places(query: string): Promise<BusinessMatch[]> {
   try {
