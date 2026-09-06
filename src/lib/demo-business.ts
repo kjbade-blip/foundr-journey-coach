@@ -82,7 +82,40 @@ export const SOFIAS_PLACE: PlaceDetails = {
   ],
 };
 
-export const DEMO_PLACES: PlaceDetails[] = [DEMO_PLACE, SOFIAS_PLACE];
+export const MOLLIES_PLACE: PlaceDetails = {
+  id: MOLLIES_PLACE_ID,
+  name: "Mollie's Nursery",
+  address: "15 High Street, Horbury, Wakefield WF4 5AE, UK",
+  category: "Nursery School",
+  rating: 4.8,
+  reviews: 112,
+  lat: 53.6601,
+  lng: -1.5582,
+  website: "https://mollies-gentle-nurture.base44.app",
+  phone: MOLLIES_PHONE,
+  openingHours: [
+    "Monday: 7:30 AM – 6:00 PM",
+    "Tuesday: 7:30 AM – 6:00 PM",
+    "Wednesday: 7:30 AM – 6:00 PM",
+    "Thursday: 7:30 AM – 6:00 PM",
+    "Friday: 7:30 AM – 6:00 PM",
+    "Saturday: Closed",
+    "Sunday: Closed",
+  ],
+  categories: ["Nursery School", "Preschool", "Child Care Service", "Day Care Center"],
+  status: "OPERATIONAL",
+  photos: [],
+  editorial:
+    "Independent nursery and preschool on Horbury high street offering gentle, child-led early years care for children from six months to school age.",
+  reviewSnippets: [
+    "The staff are incredibly nurturing — my little one runs in every morning.",
+    "Beautiful light rooms and a lovely outdoor garden for messy play.",
+    "Great communication with parents via the daily app updates.",
+    "Small ratios mean the children really get to know their key workers.",
+  ],
+};
+
+export const DEMO_PLACES: PlaceDetails[] = [DEMO_PLACE, SOFIAS_PLACE, MOLLIES_PLACE];
 
 export function isDemoPlace(placeId: string | null | undefined) {
   return DEMO_PLACES.some((p) => p.id === placeId);
@@ -116,6 +149,12 @@ export function matchingDemoPlaces(query: string): PlaceDetails[] {
     (horbury && (q.includes("groom") || q.includes("dog") || q.includes("pet")))
   ) {
     out.push(SOFIAS_PLACE);
+  }
+  if (
+    q.includes("mollie") ||
+    (horbury && (q.includes("nursery") || q.includes("preschool") || q.includes("childcare") || q.includes("child care")))
+  ) {
+    out.push(MOLLIES_PLACE);
   }
   return out;
 }
