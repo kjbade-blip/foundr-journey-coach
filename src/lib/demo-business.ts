@@ -13,6 +13,9 @@ export const DEMO_PHONE = "+44 1924 264821";
 export const SOFIAS_PLACE_ID = "demo-sofias-dog-grooming-horbury";
 export const SOFIAS_PHONE = "+44 1924 264822";
 
+export const MOLLIES_PLACE_ID = "demo-mollies-nursery-horbury";
+export const MOLLIES_PHONE = "+44 1924 264823";
+
 export const DEMO_PLACE: PlaceDetails = {
   id: DEMO_PLACE_ID,
   name: "Kristian's Coffee",
