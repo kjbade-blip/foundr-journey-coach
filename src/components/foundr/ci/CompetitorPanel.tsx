@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2, MapPin, Star } from "lucide-react";
 import { Card, Pill } from "@/components/foundr/ui";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -221,6 +222,15 @@ export function CompetitorPanel({ business, competitors }: { business: CIBusines
               >
                 History
               </button>
+              {c.placeId && (
+                <Link
+                  to="/app/competitor/$placeId"
+                  params={{ placeId: c.placeId }}
+                  className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted"
+                >
+                  Full profile
+                </Link>
+              )}
             </div>
           </Card>
         ))}
