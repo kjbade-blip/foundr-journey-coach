@@ -40,6 +40,7 @@ import { Route as AuthenticatedAppBdiCompareRouteImport } from './routes/_authen
 import { Route as AuthenticatedAppAlertsRouteImport } from './routes/_authenticated/app.alerts'
 import { Route as AuthenticatedAppAdvisorRouteImport } from './routes/_authenticated/app.advisor'
 import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/app.account'
+import { Route as AuthenticatedAppCompetitorPlaceIdRouteImport } from './routes/_authenticated/app.competitor.$placeId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -207,6 +208,12 @@ const AuthenticatedAppAccountRoute = AuthenticatedAppAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppCompetitorPlaceIdRoute =
+  AuthenticatedAppCompetitorPlaceIdRouteImport.update({
+    id: '/competitor/$placeId',
+    path: '/competitor/$placeId',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -270,6 +278,7 @@ export interface FileRoutesByTo {
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app': typeof AuthenticatedAppIndexRoute
+  '/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -304,6 +313,7 @@ export interface FileRoutesById {
   '/api/public/refresh-crime-benchmarks': typeof ApiPublicRefreshCrimeBenchmarksRoute
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
     | '/app/'
+    | '/app/competitor/$placeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
     | '/app'
+    | '/app/competitor/$placeId'
   id:
     | '__root__'
     | '/'
@@ -402,6 +414,7 @@ export interface FileRouteTypes {
     | '/api/public/refresh-crime-benchmarks'
     | '/api/public/run-ci-scans'
     | '/_authenticated/app/'
+    | '/_authenticated/app/competitor/$placeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -636,6 +649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccountRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/competitor/$placeId': {
+      id: '/_authenticated/app/competitor/$placeId'
+      path: '/competitor/$placeId'
+      fullPath: '/app/competitor/$placeId'
+      preLoaderRoute: typeof AuthenticatedAppCompetitorPlaceIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
@@ -658,6 +678,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppPremisesRoute: typeof AuthenticatedAppPremisesRoute
   AuthenticatedAppReportsRoute: typeof AuthenticatedAppReportsRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+  AuthenticatedAppCompetitorPlaceIdRoute: typeof AuthenticatedAppCompetitorPlaceIdRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
@@ -680,6 +701,8 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppPremisesRoute: AuthenticatedAppPremisesRoute,
   AuthenticatedAppReportsRoute: AuthenticatedAppReportsRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+  AuthenticatedAppCompetitorPlaceIdRoute:
+    AuthenticatedAppCompetitorPlaceIdRoute,
 }
 
 const AuthenticatedAppRouteWithChildren =

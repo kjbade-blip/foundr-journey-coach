@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2, MapPin, Search, Star } from "lucide-react";
 import { Card, Pill } from "@/components/foundr/ui";
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
@@ -172,19 +173,28 @@ export function CompetitorSearch({
                     </div>
                     {existing && <Pill tone="brand">Watching</Pill>}
                   </div>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => (existing ? unwatch.mutate(existing.id) : watch.mutate(r.id))}
-                    className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition disabled:opacity-60 ${
-                      existing
-                        ? "bg-brand text-brand-foreground hover:opacity-90"
-                        : "border border-border hover:border-brand-dark hover:bg-muted"
-                    }`}
-                  >
-                    {existing ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                    {existing ? "Unwatch" : "Watch"}
-                  </button>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => (existing ? unwatch.mutate(existing.id) : watch.mutate(r.id))}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition disabled:opacity-60 ${
+                        existing
+                          ? "bg-brand text-brand-foreground hover:opacity-90"
+                          : "border border-border hover:border-brand-dark hover:bg-muted"
+                      }`}
+                    >
+                      {existing ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      {existing ? "Unwatch" : "Watch"}
+                    </button>
+                    <Link
+                      to="/app/competitor/$placeId"
+                      params={{ placeId: r.id }}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-muted"
+                    >
+                      View profile
+                    </Link>
+                  </div>
                 </li>
               );
             })}
