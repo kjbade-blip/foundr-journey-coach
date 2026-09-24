@@ -1222,6 +1222,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_journey_notes: {
+        Row: {
+          id: string
+          note: string
+          stage_index: number
+          task_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          note?: string
+          stage_index: number
+          task_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          note?: string
+          stage_index?: number
+          task_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_journey_stages: {
         Row: {
           created_at: string
