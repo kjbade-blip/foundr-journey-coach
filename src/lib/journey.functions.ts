@@ -74,20 +74,29 @@ export const setJourneyTask = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Marks a stage complete by checking all its required tasks. */
+/** Marks a stage complete (checks all its tasks) or incomplete (clears them). */
 export const completeJourneyStage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ stageIndex: stageIdx }).parse(d))
+  .inputValidator((d) => z.object({ stageIndex: stageIdx, complete: z.boolean().default(true) }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: true }> => {
-    const rows = STAGES[data.stageIndex]!.tasks.map((t) => ({
-      user_id: context.userId,
-      stage_index: data.stageIndex,
-      task_key: t.key,
-    }));
-    if (rows.length) {
+    if (data.complete) {
+      const rows = STAGES[data.stageIndex]!.tasks.map((t) => ({
+        user_id: context.userId,
+        stage_index: data.stageIndex,
+        task_key: t.key,
+      }));
+      if (rows.length) {
+        const { error } = await context.supabase
+          .from("user_journey_tasks")
+          .upsert(rows, { onConflict: "user_id,stage_index,task_key", ignoreDuplicates: true });
+        if (error) throw new Error(error.message);
+      }
+    } else {
       const { error } = await context.supabase
         .from("user_journey_tasks")
-        .upsert(rows, { onConflict: "user_id,stage_index,task_key", ignoreDuplicates: true });
+        .delete()
+        .eq("user_id", context.userId)
+        .eq("stage_index", data.stageIndex);
       if (error) throw new Error(error.message);
     }
     await syncStage(context, data.stageIndex);
