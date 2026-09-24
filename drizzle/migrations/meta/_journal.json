@@ -15,6 +15,13 @@
       "when": 1790283952365,
       "tag": "0001_journey_tasks",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790285101623,
+      "tag": "0002_journey_notes",
+      "breakpoints": true
     }
   ]
 }
