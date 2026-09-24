@@ -1,58 +1,87 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
-import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw } from "lucide-react";
+import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { STAGES, progressMap, overallProgress } from "@/lib/journey";
-import { getJourneyProgress, setStageProgress, resetJourneyProgress } from "@/lib/journey.functions";
+import { STAGES, checkedMap, stagePercent, overallPercent, type TaskCheck } from "@/lib/journey";
+import { getJourneyTasks, setJourneyTask, completeJourneyStage, resetJourneyProgress } from "@/lib/journey.functions";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({
     meta: [
       { title: "My Journey · Found-r" },
-      { name: "description", content: "Eleven guided stages from idea to opening day, with your real progress saved as you go." },
+      { name: "description", content: "Eleven guided stages from idea to opening day, with task checklists saved to your account." },
+      { property: "og:title", content: "My Journey · Found-r" },
+      { property: "og:description", content: "Eleven guided stages from idea to opening day, with task checklists saved to your account." },
     ],
   }),
   component: Journey,
 });
 
+const KEY = ["journey-tasks"];
+
 function Journey() {
   const [active, setActive] = useState(0);
-  const progressFn = useServerFn(getJourneyProgress);
-  const saveFn = useServerFn(setStageProgress);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const tasksFn = useServerFn(getJourneyTasks);
+  const toggleFn = useServerFn(setJourneyTask);
+  const completeFn = useServerFn(completeJourneyStage);
   const resetFn = useServerFn(resetJourneyProgress);
   const qc = useQueryClient();
 
-  const { data: rows = [], isLoading } = useQuery({
-    queryKey: ["journey-progress"],
-    queryFn: () => progressFn(),
+  const { data: rows = [], isLoading, isError } = useQuery({ queryKey: KEY, queryFn: () => tasksFn() });
+
+  const afterWrite = () => {
+    void qc.invalidateQueries({ queryKey: KEY });
+    void qc.invalidateQueries({ queryKey: ["journey-progress"] });
+  };
+
+  const toggle = useMutation({
+    mutationFn: (v: { stageIndex: number; taskKey: string; checked: boolean }) => toggleFn({ data: v }),
+    onMutate: async (v) => {
+      setSaveError(null);
+      await qc.cancelQueries({ queryKey: KEY });
+      const prev = qc.getQueryData<TaskCheck[]>(KEY) ?? [];
+      const next = prev.filter((r) => !(r.stageIndex === v.stageIndex && r.taskKey === v.taskKey));
+      if (v.checked) next.push({ stageIndex: v.stageIndex, taskKey: v.taskKey });
+      qc.setQueryData(KEY, next);
+      return { prev };
+    },
+    onError: (_e, _v, c) => {
+      if (c) qc.setQueryData(KEY, c.prev);
+      setSaveError("Couldn't save that change — it has been undone. Please try again.");
+    },
+    onSettled: afterWrite,
   });
 
-  const save = useMutation({
-    mutationFn: (v: { stageIndex: number; progress: number }) => saveFn({ data: v }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["journey-progress"] }),
+  const complete = useMutation({
+    mutationFn: (stageIndex: number) => completeFn({ data: { stageIndex } }),
+    onMutate: () => setSaveError(null),
+    onError: () => setSaveError("Couldn't mark the stage complete. Please try again."),
+    onSettled: afterWrite,
   });
 
   const reset = useMutation({
     mutationFn: () => resetFn(),
-    onSuccess: () => {
-      setActive(0);
-      void qc.invalidateQueries({ queryKey: ["journey-progress"] });
-    },
+    onError: () => setSaveError("Couldn't reset your journey. Please try again."),
+    onSuccess: () => setActive(0),
+    onSettled: afterWrite,
   });
 
-  const progress = progressMap(rows);
-  const overall = overallProgress(rows);
+  const checked = checkedMap(rows);
+  const progress = STAGES.map((_, i) => stagePercent(i, checked[i]!));
+  const overall = overallPercent(checked);
   const nextIndex = progress.findIndex((p) => p < 100);
   const current = STAGES[active]!;
+  const currentChecked = checked[active]!;
 
   return (
     <div>
       <PageHeader
         eyebrow="My Business Journey"
         title="From idea to opening day."
-        subtitle="Eleven guided stages with AI specialists, tasks, and a measurable output for each. Your progress is saved to your account."
+        subtitle="Eleven guided stages with tasks, ideas and AI specialists. Tick tasks off as you go — your progress is saved to your account."
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold">
@@ -62,13 +91,10 @@ function Journey() {
               type="button"
               onClick={() => {
                 if (reset.isPending) return;
-                if (window.confirm("Reset all journey progress? This clears every stage for your account.")) {
-                  reset.mutate();
-                }
+                if (window.confirm("Reset all journey progress? This clears every checked task for your account.")) reset.mutate();
               }}
               disabled={reset.isPending || overall === 0}
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold disabled:opacity-50"
-              title="Demo helper: clears all saved journey progress"
             >
               {reset.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />}
               {reset.isPending ? "Resetting…" : "Reset journey"}
@@ -77,10 +103,16 @@ function Journey() {
         }
       />
 
-
-      <div className="mb-6 h-2 w-full rounded-full bg-muted">
+      <div className="mb-6 h-2 w-full rounded-full bg-muted" role="progressbar" aria-valuenow={overall} aria-valuemin={0} aria-valuemax={100} aria-label="Overall journey progress">
         <div className="h-full rounded-full bg-brand-dark transition-all" style={{ width: `${overall}%` }} />
       </div>
+
+      {(saveError || isError) && (
+        <div role="alert" className="mb-6 flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          {saveError ?? "We couldn't load your saved progress. Refresh the page to try again."}
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
         <div className="space-y-2">
@@ -90,8 +122,10 @@ function Journey() {
             return (
               <button
                 key={s.title}
+                type="button"
                 onClick={() => setActive(i)}
-                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition ${active === i ? "border-brand-dark bg-card shadow-soft" : "border-border bg-card hover:border-brand-dark/30"}`}
+                aria-current={active === i ? "step" : undefined}
+                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-dark ${active === i ? "border-brand-dark bg-card shadow-soft" : "border-border bg-card hover:border-brand-dark/30"}`}
               >
                 <div
                   className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold ${
@@ -106,16 +140,17 @@ function Journey() {
                 >
                   {status === "done" ? <Check className="h-5 w-5" /> : status === "locked" ? <Lock className="h-4 w-4" /> : i + 1}
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="font-semibold">{s.title}</span>
-                    {status === "next" && <Pill tone="brand">Up next</Pill>}
+                    <span className="text-xs font-semibold text-muted-foreground">{p}%</span>
                   </div>
-                  <div className="mt-1.5">
+                  <div className="mt-1.5 flex items-center gap-2">
                     <Bar value={p} />
+                    {status === "next" && <Pill tone="brand">Next</Pill>}
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
               </button>
             );
           })}
@@ -127,16 +162,65 @@ function Journey() {
               <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Stage {active + 1} of {STAGES.length}</div>
               <h2 className="mt-1 text-2xl font-bold">{current.title}</h2>
             </div>
-            <div className="text-sm font-semibold text-muted-foreground">{progress[active] ?? 0}% complete</div>
+            <div className="text-sm font-semibold text-muted-foreground">
+              {currentChecked.size} of {current.tasks.length} tasks · {progress[active]}% complete
+            </div>
           </div>
+
+          <div className="mt-6">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tasks</div>
+            {isLoading ? (
+              <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading your saved progress…
+              </div>
+            ) : current.tasks.length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">No required tasks for this stage.</p>
+            ) : (
+              <ul className="mt-2 divide-y divide-border rounded-2xl border border-border">
+                {current.tasks.map((task) => {
+                  const isChecked = currentChecked.has(task.key);
+                  const id = `task-${active}-${task.key}`;
+                  return (
+                    <li key={task.key}>
+                      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 p-3.5 hover:bg-muted/40">
+                        <input
+                          id={id}
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => toggle.mutate({ stageIndex: active, taskKey: task.key, checked: e.target.checked })}
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-[color:var(--brand-dark)]"
+                        />
+                        <span className={`text-sm ${isChecked ? "text-muted-foreground line-through" : ""}`}>{task.label}</span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          {current.ideas.length > 0 && (
+            <div className="mt-6 rounded-2xl bg-muted/50 p-4">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <Lightbulb className="h-3.5 w-3.5" /> Optional ideas
+              </div>
+              <ul className="mt-2 space-y-1.5">
+                {current.ideas.map((idea) => (
+                  <li key={idea} className="text-sm text-muted-foreground">• {idea}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Outputs</div>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <Target className="h-3.5 w-3.5" /> Outputs
+              </div>
               <ul className="mt-2 space-y-2">
                 {current.outputs.map((o) => (
                   <li key={o} className="flex items-start gap-2 text-sm">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-brand-dark" />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-dark" />
                     {o}
                   </li>
                 ))}
@@ -161,14 +245,10 @@ function Journey() {
                 <BarChart3 className="h-4 w-4" /> Evidence required for this stage
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                You can't complete {current.title.toLowerCase()} on instinct. Run an Opportunity Analysis to attach published
-                evidence — ONS population and earnings, recorded crime, business formations and live competitors — with every
-                figure sourced and every gap stated.
+                Run an Opportunity Analysis to attach published evidence — ONS population and earnings, recorded crime,
+                business formations and live competitors — with every figure sourced and every gap stated.
               </p>
-              <Link
-                to="/app/opportunity-finder"
-                className="mt-3 inline-flex rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white"
-              >
+              <Link to="/app/opportunity-finder" className="mt-3 inline-flex rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white">
                 Run an Opportunity Analysis
               </Link>
             </div>
@@ -176,19 +256,23 @@ function Journey() {
 
           <div className="mt-6 flex flex-wrap gap-2">
             <button
-              onClick={() => save.mutate({ stageIndex: active, progress: Math.min(100, (progress[active] ?? 0) + 25) })}
-              disabled={save.isPending || (progress[active] ?? 0) >= 100}
+              type="button"
+              onClick={() => complete.mutate(active)}
+              disabled={complete.isPending || isLoading || (progress[active] ?? 0) >= 100}
               className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
             >
-              {save.isPending && <Loader2 className="h-4 w-4 animate-spin" />} Log progress on this stage
+              {complete.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {(progress[active] ?? 0) >= 100 ? "Stage complete" : "Mark stage complete"}
             </button>
-            <button
-              onClick={() => save.mutate({ stageIndex: active, progress: 100 })}
-              disabled={save.isPending || (progress[active] ?? 0) === 100}
-              className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
-            >
-              Mark stage complete
-            </button>
+            {active < STAGES.length - 1 && (
+              <button
+                type="button"
+                onClick={() => setActive(active + 1)}
+                className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+              >
+                Next stage
+              </button>
+            )}
           </div>
         </Card>
       </div>
