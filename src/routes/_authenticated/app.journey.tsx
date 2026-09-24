@@ -56,9 +56,22 @@ function Journey() {
   });
 
   const complete = useMutation({
-    mutationFn: (stageIndex: number) => completeFn({ data: { stageIndex } }),
-    onMutate: () => setSaveError(null),
-    onError: () => setSaveError("Couldn't mark the stage complete. Please try again."),
+    mutationFn: (v: { stageIndex: number; complete: boolean }) => completeFn({ data: v }),
+    onMutate: async (v) => {
+      setSaveError(null);
+      await qc.cancelQueries({ queryKey: KEY });
+      const prev = qc.getQueryData<TaskCheck[]>(KEY) ?? [];
+      const others = prev.filter((r) => r.stageIndex !== v.stageIndex);
+      const next = v.complete
+        ? [...others, ...STAGES[v.stageIndex]!.tasks.map((t) => ({ stageIndex: v.stageIndex, taskKey: t.key }))]
+        : others;
+      qc.setQueryData(KEY, next);
+      return { prev };
+    },
+    onError: (_e, _v, c) => {
+      if (c) qc.setQueryData(KEY, c.prev);
+      setSaveError("Couldn't update the stage. It has been undone — please try again.");
+    },
     onSettled: afterWrite,
   });
 
@@ -254,16 +267,20 @@ function Journey() {
             </div>
           )}
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => complete.mutate(active)}
-              disabled={complete.isPending || isLoading || (progress[active] ?? 0) >= 100}
-              className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
-            >
-              {complete.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {(progress[active] ?? 0) >= 100 ? "Stage complete" : "Mark stage complete"}
-            </button>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <label className="inline-flex items-center gap-3 rounded-full border border-border bg-card px-5 py-2.5">
+              <Switch
+                checked={(progress[active] ?? 0) >= 100}
+                disabled={complete.isPending || isLoading}
+                onCheckedChange={(on) => complete.mutate({ stageIndex: active, complete: on })}
+                aria-label="Mark stage complete"
+                className="data-[state=checked]:bg-brand-dark"
+              />
+              <span className="inline-flex items-center gap-2 text-sm font-semibold">
+                {complete.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                {(progress[active] ?? 0) >= 100 ? "Stage complete" : "Stage incomplete"}
+              </span>
+            </label>
             {active < STAGES.length - 1 && (
               <button
                 type="button"
