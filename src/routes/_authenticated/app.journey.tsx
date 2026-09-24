@@ -7,6 +7,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { STAGES, checkedMap, stagePercent, overallPercent, type TaskCheck } from "@/lib/journey";
 import { getJourneyTasks, setJourneyTask, completeJourneyStage, resetJourneyProgress } from "@/lib/journey.functions";
+import { NoteField, FounderBriefPanel } from "@/components/foundr/JourneyNotes";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({
@@ -206,12 +207,15 @@ function Journey() {
                         />
                         <span className={`text-sm ${isChecked ? "text-muted-foreground line-through" : ""}`}>{task.label}</span>
                       </label>
+                      {active === 0 && <NoteField stageIndex={0} taskKey={task.key} label={task.label} />}
                     </li>
                   );
                 })}
               </ul>
             )}
           </div>
+
+          {active === 0 && <FounderBriefPanel />}
 
           {current.ideas.length > 0 && (
             <div className="mt-6 rounded-2xl bg-muted/50 p-4">
