@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
+import { Switch } from "@/components/ui/switch";
 import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
