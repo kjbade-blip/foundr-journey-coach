@@ -40,6 +40,7 @@ import { Route as AuthenticatedAppBdiCompareRouteImport } from './routes/_authen
 import { Route as AuthenticatedAppAlertsRouteImport } from './routes/_authenticated/app.alerts'
 import { Route as AuthenticatedAppAdvisorRouteImport } from './routes/_authenticated/app.advisor'
 import { Route as AuthenticatedAppAccountRouteImport } from './routes/_authenticated/app.account'
+import { Route as AuthenticatedAppReportIdRouteImport } from './routes/_authenticated/app.report.$id'
 import { Route as AuthenticatedAppCompetitorPlaceIdRouteImport } from './routes/_authenticated/app.competitor.$placeId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -208,6 +209,12 @@ const AuthenticatedAppAccountRoute = AuthenticatedAppAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppReportIdRoute =
+  AuthenticatedAppReportIdRouteImport.update({
+    id: '/report/$id',
+    path: '/report/$id',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppCompetitorPlaceIdRoute =
   AuthenticatedAppCompetitorPlaceIdRouteImport.update({
     id: '/competitor/$placeId',
@@ -247,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app/': typeof AuthenticatedAppIndexRoute
   '/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
+  '/app/report/$id': typeof AuthenticatedAppReportIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -279,6 +287,7 @@ export interface FileRoutesByTo {
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
+  '/app/report/$id': typeof AuthenticatedAppReportIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -314,6 +323,7 @@ export interface FileRoutesById {
   '/api/public/run-ci-scans': typeof ApiPublicRunCiScansRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/app/competitor/$placeId': typeof AuthenticatedAppCompetitorPlaceIdRoute
+  '/_authenticated/app/report/$id': typeof AuthenticatedAppReportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/api/public/run-ci-scans'
     | '/app/'
     | '/app/competitor/$placeId'
+    | '/app/report/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/api/public/run-ci-scans'
     | '/app'
     | '/app/competitor/$placeId'
+    | '/app/report/$id'
   id:
     | '__root__'
     | '/'
@@ -415,6 +427,7 @@ export interface FileRouteTypes {
     | '/api/public/run-ci-scans'
     | '/_authenticated/app/'
     | '/_authenticated/app/competitor/$placeId'
+    | '/_authenticated/app/report/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -649,6 +662,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppAccountRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/report/$id': {
+      id: '/_authenticated/app/report/$id'
+      path: '/report/$id'
+      fullPath: '/app/report/$id'
+      preLoaderRoute: typeof AuthenticatedAppReportIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/competitor/$placeId': {
       id: '/_authenticated/app/competitor/$placeId'
       path: '/competitor/$placeId'
@@ -679,6 +699,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppReportsRoute: typeof AuthenticatedAppReportsRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
   AuthenticatedAppCompetitorPlaceIdRoute: typeof AuthenticatedAppCompetitorPlaceIdRoute
+  AuthenticatedAppReportIdRoute: typeof AuthenticatedAppReportIdRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
@@ -703,6 +724,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
   AuthenticatedAppCompetitorPlaceIdRoute:
     AuthenticatedAppCompetitorPlaceIdRoute,
+  AuthenticatedAppReportIdRoute: AuthenticatedAppReportIdRoute,
 }
 
 const AuthenticatedAppRouteWithChildren =
