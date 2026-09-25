@@ -267,7 +267,7 @@ function Journey() {
                 Run an Opportunity Analysis to attach published evidence — ONS population and earnings, recorded crime,
                 business formations and live competitors — with every figure sourced and every gap stated.
               </p>
-              <Link to="/app/opportunity-finder" className="mt-3 inline-flex rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white">
+              <Link to="/app/opportunity-finder" className="mt-3 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm hover:bg-brand/90">
                 Run an Opportunity Analysis
               </Link>
             </div>
