@@ -21,13 +21,8 @@ export const Route = createFileRoute("/_authenticated/app")({
 const START_NAV = [
   { to: "/app/dashboard",          label: "Dashboard",          icon: LayoutDashboard },
   { to: "/app/journey",            label: "My Journey",         icon: Map },
-  { to: "/app/opportunity-finder", label: "Opportunity Finder", icon: Compass },
-  { to: "/app/premises",           label: "Find Premises",      icon: Building2 },
   { to: "/app/location-analysis",  label: "Location Analysis",   icon: BarChart3 },
-  { to: "/app/bdi-compare",        label: "BDI Compare",        icon: BarChart3 },
   { to: "/app/reports",            label: "Reports",            icon: FileText },
-  { to: "/app/marketplace",        label: "Marketplace",        icon: Store },
-  { to: "/app/learning",           label: "Learning Centre",    icon: GraduationCap },
 ] as const;
 
 const GROW_NAV = [

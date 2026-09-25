@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, Card, Pill } from "@/components/foundr/ui";
 import { Star, MessageSquare } from "lucide-react";
 import { useState } from "react";
+import { PARTNERS } from "@/lib/journey-resources";
 
 export const Route = createFileRoute("/_authenticated/app/marketplace")({
   head: () => ({ meta: [{ title: "Marketplace · Found-r" }] }),
@@ -10,16 +11,6 @@ export const Route = createFileRoute("/_authenticated/app/marketplace")({
 
 const CATS = ["All","Accountants","Banks","Insurers","Solicitors","Finance","Marketing","Commercial Agents","POS","Utilities","Web & SEO","Recruiters"];
 
-const PARTNERS = [
-  { name: "Ledger & Co", cat: "Accountants", tag: "Small business specialists", rating: 4.9, reviews: 312, price: "From £79/mo" },
-  { name: "BrightBank", cat: "Banks", tag: "Free business account", rating: 4.7, reviews: 1240, price: "£0 setup" },
-  { name: "ShieldSure", cat: "Insurers", tag: "Hospitality & retail cover", rating: 4.8, reviews: 521, price: "From £24/mo" },
-  { name: "GrowthLab", cat: "Marketing", tag: "Local SEO + paid social", rating: 4.6, reviews: 188, price: "From £950/mo" },
-  { name: "Cornerstone Property", cat: "Commercial Agents", tag: "UK high-street units", rating: 4.5, reviews: 94, price: "Negotiated" },
-  { name: "Stripe Terminal Pro", cat: "POS", tag: "Card readers + dashboards", rating: 4.9, reviews: 2200, price: "From £29/mo" },
-  { name: "Watt&Wire", cat: "Utilities", tag: "Multi-site energy procurement", rating: 4.4, reviews: 76, price: "Free quote" },
-  { name: "Found Talent", cat: "Recruiters", tag: "Hourly hospitality hiring", rating: 4.7, reviews: 405, price: "12% placement" },
-];
 
 function Marketplace() {
   const [cat, setCat] = useState("All");

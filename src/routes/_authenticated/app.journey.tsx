@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { STAGES, checkedMap, stagePercent, overallPercent, type TaskCheck } from "@/lib/journey";
 import { getJourneyTasks, setJourneyTask, completeJourneyStage, resetJourneyProgress } from "@/lib/journey.functions";
 import { NoteField, FounderBriefPanel } from "@/components/foundr/JourneyNotes";
+import { StageResourcesPanel } from "@/components/foundr/StageResources";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({
@@ -271,6 +272,8 @@ function Journey() {
               </Link>
             </div>
           )}
+
+          <StageResourcesPanel stageIndex={active} />
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <label className="inline-flex items-center gap-3 rounded-full border border-border bg-card px-5 py-2.5">
