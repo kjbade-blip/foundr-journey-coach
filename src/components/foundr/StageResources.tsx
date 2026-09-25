@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
@@ -26,26 +27,41 @@ function Heading({ children }: { children: React.ReactNode }) {
 }
 
 export function SavedReports() {
+  const [showAll, setShowAll] = useState(false);
   const fn = useServerFn(listOpportunityAnalyses);
   const { data, isLoading } = useQuery({ queryKey: ["opportunity-analyses"], queryFn: () => fn() });
   if (isLoading) return <p className="mt-2 text-sm text-muted-foreground">Loading your reports…</p>;
   if (!data?.length) return <p className="mt-2 text-sm text-muted-foreground">No reports yet. Run an Opportunity Analysis to create one.</p>;
+  const visible = showAll ? data : data.slice(0, 5);
+  const hiddenCount = data.length - visible.length;
   return (
-    <ul className="mt-2 divide-y divide-border rounded-2xl border border-border">
-      {data.map((r) => (
-        <li key={r.id}>
-          <Link to="/app/report/$id" params={{ id: r.id }} className="flex items-center gap-3 p-3.5 hover:bg-muted/40">
-            <FileText className="h-4 w-4 shrink-0 text-brand-dark" />
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-semibold">{r.displayName} — {r.businessType}</div>
-              <div className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-GB")}{r.verdict ? ` · ${r.verdict}` : ""}</div>
-            </div>
-            {r.overallScore !== null && <Pill>Score {r.overallScore}</Pill>}
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="mt-2 divide-y divide-border rounded-2xl border border-border">
+        {visible.map((r) => (
+          <li key={r.id}>
+            <Link to="/app/report/$id" params={{ id: r.id }} className="flex items-center gap-3 p-3.5 hover:bg-muted/40">
+              <FileText className="h-4 w-4 shrink-0 text-brand-dark" />
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-semibold">{r.displayName} — {r.businessType}</div>
+                <div className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-GB")}{r.verdict ? ` · ${r.verdict}` : ""}</div>
+              </div>
+              {r.overallScore !== null && <Pill>Score {r.overallScore}</Pill>}
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {(hiddenCount > 0 || showAll) && data.length > 5 && (
+        <button
+          type="button"
+          onClick={() => setShowAll((v) => !v)}
+          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
+        >
+          <ChevronRight className={`h-4 w-4 transition-transform ${showAll ? "rotate-90" : ""}`} />
+          {showAll ? "Show fewer" : `Show all ${data.length} reports`}
+        </button>
+      )}
+    </>
   );
 }
 
