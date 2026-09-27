@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/app/opportunity-finder")({
   validateSearch: (s: Record<string, unknown>): { type?: string; location?: string; autorun?: string } => ({
     ...(typeof s.type === "string" ? { type: s.type } : {}),
     ...(typeof s.location === "string" ? { location: s.location } : {}),
-    ...(s.autorun === "1" || s.autorun === 1 ? { autorun: "1" } : {}),
+    ...(s.autorun === "1" || s.autorun === 1 || s.autorun === '"1"' || s.autorun === true ? { autorun: "1" } : {}),
   }),
   head: () => ({
     meta: [
@@ -67,11 +67,15 @@ function Finder() {
   // Started from the founder brief: run straight away with the brief's type + location.
   const autoRan = useRef(false);
   useEffect(() => {
-    if (autoRan.current || search.autorun !== "1" || !search.location) return;
+    if (autoRan.current || !search.autorun || !search.location) return;
     autoRan.current = true;
-    setAiSummary("Running from your founder brief.");
+    // A brief can list several towns ("Horbury, Ossett, Wakefield, UK"); geocode the first one.
+    const parts = search.location.split(",").map((s) => s.trim()).filter(Boolean);
+    const primary = parts.length > 2 ? `${parts[0]}, ${parts[parts.length - 2]}` : search.location;
+    setPostcode(primary);
+    setAiSummary(`Running from your founder brief: ${primary}.`);
     setStep(1);
-    analyse.mutate({ query: search.location, businessType: typeKey, radiusMiles: radius });
+    analyse.mutate({ query: primary, businessType: typeKey, radiusMiles: radius });
     requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
