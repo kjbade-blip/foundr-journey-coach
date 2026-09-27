@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
+import { PageHeader, Card } from "@/components/foundr/ui";
 import { Switch } from "@/components/ui/switch";
-import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
+import { Check, Lock, Brain, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +11,9 @@ import { NoteField, TownsNoteField, FounderBriefPanel } from "@/components/found
 import { StageResourcesPanel } from "@/components/foundr/StageResources";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
+  validateSearch: (s: Record<string, unknown>): { stage?: number } => ({
+    stage: typeof s.stage === "number" ? s.stage : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "My Journey · Found-r" },
