@@ -58,17 +58,22 @@ export function NoteField({ stageIndex, taskKey, label }: { stageIndex: number; 
 export function TownsNoteField({ stageIndex, taskKey, label }: { stageIndex: number; taskKey: string; label: string }) {
   const { data } = useJourneyNotes();
   const saved = data?.notes[`${stageIndex}:${taskKey}`] ?? "";
-  const [value, setValue] = useState(saved);
+  const toSlots = (v: string) => {
+    const parts = v.split(",").map((s) => s.trim()).filter(Boolean);
+    return [parts[0] ?? "", parts[1] ?? "", parts[2] ?? ""];
+  };
+  const [slots, setSlots] = useState<string[]>(() => toSlots(saved));
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const saveFn = useServerFn(saveJourneyNote);
   const qc = useQueryClient();
-  useEffect(() => setValue(saved), [saved]);
+  useEffect(() => setSlots(toSlots(saved)), [saved]);
 
-  const save = async (v: string) => {
-    if (v === saved) return;
+  const save = async (next: string[]) => {
+    const note = next.map((s) => s.trim()).filter(Boolean).join(", ");
+    if (note === saved) return;
     setStatus("saving");
     try {
-      await saveFn({ data: { stageIndex, taskKey, note: v } });
+      await saveFn({ data: { stageIndex, taskKey, note } });
       await qc.invalidateQueries({ queryKey: NOTES_KEY });
       setStatus("saved");
     } catch {
@@ -76,18 +81,32 @@ export function TownsNoteField({ stageIndex, taskKey, label }: { stageIndex: num
     }
   };
 
+  const update = (i: number, v: string, commit: boolean) => {
+    const next = slots.map((s, j) => (j === i ? v : s));
+    setSlots(next);
+    setStatus("idle");
+    if (commit) void save(next);
+  };
+
   return (
     <div className="px-3.5 pb-3.5 pl-10">
-      <div onBlur={() => void save(value)}>
-        <LocationAutocomplete
-          value={value}
-          onChange={(v) => { setValue(v); setStatus("idle"); }}
-          onSelect={(v) => void save(v)}
-          placeholder="Start typing a town or postcode…"
-        />
+      <div className="grid gap-2 sm:grid-cols-3">
+        {[0, 1, 2].map((i) => (
+          <div key={i}>
+            <div className="mb-1 text-xs font-semibold text-muted-foreground">Area {i + 1}</div>
+            <div onBlur={() => void save(slots)}>
+              <LocationAutocomplete
+                value={slots[i] ?? ""}
+                onChange={(v) => update(i, v, false)}
+                onSelect={(v) => update(i, v, true)}
+                placeholder={i === 0 ? "Start typing a town or postcode…" : "Optional…"}
+              />
+            </div>
+          </div>
+        ))}
       </div>
       <p className="mt-1 text-xs text-muted-foreground">
-        Pick up to 3 towns or postcodes from the suggestions — separate them with commas.
+        Choose up to 3 target towns or postcodes — one per panel. Each saves automatically.
       </p>
       <div className="mt-1 h-4 text-xs text-muted-foreground" aria-live="polite">
         {status === "saving" && "Saving…"}
