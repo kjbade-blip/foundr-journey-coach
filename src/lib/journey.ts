@@ -18,29 +18,26 @@ const t = (key: string, label: string): JourneyTask => ({ key, label });
 
 export const STAGES: JourneyStage[] = [
   {
-    title: "Explore",
-    outputs: ["Founder Readiness Score", "Founder Profile", "Recommended Industries"],
-    ai: ["Founder Coach"],
+    title: "Explore & Discover Opportunities",
+    outputs: ["Founder Readiness Score", "Founder Profile", "Recommended Industries", "Opportunity Shortlist", "Opportunity Rankings"],
+    ai: ["Founder Coach", "Opportunity Engine"],
     tasks: [
       t("skills", "List your skills, experience and strengths"),
       t("budget", "Set the money you could realistically invest"),
       t("time", "Decide how many hours a week you can commit"),
       t("goals", "Write down what success looks like in 3 years"),
       t("industries", "Shortlist 3 industries that interest you"),
-    ],
-    ideas: ["Talk to two local business owners about their first year", "Consider franchise vs independent routes"],
-  },
-  {
-    title: "Discover Opportunities",
-    outputs: ["Opportunity Shortlist", "Opportunity Rankings"],
-    ai: ["Opportunity Engine"],
-    tasks: [
       t("areas", "Pick 1–3 target towns or postcodes"),
       t("finder", "Run the Opportunity Finder for each idea"),
       t("shortlist", "Shortlist your top 3 opportunities"),
       t("rank", "Rank them by score and personal fit"),
     ],
-    ideas: ["Try a blended concept (e.g. bookshop + wine bar)", "Compare areas with the Business Diversity Index"],
+    ideas: [
+      "Talk to two local business owners about their first year",
+      "Consider franchise vs independent routes",
+      "Try a blended concept (e.g. bookshop + wine bar)",
+      "Compare areas with the Business Diversity Index",
+    ],
   },
   {
     title: "Validate Opportunity",

@@ -32,8 +32,7 @@ export interface StageResources {
 }
 
 export const STAGE_RESOURCES: StageResources[] = [
-  /* Explore */ { tools: [], showReports: true, partnerCats: ["Accountants"], videos: ["How to choose the right business to start UK", "Franchise vs independent business UK"] },
-  /* Discover */ { tools: ["opportunity-finder", "bdi-compare"], showReports: true, partnerCats: [], videos: ["How to find a profitable local business idea", "Market research for a small business UK"] },
+  /* Explore & Discover */ { tools: ["opportunity-finder", "bdi-compare"], showReports: true, partnerCats: ["Accountants"], videos: ["How to choose the right business to start UK", "Franchise vs independent business UK", "How to find a profitable local business idea", "Market research for a small business UK"] },
   /* Validate */ { tools: ["opportunity-finder", "bdi-compare", "location-analysis"], showReports: true, partnerCats: ["Accountants"], videos: ["How to validate a business idea", "How to do a SWOT analysis for a small business"] },
   /* Plan */ { tools: [], showReports: false, partnerCats: ["Accountants", "Finance"], videos: ["How to write a business plan UK", "Cash flow forecast for a new business"] },
   /* Foundations */ { tools: [], showReports: false, partnerCats: ["Solicitors", "Banks", "Insurers"], videos: ["Sole trader vs limited company UK", "How to register a company with Companies House"] },

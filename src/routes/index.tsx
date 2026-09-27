@@ -92,7 +92,7 @@ function Landing() {
       <section id="journey" className="mx-auto max-w-7xl px-4 py-24 sm:px-6">
         <div className="max-w-2xl">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-dark">My Business Journey</span>
-          <h2 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">From a hunch to a humming high-street business — in 11 guided stages.</h2>
+          <h2 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">From a hunch to a humming high-street business — in 10 guided stages.</h2>
           <p className="mt-4 text-lg text-muted-foreground">Each stage has tasks, AI specialists, recommended suppliers and a measurable output — so you always know what to do next.</p>
         </div>
 
@@ -221,8 +221,7 @@ function Landing() {
 }
 
 const STAGES = [
-  { title: "Explore", body: "Founder Readiness Score, profile and recommended industries.", ai: ["Founder Coach"] },
-  { title: "Discover Opportunities", body: "Opportunity shortlist and rankings tailored to you.", ai: ["Opportunity Engine"] },
+  { title: "Explore & Discover Opportunities", body: "Founder Readiness Score, profile, recommended industries and an opportunity shortlist tailored to you.", ai: ["Founder Coach", "Opportunity Engine"] },
   { title: "Validate", body: "Opportunity Score, SWOT and a defensible Go / No-Go.", ai: ["Location","Competitor","Business"] },
   { title: "Plan", body: "Business plan, funding plan and launch roadmap.", ai: ["Business Planner"] },
   { title: "Build Foundations", body: "Company setup and compliance checklists.", ai: ["Compliance Advisor"] },
