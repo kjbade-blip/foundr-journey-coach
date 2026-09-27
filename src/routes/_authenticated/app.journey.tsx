@@ -214,14 +214,13 @@ function Journey() {
                         ) : (
                           <NoteField stageIndex={0} taskKey={task.key} label={task.label} />
                         ))}
+                      {active === 0 && task.key === "areas" && <FounderBriefPanel />}
                     </li>
                   );
                 })}
               </ul>
             )}
           </div>
-
-          {active === 0 && <FounderBriefPanel />}
 
           {current.ideas.length > 0 && (
             <div className="mt-6 rounded-2xl bg-muted/50 p-4">
