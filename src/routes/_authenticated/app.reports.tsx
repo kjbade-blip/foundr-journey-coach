@@ -29,8 +29,7 @@ function OnsAnalyses() {
           </p>
         </div>
         <Link
-          to="/app/location-analysis"
-          search={{ q: undefined, type: undefined }}
+          to="/app/opportunity-finder"
           className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
         >
           New analysis

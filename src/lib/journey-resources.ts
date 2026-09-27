@@ -33,11 +33,11 @@ export interface StageResources {
 
 export const STAGE_RESOURCES: StageResources[] = [
   /* Explore & Discover */ { tools: ["opportunity-finder", "bdi-compare"], showReports: true, partnerCats: ["Accountants"], videos: ["How to choose the right business to start UK", "Franchise vs independent business UK", "How to find a profitable local business idea", "Market research for a small business UK"] },
-  /* Validate */ { tools: ["opportunity-finder", "bdi-compare", "location-analysis"], showReports: true, partnerCats: ["Accountants"], videos: ["How to validate a business idea", "How to do a SWOT analysis for a small business"] },
+  /* Validate */ { tools: ["opportunity-finder", "bdi-compare"], showReports: true, partnerCats: ["Accountants"], videos: ["How to validate a business idea", "How to do a SWOT analysis for a small business"] },
   /* Plan */ { tools: [], showReports: false, partnerCats: ["Accountants", "Finance"], videos: ["How to write a business plan UK", "Cash flow forecast for a new business"] },
   /* Foundations */ { tools: [], showReports: false, partnerCats: ["Solicitors", "Banks", "Insurers"], videos: ["Sole trader vs limited company UK", "How to register a company with Companies House"] },
   /* Funding */ { tools: [], showReports: false, partnerCats: ["Finance", "Banks"], videos: ["Start Up Loans UK explained", "How to get funding for a small business UK"] },
-  /* Premises */ { tools: ["premises", "location-analysis"], showReports: false, partnerCats: ["Commercial Agents", "Solicitors"], videos: ["How to negotiate a commercial lease UK", "Business rates explained UK"] },
+  /* Premises */ { tools: ["premises", "opportunity-finder"], showReports: false, partnerCats: ["Commercial Agents", "Solicitors"], videos: ["How to negotiate a commercial lease UK", "Business rates explained UK"] },
   /* Fit out */ { tools: [], showReports: false, partnerCats: ["POS", "Utilities"], videos: ["Shop fit out on a budget", "Choosing a POS system for a small business"] },
   /* Presence */ { tools: [], showReports: false, partnerCats: ["Web & SEO", "Marketing"], videos: ["Google Business Profile setup guide", "Local SEO for small businesses"] },
   /* Pre-launch */ { tools: [], showReports: false, partnerCats: ["Marketing", "Recruiters"], videos: ["Pre-launch marketing for a local business", "How to hire your first employee UK"] },

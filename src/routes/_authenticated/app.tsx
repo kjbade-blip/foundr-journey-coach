@@ -21,7 +21,6 @@ export const Route = createFileRoute("/_authenticated/app")({
 const START_NAV = [
   { to: "/app/dashboard",          label: "Dashboard",          icon: LayoutDashboard },
   { to: "/app/journey",            label: "My Journey",         icon: Map },
-  { to: "/app/location-analysis",  label: "Location Analysis",   icon: BarChart3 },
   { to: "/app/reports",            label: "Reports",            icon: FileText },
 ] as const;
 
@@ -30,7 +29,6 @@ const GROW_NAV = [
   { to: "/app/business-profile", label: "Business Profile",        icon: Building2 },
   { to: "/app/intelligence",  label: "Competitor Intelligence", icon: Radar },
   { to: "/app/premises",     label: "Find Premises",         icon: Building2 },
-  { to: "/app/location-analysis", label: "Location Analysis",  icon: BarChart3 },
 
   { to: "/app/bdi-compare",  label: "BDI Compare",           icon: BarChart3 },
   { to: "/app/alerts",       label: "Market Alerts",         icon: Bell },
@@ -71,7 +69,7 @@ function AppShell() {
             <LocationAutocomplete
               value={q}
               onChange={setQ}
-              onSelect={(v) => navigate({ to: "/app/location-analysis", search: { q: v } })}
+              onSelect={(v) => navigate({ to: "/app/opportunity-finder", search: { location: v } })}
               placeholder="Search businesses, postcodes, places…"
               icon="search"
             />

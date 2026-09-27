@@ -13,6 +13,7 @@ import { AISearchBar } from "@/components/foundr/AISearchBar";
 import { conceptToTypeKey, describeSearch } from "@/lib/ai-search";
 import { BDICard } from "@/components/foundr/bdi/BDICard";
 import { LocationProfileCard } from "@/components/foundr/ons/LocationProfileCard";
+import { LocationTools } from "@/components/foundr/ons/LocationTools";
 import { CrimeRiskCard } from "@/components/foundr/crime/CrimeRiskCard";
 import { OpportunityReport } from "@/components/foundr/opportunity/OpportunityReport";
 import { AnalysisProgress, ANALYSIS_STEPS } from "@/components/foundr/opportunity/AnalysisProgress";
@@ -330,6 +331,14 @@ function Finder() {
           {a.evidence.ons && <LocationProfileCard profile={a.evidence.ons} />}
         </div>
       )}
+
+      <section className="mt-10">
+        <h2 className="text-xl font-bold">Area statistics, ideas &amp; comparison</h2>
+        <p className="mb-4 mt-1 text-sm text-muted-foreground">
+          Look up official ONS figures for any area, see which business types suit it, or compare up to three areas side by side.
+        </p>
+        <LocationTools initialQuery={search.location ?? ""} initialType={search.type ?? ""} />
+      </section>
     </div>
   );
 }
