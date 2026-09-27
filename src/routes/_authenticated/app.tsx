@@ -171,6 +171,78 @@ function UserMenu() {
   );
 }
 
+function JourneyNavItem({ open, onToggle, onNavigate }: { open: boolean; onToggle: () => void; onNavigate: () => void }) {
+  const { pathname, search } = useLocation() as ReturnType<typeof useLocation> & { search: { stage?: number } };
+  const navigate = useNavigate();
+  const tasksFn = useServerFn(getJourneyTasks);
+  const { data: rows = [], isLoading } = useQuery({ queryKey: ["journey-tasks"], queryFn: () => tasksFn() });
+  const checked = checkedMap(rows);
+  const overall = overallPercent(checked);
+  const activePage = pathname === "/app/journey";
+  const activeStage = activePage && typeof search?.stage === "number" ? search.stage : undefined;
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          onToggle();
+          if (!activePage) {
+            navigate({ to: "/app/journey" });
+            onNavigate();
+          }
+        }}
+        aria-expanded={open}
+        className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${activePage ? "bg-brand-dark text-white" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+      >
+        <Map className={`h-4.5 w-4.5 ${activePage ? "text-brand" : ""}`} />
+        <span>My Journey</span>
+        <span className={`ml-auto text-xs font-semibold ${activePage ? "text-brand" : "text-muted-foreground"}`}>
+          {isLoading ? "…" : `${overall}%`}
+        </span>
+        <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <ul className="ml-6 mt-1 space-y-0.5 border-l border-border pl-3">
+          {STAGES.map((s, i) => {
+            const p = stagePercent(i, checked[i]!);
+            const done = p === 100;
+            const isActive = activeStage === i;
+            return (
+              <li key={s.title}>
+                <Link
+                  to="/app/journey"
+                  search={{ stage: i }}
+                  onClick={onNavigate}
+                  className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition ${
+                    isActive
+                      ? "bg-accent font-semibold text-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  <span
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-bold ${
+                      done
+                        ? "bg-[color:var(--success)] text-white"
+                        : p > 0
+                          ? "bg-brand text-brand-foreground"
+                          : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {done ? <Check className="h-3 w-3" /> : i + 1}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{s.title}</span>
+                  <span className="text-[10px] font-semibold text-muted-foreground">{p}%</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function NavItem({ to, label, Icon, onClick }: { to: string; label: string; Icon: any; onClick: () => void }) {
   const { pathname } = useLocation();
   const active = pathname === to;
