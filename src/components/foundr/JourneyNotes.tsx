@@ -132,11 +132,19 @@ export function FounderBriefPanel() {
           </div>
           <Link
             to="/app/opportunity-finder"
-            search={{ type: brief.opportunity.typeKey, ...(brief.opportunity.location ? { location: brief.opportunity.location } : {}) }}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-5 py-2.5 text-sm font-semibold text-white"
+            search={{
+              type: brief.opportunity.typeKey,
+              ...(brief.opportunity.location ? { location: brief.opportunity.location, autorun: "1" } : {}),
+            }}
+            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground"
           >
-            <BarChart3 className="h-4 w-4" /> Run Opportunity Analysis
+            <BarChart3 className="h-4 w-4" /> Run Opportunity Analysis from my brief
           </Link>
+          {!brief.opportunity.location && (
+            <p className="text-xs text-muted-foreground">
+              Your notes don't mention a town or postcode yet, so you'll need to pick a location before the analysis runs.
+            </p>
+          )}
           <p className="text-xs text-muted-foreground">
             Written by Found-r AI from your own notes only — no figures are added. The analysis uses published data.
           </p>
