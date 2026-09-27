@@ -208,7 +208,12 @@ function Journey() {
                         />
                         <span className={`text-sm ${isChecked ? "text-muted-foreground line-through" : ""}`}>{task.label}</span>
                       </label>
-                      {active === 0 && <NoteField stageIndex={0} taskKey={task.key} label={task.label} />}
+                      {active === 0 &&
+                        (task.key === "areas" ? (
+                          <TownsNoteField stageIndex={0} taskKey={task.key} label={task.label} />
+                        ) : (
+                          <NoteField stageIndex={0} taskKey={task.key} label={task.label} />
+                        ))}
                     </li>
                   );
                 })}
