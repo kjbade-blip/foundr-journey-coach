@@ -93,9 +93,18 @@ function AppShell() {
         {/* Sidebar */}
         <aside className={`${open ? "translate-x-0" : "-translate-x-full"} fixed inset-y-16 left-0 z-20 w-72 border-r border-border bg-card p-4 transition lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0`}>
           <nav className="flex flex-col gap-1">
-            {nav.map((item) => (
-              <NavItem key={item.to} to={item.to} label={item.label} Icon={item.icon} onClick={() => setOpen(false)} />
-            ))}
+            {nav.map((item) =>
+              item.to === "/app/journey" ? (
+                <JourneyNavItem
+                  key={item.to}
+                  open={journeyOpen}
+                  onToggle={() => setJourneyOpen((o) => !o)}
+                  onNavigate={() => setOpen(false)}
+                />
+              ) : (
+                <NavItem key={item.to} to={item.to} label={item.label} Icon={item.icon} onClick={() => setOpen(false)} />
+              ),
+            )}
           </nav>
           <div className="mt-6 rounded-2xl border border-border bg-gradient-to-br from-accent to-card p-4">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-dark">
