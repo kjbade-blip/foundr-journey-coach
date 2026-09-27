@@ -139,49 +139,7 @@ function Journey() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
-        <div className="space-y-2">
-          {STAGES.map((s, i) => {
-            const p = progress[i] ?? 0;
-            const status = p === 100 ? "done" : p > 0 ? "active" : i === nextIndex ? "next" : "locked";
-            return (
-              <button
-                key={s.title}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-current={active === i ? "step" : undefined}
-                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-dark ${active === i ? "border-brand-dark bg-card shadow-soft" : "border-border bg-card hover:border-brand-dark/30"}`}
-              >
-                <div
-                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold ${
-                    status === "done"
-                      ? "bg-[color:var(--success)] text-white"
-                      : status === "active"
-                        ? "bg-brand text-brand-foreground"
-                        : status === "next"
-                          ? "bg-brand-dark text-white"
-                          : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {status === "done" ? <Check className="h-5 w-5" /> : status === "locked" ? <Lock className="h-4 w-4" /> : i + 1}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold">{s.title}</span>
-                    <span className="text-xs font-semibold text-muted-foreground">{p}%</span>
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <Bar value={p} />
-                    {status === "next" && <Pill tone="brand">Next</Pill>}
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-              </button>
-            );
-          })}
-        </div>
-
-        <Card>
+      <Card>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Stage {active + 1} of {STAGES.length}</div>
