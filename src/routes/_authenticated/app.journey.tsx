@@ -14,9 +14,9 @@ export const Route = createFileRoute("/_authenticated/app/journey")({
   head: () => ({
     meta: [
       { title: "My Journey · Found-r" },
-      { name: "description", content: "Eleven guided stages from idea to opening day, with task checklists saved to your account." },
+      { name: "description", content: "Ten guided stages from idea to opening day, with task checklists saved to your account." },
       { property: "og:title", content: "My Journey · Found-r" },
-      { property: "og:description", content: "Eleven guided stages from idea to opening day, with task checklists saved to your account." },
+      { property: "og:description", content: "Ten guided stages from idea to opening day, with task checklists saved to your account." },
     ],
   }),
   component: Journey,
@@ -97,7 +97,7 @@ function Journey() {
       <PageHeader
         eyebrow="My Business Journey"
         title="From idea to opening day."
-        subtitle="Eleven guided stages with tasks, ideas and AI specialists. Tick tasks off as you go — your progress is saved to your account."
+        subtitle="Ten guided stages with tasks, ideas and AI specialists. Tick tasks off as you go — your progress is saved to your account."
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold">
@@ -258,7 +258,7 @@ function Journey() {
             </div>
           </div>
 
-          {["Discover Opportunities", "Validate Opportunity", "Find Premises"].includes(current.title) && (
+          {["Explore & Discover Opportunities", "Validate Opportunity", "Find Premises"].includes(current.title) && (
             <div className="mt-6 rounded-2xl border border-border p-5">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-dark">
                 <BarChart3 className="h-4 w-4" /> Evidence required for this stage
