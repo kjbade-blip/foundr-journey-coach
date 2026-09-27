@@ -1,6 +1,10 @@
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { STAGES, checkedMap, stagePercent, overallPercent } from "@/lib/journey";
+import { getJourneyTasks } from "@/lib/journey.functions";
 import { Logo } from "@/components/foundr/Logo";
 import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
@@ -41,6 +45,8 @@ function AppShell() {
   const navigate = useNavigate();
   const [mode, setLocalMode] = useState<Mode>("start");
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const [journeyOpen, setJourneyOpen] = useState(pathname === "/app/journey");
   const [q, setQ] = useState("");
 
   useEffect(() => {
