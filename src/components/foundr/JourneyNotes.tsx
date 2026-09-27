@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Loader2, Sparkles, Copy, BarChart3, Check } from "lucide-react";
 import { getJourneyNotes, saveJourneyNote, generateFounderBrief } from "@/lib/journey-notes.functions";
+import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
 
 export const NOTES_KEY = ["journey-notes"];
 
