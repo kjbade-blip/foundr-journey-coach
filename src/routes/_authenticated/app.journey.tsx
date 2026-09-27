@@ -28,7 +28,10 @@ export const Route = createFileRoute("/_authenticated/app/journey")({
 const KEY = ["journey-tasks"];
 
 function Journey() {
-  const [active, setActive] = useState(0);
+  const search = Route.useSearch();
+  const routeNav = Route.useNavigate();
+  const active =
+    typeof search.stage === "number" && search.stage >= 0 && search.stage < STAGES.length ? search.stage : 0;
   const [saveError, setSaveError] = useState<string | null>(null);
   const tasksFn = useServerFn(getJourneyTasks);
   const toggleFn = useServerFn(setJourneyTask);
@@ -84,7 +87,10 @@ function Journey() {
   const reset = useMutation({
     mutationFn: () => resetFn(),
     onError: () => setSaveError("Couldn't reset your journey. Please try again."),
-    onSuccess: () => setActive(0),
+    onSuccess: () => {
+      setSaveError(null);
+      void routeNav({ to: "/app/journey", search: {} });
+    },
     onSettled: afterWrite,
   });
 
