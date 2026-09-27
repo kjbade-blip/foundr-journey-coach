@@ -27,7 +27,7 @@ export const STAGES: JourneyStage[] = [
       t("time", "Decide how many hours a week you can commit"),
       t("goals", "Write down what success looks like in 3 years"),
       t("industries", "Shortlist 3 industries that interest you"),
-      t("areas", "Pick 1–3 target towns or postcodes"),
+      t("areas", "Pick your target area — a city, town, village or street"),
       t("finder", "Run the Opportunity Finder for each idea"),
       t("shortlist", "Shortlist your top 3 opportunities"),
       t("rank", "Rank them by score and personal fit"),
