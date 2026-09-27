@@ -263,7 +263,7 @@ function Journey() {
             {active < STAGES.length - 1 && (
               <button
                 type="button"
-                onClick={() => setActive(active + 1)}
+                onClick={() => routeNav({ to: "/app/journey", search: { stage: active + 1 } })}
                 className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
               >
                 Next stage
@@ -271,7 +271,6 @@ function Journey() {
             )}
           </div>
         </Card>
-      </div>
     </div>
   );
 }
