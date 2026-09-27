@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PageHeader, Card, Pill, Bar } from "@/components/foundr/ui";
+import { PageHeader, Card } from "@/components/foundr/ui";
 import { Switch } from "@/components/ui/switch";
-import { Check, Lock, Brain, ChevronRight, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
+import { Check, Lock, Brain, BarChart3, Loader2, RotateCcw, Lightbulb, Target, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +11,9 @@ import { NoteField, TownsNoteField, FounderBriefPanel } from "@/components/found
 import { StageResourcesPanel } from "@/components/foundr/StageResources";
 
 export const Route = createFileRoute("/_authenticated/app/journey")({
+  validateSearch: (s: Record<string, unknown>): { stage?: number } => ({
+    stage: typeof s.stage === "number" ? s.stage : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "My Journey · Found-r" },
@@ -25,7 +28,10 @@ export const Route = createFileRoute("/_authenticated/app/journey")({
 const KEY = ["journey-tasks"];
 
 function Journey() {
-  const [active, setActive] = useState(0);
+  const search = Route.useSearch();
+  const routeNav = Route.useNavigate();
+  const active =
+    typeof search.stage === "number" && search.stage >= 0 && search.stage < STAGES.length ? search.stage : 0;
   const [saveError, setSaveError] = useState<string | null>(null);
   const tasksFn = useServerFn(getJourneyTasks);
   const toggleFn = useServerFn(setJourneyTask);
@@ -81,7 +87,10 @@ function Journey() {
   const reset = useMutation({
     mutationFn: () => resetFn(),
     onError: () => setSaveError("Couldn't reset your journey. Please try again."),
-    onSuccess: () => setActive(0),
+    onSuccess: () => {
+      setSaveError(null);
+      void routeNav({ to: "/app/journey", search: {} });
+    },
     onSettled: afterWrite,
   });
 
@@ -130,49 +139,7 @@ function Journey() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
-        <div className="space-y-2">
-          {STAGES.map((s, i) => {
-            const p = progress[i] ?? 0;
-            const status = p === 100 ? "done" : p > 0 ? "active" : i === nextIndex ? "next" : "locked";
-            return (
-              <button
-                key={s.title}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-current={active === i ? "step" : undefined}
-                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-dark ${active === i ? "border-brand-dark bg-card shadow-soft" : "border-border bg-card hover:border-brand-dark/30"}`}
-              >
-                <div
-                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold ${
-                    status === "done"
-                      ? "bg-[color:var(--success)] text-white"
-                      : status === "active"
-                        ? "bg-brand text-brand-foreground"
-                        : status === "next"
-                          ? "bg-brand-dark text-white"
-                          : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {status === "done" ? <Check className="h-5 w-5" /> : status === "locked" ? <Lock className="h-4 w-4" /> : i + 1}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold">{s.title}</span>
-                    <span className="text-xs font-semibold text-muted-foreground">{p}%</span>
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <Bar value={p} />
-                    {status === "next" && <Pill tone="brand">Next</Pill>}
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-              </button>
-            );
-          })}
-        </div>
-
-        <Card>
+      <Card>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-brand-dark">Stage {active + 1} of {STAGES.length}</div>
@@ -296,7 +263,7 @@ function Journey() {
             {active < STAGES.length - 1 && (
               <button
                 type="button"
-                onClick={() => setActive(active + 1)}
+                onClick={() => routeNav({ to: "/app/journey", search: { stage: active + 1 } })}
                 className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
               >
                 Next stage
@@ -304,7 +271,6 @@ function Journey() {
             )}
           </div>
         </Card>
-      </div>
     </div>
   );
 }
