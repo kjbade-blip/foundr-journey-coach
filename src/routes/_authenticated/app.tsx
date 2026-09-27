@@ -10,7 +10,7 @@ import { getMode, setMode, type Mode } from "@/lib/mode";
 import {
   LayoutDashboard, Compass, Map, FileText, Store, GraduationCap,
   TrendingUp, Radar, Bell, Sparkles, Users, Menu, X, ChevronDown, Bot, BarChart3, Building2,
-  Settings, LogOut
+  Settings, LogOut, Check
 } from "lucide-react";
 
 import { LocationAutocomplete } from "@/components/foundr/LocationAutocomplete";
