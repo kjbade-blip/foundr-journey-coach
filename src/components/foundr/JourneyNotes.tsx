@@ -55,6 +55,50 @@ export function NoteField({ stageIndex, taskKey, label }: { stageIndex: number; 
   );
 }
 
+export function TownsNoteField({ stageIndex, taskKey, label }: { stageIndex: number; taskKey: string; label: string }) {
+  const { data } = useJourneyNotes();
+  const saved = data?.notes[`${stageIndex}:${taskKey}`] ?? "";
+  const [value, setValue] = useState(saved);
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const saveFn = useServerFn(saveJourneyNote);
+  const qc = useQueryClient();
+  useEffect(() => setValue(saved), [saved]);
+
+  const save = async (v: string) => {
+    if (v === saved) return;
+    setStatus("saving");
+    try {
+      await saveFn({ data: { stageIndex, taskKey, note: v } });
+      await qc.invalidateQueries({ queryKey: NOTES_KEY });
+      setStatus("saved");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div className="px-3.5 pb-3.5 pl-10">
+      <div onBlur={() => void save(value)}>
+        <LocationAutocomplete
+          value={value}
+          onChange={(v) => { setValue(v); setStatus("idle"); }}
+          onSelect={(v) => void save(v)}
+          placeholder="Start typing a town or postcode…"
+        />
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Pick up to 3 towns or postcodes from the suggestions — separate them with commas.
+      </p>
+      <div className="mt-1 h-4 text-xs text-muted-foreground" aria-live="polite">
+        {status === "saving" && "Saving…"}
+        {status === "saved" && "Saved"}
+        {status === "error" && <span className="text-destructive">Couldn't save — try again</span>}
+      </div>
+      <span className="sr-only">{label}</span>
+    </div>
+  );
+}
+
 export function FounderBriefPanel() {
   const { data } = useJourneyNotes();
   const genFn = useServerFn(generateFounderBrief);
