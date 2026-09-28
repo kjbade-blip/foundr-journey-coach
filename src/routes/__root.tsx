@@ -80,6 +80,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "The AI-powered operating system to discover, validate, launch and grow brick-and-mortar businesses." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/799cc933-ff24-4ff7-b0ca-7d0622b4b40b/id-preview-9a367028--566ea121-7bc7-4116-92e8-c11cbe721dba.lovable.app-1783075817619.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/799cc933-ff24-4ff7-b0ca-7d0622b4b40b/id-preview-9a367028--566ea121-7bc7-4116-92e8-c11cbe721dba.lovable.app-1783075817619.png" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "Found-r" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
